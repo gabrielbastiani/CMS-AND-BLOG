@@ -3,18 +3,36 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'
+import "react-toastify/dist/ReactToastify.css";
 
+// Configuração da fonte local
 const geistSans = localFont({
   src: "./fonts/Poppins-Regular.ttf",
   variable: "--font-poppins-regular",
   weight: "100 900",
 });
 
-export const metadata: Metadata = {
-  title: "Blog Oficina Mecânica Online",
-  description: "Blog da Oficina Mecânica Online",
-};
+// Função para gerar metadados dinâmicos
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    // Faz uma requisição para sua API
+    const response = await fetch("http://localhost:3333/configuration_blog/get_configs");
+    const data = await response.json();
+
+    // Retorna os metadados dinâmicos
+    return {
+      title: data.name_blog || "Blog",
+      description: data.name_blog || "Blog",
+    };
+  } catch (error) {
+    console.error("Erro ao buscar metadados:", error);
+    // Retorna valores padrão em caso de erro
+    return {
+      title: "Blog",
+      description: "Blog",
+    };
+  }
+}
 
 export default function RootLayout({
   children,
@@ -23,10 +41,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body
-        id="root"
-        className={`${geistSans.variable} antialiased`}
-      >
+      <body id="root" className={`${geistSans.variable} antialiased`}>
         <AuthProvider>
           <ToastContainer autoClose={5000} />
           {children}

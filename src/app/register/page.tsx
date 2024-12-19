@@ -182,10 +182,10 @@ export default function Register() {
 
                                     <div className='mb-3'>
                                         {/* Input para Imagem */}
-                                        <label className="relative w-full h-[450px] rounded-lg cursor-pointer flex justify-center bg-gray-200 overflow-hidden">
+                                        <label className="relative w-full h-[250px] rounded-lg cursor-pointer flex justify-center bg-gray-200 overflow-hidden">
                                             <input type="file" accept="image/png, image/jpeg" onChange={handleFile} className="hidden" />
                                             {avatarUrl ? (
-                                                <Image src={avatarUrl} alt="Preview da imagem" width={250} height={200} className="object-cover w-full h-full" />
+                                                <Image src={avatarUrl} alt="Preview da imagem" width={250} height={200} className="w-full h-full" />
                                             ) : (
                                                 <div className="flex items-center justify-center w-full h-full bg-gray-300">
                                                     <FiUpload size={30} color="#ff6700" />

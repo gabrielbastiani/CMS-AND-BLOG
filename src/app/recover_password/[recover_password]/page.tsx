@@ -1,7 +1,6 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import logoImg from '../../../assets/LogoBuilderWhite.webp'
 import { Container } from '../../components/container'
 import { Input } from '../../components/input'
 import { useForm } from 'react-hook-form'

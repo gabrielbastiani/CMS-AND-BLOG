@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { Section } from "@/app/components/section";
 import { SidebarAndHeader } from "@/app/components/sidebarAndHeader";

@@ -3,7 +3,6 @@ import { ReactNode, useContext, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { ArrowBendDoubleUpLeft, CaretRight } from "phosphor-react";
 import Image from "next/image";
-import logo from '../../../assets/LogoBuilderWhite.webp';
 import { AuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { FiLogIn, FiUser, FiBell } from "react-icons/fi";
@@ -387,6 +386,32 @@ export function SidebarAndHeader({ children }: Content) {
                                                     'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_contents/add_content_marketing"
                                                 })}>
                                                     Adicionar novo conteudo de marketing
+                                                </Link>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <div>
+                                        <button
+                                            onClick={() => handleMenuToggle('configurations')}
+                                            className={clsx('p-2 text-left mb-2 flex justify-between items-center w-full', {
+                                                'bg-activeLink rounded': openMenu === 'configurations' || currentRoute?.includes("/configurations"),
+                                                'text-white': openMenu !== 'configurations' && !currentRoute?.includes("/configurations")
+                                            })}
+                                        >
+                                            Configurações do blog
+                                            <CaretRight className={clsx('transition-transform duration-200', {
+                                                'rotate-90': openMenu === 'configurations',
+                                                'rotate-0': openMenu !== 'configurations'
+                                            })} />
+                                        </button>
+                                        {openMenu === 'configurations' && (
+                                            <div className="ml-4 overflow-hidden transition-all duration-300 ease-in-out flex flex-col">
+                                                <Link href="/configurations/configuration" className={clsx({
+                                                    'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/configurations/configuration",
+                                                    'text-white p-2 mb-2 text-sm': currentRoute !== "/configurations/configuration"
+                                                })}>
+                                                    Configurações
                                                 </Link>
                                             </div>
                                         )}

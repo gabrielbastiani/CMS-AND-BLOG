@@ -14,7 +14,8 @@ import { z } from "zod";
 import Image from "next/image";
 import Select from "react-select";
 import { Editor } from "@tinymce/tinymce-react";
-import BulkDatas from "@/app/components/BulkDatas"; 
+import BulkDatas from "@/app/components/BulkDatas";
+import CreatableSelect from "react-select/creatable";
 
 interface FormDataProps {
     title: string;
@@ -24,6 +25,9 @@ interface FormDataProps {
     publish_at?: string;
     categories?: string[];
     tags?: string[];
+    seo_description?: string;
+    seo_keywords?: string[];
+    custom_url?: string;
 }
 
 interface Category {
@@ -46,6 +50,9 @@ const schema = z.object({
     publish_at: z.string().optional(),
     categories: z.array(z.string()).optional(),
     tags: z.array(z.string()).optional(),
+    seo_description: z.string().optional(),
+    seo_keywords: z.array(z.string()).optional(),
+    custom_url: z.string().optional()
 });
 
 type FormData = z.infer<typeof schema>;
@@ -60,6 +67,7 @@ export default function AddPost() {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [image_post, setImage_post] = useState<File | null>(null);
+    const [seoKeywords, setSeoKeywords] = useState<{ label: string; value: string }[]>([]);
 
     const {
         register,
@@ -100,6 +108,10 @@ export default function AddPost() {
         }
     }
 
+    const handleSeoKeywordsChange = (newValue: any) => {
+        setSeoKeywords(newValue || []);
+    };
+
     const onSubmit = async (data: FormDataProps) => {
         setLoading(true);
         try {
@@ -124,6 +136,9 @@ export default function AddPost() {
             formData.append("publish_at", data.publish_at || "");
             formData.append("categories", JSON.stringify(selectedCategories));
             formData.append("tags", JSON.stringify(selectedTags));
+            formData.append("seo_description", data.seo_description || "");
+            formData.append("seo_keywords", JSON.stringify(seoKeywords.map((kw) => kw.value)));
+            formData.append("custom_url", data.custom_url || "");
 
             if (image_post) {
                 formData.append("file", image_post);
@@ -135,10 +150,12 @@ export default function AddPost() {
             toast.success("Post cadastrado com sucesso!");
             setSelectedCategories([]);
             setSelectedTags([]);
+            setSeoKeywords([]);
             reset();
             setAvatarUrl(null);
             setImage_post(null);
             editorRef.current?.setContent("");
+
         } catch (error) {
             console.log(error)
             toast.error("Erro ao cadastrar o post.");
@@ -156,7 +173,7 @@ export default function AddPost() {
                     <label className="relative w-full h-[450px] rounded-lg cursor-pointer flex justify-center bg-gray-200 overflow-hidden">
                         <input type="file" accept="image/png, image/jpeg" onChange={handleFile} className="hidden" />
                         {avatarUrl ? (
-                            <Image src={avatarUrl} alt="Preview da imagem" width={250} height={200} className="object-cover w-full h-full" />
+                            <Image src={avatarUrl} alt="Preview da imagem" width={250} height={200} className="w-full h-full" />
                         ) : (
                             <div className="flex items-center justify-center w-full h-full bg-gray-300">
                                 <FiUpload size={30} color="#ff6700" />
@@ -212,7 +229,40 @@ export default function AddPost() {
 
                     </div>
 
-                    {/* Editor de texto */}
+                    <h1 className="text-xl">SEO</h1>
+
+                    {/* SEO */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <input
+                            type="text"
+                            placeholder="Digite uma url para SEO..."
+                            {...register("custom_url")}
+                            className="w-full border-2 rounded-md px-3 py-2 text-black"
+                        />
+
+                        <label>
+                            Palavras-chave para SEO:
+                            <CreatableSelect
+                                isMulti
+                                value={seoKeywords}
+                                onChange={handleSeoKeywordsChange}
+                                placeholder="Adicione palavras-chave..."
+                                className="text-black z-10"
+                                classNamePrefix="select"
+                            />
+                        </label>
+                    </div>
+
+                    <div>
+                        <textarea
+                            placeholder="Digite uma breve descrição para o SEO..."
+                            {...register("seo_description")}
+                            className="w-full border-2 rounded-md px-3 py-2 text-black"
+                        />
+                    </div>
+
+                    <h1 className="text-xl">Texto do post</h1>
+
                     <Editor
                         apiKey="3uadxc7du623dpn0gcvz8d1520ngvsigncyxnuj5f580qyz4"
                         onInit={(evt, editor) => (editorRef.current = editor)}

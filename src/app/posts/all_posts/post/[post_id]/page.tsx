@@ -12,6 +12,7 @@ import { z } from "zod";
 import Image from "next/image";
 import Select from "react-select";
 import { Editor } from "@tinymce/tinymce-react";
+import CreatableSelect from "react-select/creatable";
 
 interface FormDataProps {
     categories?: {
@@ -27,6 +28,10 @@ interface FormDataProps {
     status?: string;
     publish_at?: string;
     created_at?: string;
+    seo_description?: string;
+    seo_keywords?: string[];
+    [key: string]: any;
+    custom_url?: string;
 }
 
 interface Author {
@@ -54,6 +59,9 @@ const schema = z.object({
     publish_at: z.string().optional(),
     categories: z.array(z.string()).optional(),
     tags: z.array(z.string()).optional(),
+    seo_description: z.string().optional(),
+    seo_keywords: z.array(z.string()).optional(),
+    custom_url: z.string().optional()
 });
 
 type FormData = z.infer<typeof schema>;
@@ -66,6 +74,7 @@ export default function Post({ params }: { params: { post_id: string } }) {
     const [tags, setTags] = useState<Tag[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [seoKeywords, setSeoKeywords] = useState<{ label: string; value: string }[]>([]);
     const [selectedAuthor, setSelectedAuthor] = useState<string | null>(null);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [imagePost, setImagePost] = useState<File | null>(null);
@@ -106,6 +115,12 @@ export default function Post({ params }: { params: { post_id: string } }) {
                     postData.tags?.map((tag: { tag: { id: any } }) => tag.tag.id) || []
                 );
 
+                const keywords = (postData.seo_keywords || []).map((kw: string) => ({
+                    label: kw,
+                    value: kw,
+                }));
+                setSeoKeywords(keywords);
+
                 setCategories(categoriesResponse.data.all_categories_disponivel);
                 setTags(tagsResponse.data.tags_all);
 
@@ -115,6 +130,9 @@ export default function Post({ params }: { params: { post_id: string } }) {
                 reset({
                     title: postData.title,
                     status: postData.status,
+                    seo_description: postData.seo_description,
+                    custom_url: postData.custom_url,
+                    seo_keywords: postData.seo_keywords,
                     publish_at: postData.publish_at
                         ? new Date(postData.publish_at).toISOString().slice(0, 16)
                         : "",
@@ -145,6 +163,10 @@ export default function Post({ params }: { params: { post_id: string } }) {
         }
     }
 
+    const handleSeoKeywordsChange = (newValue: any) => {
+        setSeoKeywords(newValue || []);
+    };
+
     const onSubmit = async (data: FormData) => {
         setLoading(true);
         try {
@@ -164,6 +186,9 @@ export default function Post({ params }: { params: { post_id: string } }) {
             formData.append("publish_at", data.publish_at ? new Date(data.publish_at).toISOString() : "");
             formData.append("categories", JSON.stringify(selectedCategories));
             formData.append("tags", JSON.stringify(selectedTags));
+            formData.append("seo_description", data.seo_description || "");
+            formData.append("seo_keywords", JSON.stringify(seoKeywords.map((kw) => kw.value)));
+            formData.append("custom_url", data.custom_url || "");
 
             if (imagePost) {
                 formData.append("file", imagePost);
@@ -194,7 +219,7 @@ export default function Post({ params }: { params: { post_id: string } }) {
                                 alt="Preview da imagem"
                                 width={450}
                                 height={300}
-                                className="object-cover w-full h-full"
+                                className="w-full h-full"
                             />
                         ) : (
                             <div className="flex items-center justify-center w-full h-full bg-gray-300">
@@ -272,7 +297,7 @@ export default function Post({ params }: { params: { post_id: string } }) {
                                 options={tags.map((tag) => ({
                                     value: tag.id,
                                     label: tag.tag_name,
-                                }))} // Opções disponíveis para seleção
+                                }))}
                                 isMulti
                                 placeholder="Selecione tags"
                                 value={
@@ -281,7 +306,7 @@ export default function Post({ params }: { params: { post_id: string } }) {
                                             value: ta.tag.id,
                                             label: ta.tag.tag_name,
                                         }))
-                                        : [] // Garante que não haverá erro caso tags seja null/undefined
+                                        : []
                                 }
                                 onChange={(selected) => {
                                     const updatedTags = selected.map((item) => ({
@@ -323,6 +348,45 @@ export default function Post({ params }: { params: { post_id: string } }) {
                         />
 
                     </label>
+
+                    <h1 className="text-xl">SEO</h1>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <label>
+                            URL de SEO:
+                            <input
+                                type="text"
+                                placeholder="Digite uma url para SEO..."
+                                {...register("custom_url")}
+                                className="w-full border-2 rounded-md px-3 py-2 text-black"
+                            />
+                        </label>
+
+                        <label>
+                            Palavras-chave para SEO:
+                            <CreatableSelect
+                                isMulti
+                                value={seoKeywords}
+                                onChange={handleSeoKeywordsChange}
+                                placeholder="Adicione palavras-chave..."
+                                className="text-black z-10"
+                                classNamePrefix="select"
+                            />
+                        </label>
+                    </div>
+
+                    <div>
+                        <label>
+                            Descrição de SEO:
+                            <textarea
+                                placeholder="Digite uma breve descrição para o SEO..."
+                                {...register("seo_description")}
+                                className="h-60 w-full border-2 rounded-md px-3 py-2 text-black"
+                            />
+                        </label>
+                    </div>
+
+                    <h1 className="text-xl">Texto do post</h1>
 
                     <Editor
                         apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}

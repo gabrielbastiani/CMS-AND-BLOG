@@ -1,20 +1,19 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import logoImg from '../../assets/LogoBuilderWhite.webp'
 import { Container } from '../components/container'
 import { Input } from '../components/input'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { AuthContext } from '../../contexts/AuthContext'
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { LoadingRequest } from '../components/loadingRequest'
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from 'react-toastify'
 import { setupAPIClient } from '@/services/api'
+import { AuthContext } from '@/contexts/AuthContext'
 
 const schema = z.object({
     email: z.string().email("Insira um email válido").nonempty("O campo email é obrigatório"),
@@ -24,6 +23,7 @@ type FormData = z.infer<typeof schema>
 
 export default function EmailRecoveryPassword() {
 
+    const { configs } = useContext(AuthContext);
     const router = useRouter()
 
     const [loading, setLoading] = useState(false);
@@ -82,12 +82,16 @@ export default function EmailRecoveryPassword() {
                 <Container>
                     <div className='w-full min-h-screen flex justify-center items-center flex-col gap-4'>
                         <div className='mb-6 max-w-sm w-full'>
-                            <Image
-                                src={logoImg}
-                                alt='logo-do-site'
-                                width={500}
-                                height={500}
-                            />
+                            {configs?.logo ?
+                                <Image
+                                    src={`http://localhost:3333/files/${configs?.logo}`}
+                                    alt='logo-do-site'
+                                    width={500}
+                                    height={500}
+                                />
+                                :
+                                null
+                            }
                         </div>
 
                         <form

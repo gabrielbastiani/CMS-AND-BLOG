@@ -4,6 +4,8 @@ const config: IConfig = {
     siteUrl: 'https://seublog.com', // Substitua pelo URL do seu blog
     generateRobotsTxt: true, // Gera o arquivo robots.txt automaticamente
     exclude: [
+        '/configurations/configuration',
+        '/configurations',
         '/marketing_contents/configurations_marketing',
         '/marketing_contents/add_content_marketing',
         '/marketing_contents/all_marketing_contents',
