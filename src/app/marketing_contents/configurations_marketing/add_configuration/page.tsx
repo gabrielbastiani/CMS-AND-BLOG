@@ -18,7 +18,6 @@ const schemaType = z.object({
 
 const schemaConfiguration = z.object({
     value: z.string().nonempty("O campo valor é obrigatório"),
-    description_value: z.string().optional(),
 });
 
 type FormTypeData = z.infer<typeof schemaType>;
@@ -143,14 +142,6 @@ export default function AddConfiguration() {
                             error={errorsConfiguration.value?.message}
                             register={registerConfiguration}
                         />
-                        <div>
-                            <textarea
-                                {...registerConfiguration("description_value")}
-                                className="border-2 rounded-md h-56 p-3 w-96 resize-none text-black"
-                                placeholder="Digite uma descrição..."
-                            />
-                            {errorsConfiguration.description_value && <p className="text-red-500 text-xs">{errorsConfiguration.description_value.message}</p>}
-                        </div>
                         <button
                             onClick={handleSubmitConfiguration(onSubmitConfiguration)}
                             className="w-full md:w-80 px-6 py-3 bg-backgroundButton text-white rounded hover:bg-hoverButtonBackground transition duration-300"
