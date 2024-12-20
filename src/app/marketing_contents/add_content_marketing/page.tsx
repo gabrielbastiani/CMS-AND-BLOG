@@ -53,8 +53,6 @@ export default function Add_content_marketing() {
     const [config_publication, setConfig_publication] = useState<ConfigsPublicationProps[]>([]);
     const [selectedConfig_publication, setSelectedConfig_publication] = useState<string[]>([]);
 
-    console.log(selectedConfig_publication)
-
     const {
         register,
         handleSubmit,

@@ -5,8 +5,7 @@ import jwt from 'jsonwebtoken';
 const PUBLIC_ROUTES = [
   '/login',
   '/register',
-  '/recovery_password',
-  "/"
+  '/recovery_password'
 ];
 const PROTECTED_ROUTES = [
   '/configurations/configuration',
@@ -142,7 +141,6 @@ function hasAccessToRoute(userRole: string, pathname: string): boolean {/* @ts-i
 
 export const config = {
   matcher: [
-    '/',
     '/configurations',
     '/configurations/configuration',
     '/marketing_contents/configurations_marketing',

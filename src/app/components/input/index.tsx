@@ -9,9 +9,10 @@ interface InputProps {
     rules?: RegisterOptions;
     styles?: string;
     value?: string | number;
+    defaultValue?: any;
 }
 
-export function Input({ name, placeholder, type, register, rules, error, styles, value, ...rest }: InputProps) {
+export function Input({ defaultValue, name, placeholder, type, register, rules, error, styles, value, ...rest }: InputProps) {
     return (
         <div>
             <input

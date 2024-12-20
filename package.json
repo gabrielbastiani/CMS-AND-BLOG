@@ -43,6 +43,7 @@
     "react-select": "^5.8.3",
     "react-sortablejs": "^6.1.4",
     "react-toastify": "^10.0.5",
+    "swiper": "^11.1.15",
     "tailwind-scrollbar": "^3.1.0",
     "zod": "^3.23.8"
   },
