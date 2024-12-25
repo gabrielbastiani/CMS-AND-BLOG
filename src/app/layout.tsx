@@ -16,13 +16,13 @@ const geistSans = localFont({
 
 export async function generateMetadata(): Promise<Metadata> {
   const response = await fetch(`${API_URL}configuration_blog/get_configs`, {
-    cache: "no-store", // Evita cache, se necessário
+    cache: "no-store",
   });
   const blog = await response.json();
 
   return {
-    title: blog?.name_blog || "Default Title",
-    description: blog?.description_blog || "Default Description",
+    title: blog?.name_blog || "Blog",
+    description: blog?.description_blog || "Blog Description",
   };
 }
 
