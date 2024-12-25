@@ -68,7 +68,7 @@ export default function Add_content_marketing() {
             try {
                 const apiClient = setupAPIClient();
                 const response = await apiClient.get(`/all_marketing_configurations/type`);
-                setConfig_publication(response.data.total_marketing_configs);
+                setConfig_publication(response.data.total_marketing_configs || []);
             } catch (error) {
                 toast.error("Erro ao carregar configuraçõs de publicidade.");
             }
