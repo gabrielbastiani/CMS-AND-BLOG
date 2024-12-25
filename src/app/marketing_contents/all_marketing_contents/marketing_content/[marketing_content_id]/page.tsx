@@ -53,6 +53,8 @@ type FormData = z.infer<typeof schema>;
 
 export default function Marketing_content({ params }: { params: { marketing_content_id: string } }) {
 
+    const API_URL = process.env.API_URL || "http://localhost:3333/";
+
     const [marketingPublicationData, setMarketingPublicationData] = useState<FormDataProps | null>(null);
     const [configurationMarketingOnPublication, setConfigurationMarketingOnPublication] = useState<ConfigurationMarketingTypeProps[]>([]);
     const [selectedConfigsMarketing, setSelectedConfigsMarketing] = useState<string[]>([]);
@@ -178,7 +180,7 @@ export default function Marketing_content({ params }: { params: { marketing_cont
                         <input type="file" accept="image/png, image/jpeg" onChange={handleFile} className="hidden" />
                         {avatarUrl ? (
                             <Image
-                                src={imageMarketing ? avatarUrl : `http://localhost:3333/files/${avatarUrl}`}
+                                src={imageMarketing ? avatarUrl : `${API_URL}files/${avatarUrl}`}
                                 alt="Preview da imagem"
                                 width={450}
                                 height={300}

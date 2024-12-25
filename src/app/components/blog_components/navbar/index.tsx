@@ -23,13 +23,14 @@ type FormData = z.infer<typeof schema>
 
 export function Navbar() {
 
+    const API_URL = process.env.API_URL || "http://localhost:3333/";
     const { signIn, isAuthenticated, loadingAuth, user, configs, updateUser, signOut } = useContext(AuthContextBlog);
 
     const [modalLogin, setModalLogin] = useState<string | null>(null);
     const [modalEditUser, setModalEditUser] = useState<string | null>(null);
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
     const [avatarUrl, setAvatarUrl] = useState(
-        user?.image_user ? `http://localhost:3333/files/${user.image_user}` : ""
+        user?.image_user ? `${API_URL}files/${user.image_user}` : ""
     );
     const [photo, setPhoto] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
@@ -70,7 +71,7 @@ export function Navbar() {
                 email: user?.email || "",
             });
             setAvatarUrl(
-                user?.image_user ? `http://localhost:3333/files/${user.image_user}` : ""
+                user?.image_user ? `${API_URL}files/${user.image_user}` : ""
             );
         }
     }, [modalEditUser, user, reset]);
@@ -163,7 +164,7 @@ export function Navbar() {
             <nav className="container mx-auto flex justify-between items-center py-4">
                 <Link href="/">
                     <Image
-                        src={`http://localhost:3333/files/${configs?.logo}`}
+                        src={`${API_URL}files/${configs?.logo}`}
                         width={120}
                         height={120}
                         alt="logo"
@@ -180,7 +181,7 @@ export function Navbar() {
                         <div className="border-2 rounded-full p-1 border-var(--foreground) overflow-hidden w-[50px] h-[50px] flex items-center justify-center">
                             {user?.image_user ? (
                                 <Image
-                                    src={`http://localhost:3333/files/${user.image_user}`}
+                                    src={`${API_URL}files/${user.image_user}`}
                                     alt="user"
                                     width={50}
                                     height={50}

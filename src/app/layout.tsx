@@ -15,18 +15,30 @@ const geistSans = localFont({
 
 // Função para gerar metadados dinâmicos
 export async function generateMetadata(): Promise<Metadata> {
+
+  const API_URL = process.env.API_URL || "http://localhost:3333/";
+
   try {
     // Faz uma requisição para sua API
-    const response = await fetch("http://localhost:3333/configuration_blog/get_configs");
+    const response = await fetch(`${API_URL}` + "configuration_blog/get_configs");
+
+    if (!response.ok) {
+      throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
+    }
+
     const data = await response.json();
+
+    // Validação dos dados retornados
+    const nameBlog = data?.name_blog ?? "Blog"; // Usa "Blog" como fallback
 
     // Retorna os metadados dinâmicos
     return {
-      title: data.name_blog || "Blog",
-      description: data.name_blog || "Blog",
+      title: nameBlog,
+      description: nameBlog,
     };
   } catch (error) {
     console.error("Erro ao buscar metadados:", error);
+
     // Retorna valores padrão em caso de erro
     return {
       title: "Blog",

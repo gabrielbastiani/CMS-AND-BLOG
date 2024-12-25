@@ -42,6 +42,8 @@ export default function All_posts() {
     const router = useRouter();
     const apiClient = setupAPIClient();
 
+    const API_URL = process.env.API_URL || "http://localhost:3333/";
+
     const [all_posts, setAll_posts] = useState<PostsProps[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [modalImage, setModalImage] = useState<string | null>(null);
@@ -176,12 +178,12 @@ export default function All_posts() {
                             render: (item) => (
                                 <>
                                     <Image
-                                        src={`http://localhost:3333/files/${item.image_post}`}
+                                        src={`${API_URL}files/${item.image_post}`}
                                         alt={item.title}
                                         width={100}
                                         height={100}
                                         className="w-8 h-8 rounded-full object-cover cursor-pointer"
-                                        onClick={() => handleImageClick(`http://localhost:3333/files/${item.image_post}`)}
+                                        onClick={() => handleImageClick(`${API_URL}files/${item.image_post}`)}
                                     />
                                     {modalImage && (
                                         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">

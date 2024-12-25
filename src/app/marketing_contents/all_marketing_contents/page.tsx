@@ -49,6 +49,8 @@ export default function All_marketing_contents() {
 
     const apiClient = setupAPIClient();
 
+    const API_URL = process.env.API_URL || "http://localhost:3333/";
+
     const [allPublications, setAllPublications] = useState<PublicationProps[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [editingPublication, setEditingPublication] = useState<{ id: string, field: string } | null>(null);
@@ -199,12 +201,12 @@ export default function All_marketing_contents() {
                                     {item.image_url ? (
                                         <>
                                             <Image
-                                                src={`http://localhost:3333/files/${item.image_url}`}
+                                                src={`${API_URL}files/${item.image_url}`}
                                                 alt={item.title}
                                                 width={100}
                                                 height={100}
                                                 className="w-8 h-8 rounded-full object-cover cursor-pointer"
-                                                onClick={() => handleImageClick(`http://localhost:3333/files/${item.image_url}`)}
+                                                onClick={() => handleImageClick(`${API_URL}files/${item.image_url}`)}
                                             />
                                             {modalImage && (
                                                 <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">

@@ -24,7 +24,9 @@ type FormData = z.infer<typeof schema>
 export default function EmailRecoveryPassword() {
 
     const { configs } = useContext(AuthContext);
-    const router = useRouter()
+    const router = useRouter();
+
+    const API_URL = process.env.API_URL || "http://localhost:3333/";
 
     const [loading, setLoading] = useState(false);
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
@@ -84,7 +86,7 @@ export default function EmailRecoveryPassword() {
                         <div className='mb-6 max-w-sm w-full'>
                             {configs?.logo ?
                                 <Image
-                                    src={`http://localhost:3333/files/${configs?.logo}`}
+                                    src={`${API_URL}files/${configs?.logo}`}
                                     alt='logo-do-site'
                                     width={500}
                                     height={500}
