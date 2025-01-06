@@ -27,6 +27,8 @@ type PasswordFormValues = z.infer<typeof passwordSchema>;
 
 export default function RecoverPassword({ params }: { params: { recover_password: string } }) {
 
+    const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
+
     const router = useRouter();
     const { configs } = useContext(AuthContext);
 
@@ -118,7 +120,7 @@ export default function RecoverPassword({ params }: { params: { recover_password
                             <div className='mb-3'>
                                 <ReCAPTCHA
                                     ref={captchaRef}
-                                    sitekey="6LfEo7wiAAAAALlmW4jdxPw4HQ-UH5NNCDatw8ug"
+                                    sitekey={RECAPTCHA_SITE_KEY}
                                     onChange={onChangeCaptcha}
                                 />
                             </div>

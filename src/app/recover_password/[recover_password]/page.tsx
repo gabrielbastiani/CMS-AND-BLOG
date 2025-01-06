@@ -31,6 +31,7 @@ export default function Recoverpassworduserblog({ params }: { params: { recover_
     const { configs } = useContext(AuthContext);
 
     const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
 
     const [loading, setLoading] = useState(false);
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
@@ -120,7 +121,7 @@ export default function Recoverpassworduserblog({ params }: { params: { recover_
                             <div className='mb-3'>
                                 <ReCAPTCHA
                                     ref={captchaRef}
-                                    sitekey="6LfEo7wiAAAAALlmW4jdxPw4HQ-UH5NNCDatw8ug"
+                                    sitekey={RECAPTCHA_SITE_KEY}
                                     onChange={onChangeCaptcha}
                                 />
                             </div>

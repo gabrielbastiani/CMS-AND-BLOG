@@ -24,6 +24,8 @@ type FormData = z.infer<typeof schema>
 export function Navbar() {
 
     const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
+
     const { signIn, isAuthenticated, loadingAuth, user, configs, updateUser, signOut } = useContext(AuthContextBlog);
 
     const [modalLogin, setModalLogin] = useState<string | null>(null);
@@ -168,15 +170,9 @@ export function Navbar() {
                 {/* Logo */}
                 <Link href="/">
                     <Image
-<<<<<<< HEAD
-                        src={`http://localhost:3333/files/${configs?.logo}`}
-                        width={150}
-                        height={150}
-=======
                         src={`${API_URL}files/${configs?.logo}`}
                         width={120}
                         height={120}
->>>>>>> 7da106f2c040fc6adc19a87a562e3b6bd57eef5b
                         alt="logo"
                         className="w-20 h-20 md:w-28 md:h-28 object-contain mr-14"
                     />
@@ -241,34 +237,6 @@ export function Navbar() {
                     </li>
                 </ul>
 
-<<<<<<< HEAD
-                {/* Ícone de usuário ou login - Desktop */}
-                <div className="hidden md:flex items-center">
-                    {!loadingAuth && isAuthenticated ? (
-                        <button onClick={handleEditUserModalClick}>
-                            <div className="border-2 rounded-full p-1 border-var(--foreground) overflow-hidden w-[50px] h-[50px] flex items-center justify-center">
-                                {user?.image_user ? (
-                                    <Image
-                                        src={`http://localhost:3333/files/${user.image_user}`}
-                                        alt="user"
-                                        width={50}
-                                        height={50}
-                                        className="object-cover w-full h-full rounded-full"
-                                    />
-                                ) : (
-                                    <FiUser cursor="pointer" size={24} color="var(--foreground)" />
-                                )}
-                            </div>
-                        </button>
-                    ) : (
-                        <button onClick={handleLoginModalClick}>
-                            <div className="border-2 rounded-full p-1 border-var(--foreground)">
-                                <FiLogIn size={22} color="var(--foreground)" />
-                            </div>
-                        </button>
-                    )}
-                </div>
-=======
                 {!loadingAuth && isAuthenticated ? (
                     <button onClick={handleEditUserModalClick}>
                         <div className="border-2 rounded-full p-1 border-var(--foreground) overflow-hidden w-[50px] h-[50px] flex items-center justify-center">
@@ -292,7 +260,6 @@ export function Navbar() {
                         </div>
                     </button>
                 )}
->>>>>>> 7da106f2c040fc6adc19a87a562e3b6bd57eef5b
             </nav>
             {modalLogin && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -328,7 +295,7 @@ export function Navbar() {
                                 <div className='mb-3'>
                                     <ReCAPTCHA
                                         ref={captchaRef}
-                                        sitekey="6LfEo7wiAAAAALlmW4jdxPw4HQ-UH5NNCDatw8ug"
+                                        sitekey={RECAPTCHA_SITE_KEY}
                                         onChange={onChangeCaptcha}
                                     />
                                 </div>

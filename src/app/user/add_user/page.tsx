@@ -25,6 +25,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function Add_user() {
 
+    const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
     const { user } = useContext(AuthContext);
 
     const [loading, setLoading] = useState(false);
@@ -193,7 +194,7 @@ export default function Add_user() {
 
                             <ReCAPTCHA
                                 ref={captchaRef}
-                                sitekey="6LfEo7wiAAAAALlmW4jdxPw4HQ-UH5NNCDatw8ug"
+                                sitekey={RECAPTCHA_SITE_KEY}
                                 onChange={onChangeCaptcha}
                             />
 

@@ -30,6 +30,8 @@ type FormData = z.infer<typeof schema>
 
 export default function Register() {
 
+    const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
+
     const router = useRouter();
 
     const [superAdmin, setSuperAdmin] = useState([]);
@@ -230,7 +232,7 @@ export default function Register() {
                                     <div className='mb-3'>
                                         <ReCAPTCHA
                                             ref={captchaRef}
-                                            sitekey="6LfEo7wiAAAAALlmW4jdxPw4HQ-UH5NNCDatw8ug"
+                                            sitekey={RECAPTCHA_SITE_KEY}
                                             onChange={onChangeCaptcha}
                                         />
                                     </div>
