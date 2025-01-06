@@ -1,14 +1,12 @@
+"use client";
+
 import React, { useRef, useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
 import { setupAPIClient } from "@/services/api";
-
-interface ContactFormProps {
-  onSubmitSuccess?: () => void;
-}
 
 const contactFormSchema = z.object({
   name_user: z.string().min(1, "O nome é obrigatório").max(50, "Máximo de 50 caracteres"),
@@ -19,9 +17,7 @@ const contactFormSchema = z.object({
 
 type ContactFormInputs = z.infer<typeof contactFormSchema>;
 
-const ContactForm: React.FC<ContactFormProps> = ({ onSubmitSuccess }) => {
-
-  const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
+export default function ContactForm() {
 
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const captchaRef = useRef<ReCAPTCHA | null>(null);
@@ -136,7 +132,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmitSuccess }) => {
       <div className="mb-4">
         <ReCAPTCHA
           ref={captchaRef}
-          sitekey={RECAPTCHA_SITE_KEY}
+          sitekey={process.env.RECAPTCHA_SITE_KEY}
           onChange={onChangeCaptcha}
         />
       </div>
@@ -153,5 +149,3 @@ const ContactForm: React.FC<ContactFormProps> = ({ onSubmitSuccess }) => {
     </form>
   );
 };
-
-export default ContactForm;
