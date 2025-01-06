@@ -33,6 +33,8 @@ type FormData = z.infer<typeof schema>;
 
 export default function Configuration() {
 
+    const API_URL = process.env.API_URL || "http://localhost:3333/";
+
     const [id, setId] = useState<string>();
     const [logoUrl, setLogoUrl] = useState<string | null>(null);
     const [logo, setLogo] = useState<File | null>(null);
@@ -130,7 +132,7 @@ export default function Configuration() {
                             <input type="file" accept="image/png, image/jpeg" onChange={handleFile} className="hidden" />
                             {logoUrl ? (
                                 <Image
-                                    src={logo ? logoUrl : `http://localhost:3333/files/${logoUrl}`}
+                                    src={logo ? logoUrl : `${API_URL}files/${logoUrl}`}
                                     alt="Preview da imagem"
                                     width={450}
                                     height={300}

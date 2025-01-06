@@ -44,6 +44,8 @@ export default function Comments() {
     const router = useRouter();
     const apiClient = setupAPIClient();
 
+    const API_URL = process.env.API_URL || "http://localhost:3333/";
+
     const [all_comments, setAll_comments] = useState<CommentProps[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [editedValue, setEditedValue] = useState<string>("");
@@ -172,7 +174,7 @@ export default function Comments() {
                                     {item.userBlog?.image_user ? (
                                         <Image
                                             key={item.id}
-                                            src={`http://localhost:3333/files/${item.userBlog.image_user}`}
+                                            src={`${API_URL}files/${item.userBlog.image_user}`}
                                             alt={item.userBlog?.name}
                                             width={80}
                                             height={80}

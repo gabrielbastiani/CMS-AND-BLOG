@@ -26,6 +26,8 @@ interface Notification {
 
 export function SidebarAndHeader({ children }: Content) {
 
+    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    
     const { isAuthenticated, loadingAuth, user, configs } = useContext(AuthContext);
     const [isSideBarOpen, setIsSideBarOpen] = useState(true);
     const [currentRoute, setCurrentRoute] = useState<string | null>(null);
@@ -165,7 +167,7 @@ export function SidebarAndHeader({ children }: Content) {
                             <div className="text-white font-semibold uppercase mb-2 ml-2 mt-3">
                                 <Link href="/dashboard">
                                     <Image
-                                        src={`http://localhost:3333/files/${configs?.logo}`}
+                                        src={`${API_URL}files/${configs?.logo}`}
                                         width={120}
                                         height={120}
                                         alt="logo"
@@ -798,7 +800,7 @@ export function SidebarAndHeader({ children }: Content) {
                                 <div className="border-2 rounded-full p-1 border-var(--foreground) overflow-hidden w-[50px] h-[50px] flex items-center justify-center">
                                     {user?.image_user ? (
                                         <Image
-                                            src={`http://localhost:3333/files/${user.image_user}`}
+                                            src={`${API_URL}files/${user.image_user}`}
                                             alt="user"
                                             width={50}
                                             height={50}

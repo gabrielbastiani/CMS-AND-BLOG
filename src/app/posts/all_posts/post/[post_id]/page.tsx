@@ -67,6 +67,9 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function Post({ params }: { params: { post_id: string } }) {
+
+    const API_URL = process.env.API_URL || "http://localhost:3333/";
+
     const editorRef = useRef<any>(null);
     const [allAuthors, setAllAuthors] = useState<Author[]>([]);
     const [dataPost, setDataPost] = useState<FormDataProps | null>(null);
@@ -215,7 +218,7 @@ export default function Post({ params }: { params: { post_id: string } }) {
                         <input type="file" accept="image/png, image/jpeg" onChange={handleFile} className="hidden" />
                         {avatarUrl ? (
                             <Image
-                                src={imagePost ? avatarUrl : `http://localhost:3333/files/${avatarUrl}`}
+                                src={imagePost ? avatarUrl : `${API_URL}files/${avatarUrl}`}
                                 alt="Preview da imagem"
                                 width={450}
                                 height={300}

@@ -7,9 +7,11 @@ import { setupAPIClient } from "@/services/api";
 import { Metadata } from "next";
 import { useEffect } from "react";
 
+const API_URL = process.env.API_URL || "http://localhost:3333/";
+
 /* export async function generateMetadata(): Promise<Metadata> {
   try {
-    const response = await fetch("http://localhost:3333/configuration_blog/get_configs");
+    const response = await fetch(`${API_URL}configuration_blog/get_configs`);
     const data = await response.json();
 
     return {
