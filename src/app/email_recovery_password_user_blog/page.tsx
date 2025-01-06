@@ -1,48 +1,45 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import { Container } from '../../components/container'
-import { Input } from '../../components/input'
+import { Container } from '../components/container'
+import { Input } from '../components/input'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContext, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { LoadingRequest } from '../../components/loadingRequest'
+import { LoadingRequest } from '../components/loadingRequest'
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from 'react-toastify'
 import { setupAPIClient } from '@/services/api'
 import { AuthContext } from '@/contexts/AuthContext'
 
-const passwordSchema = z.object({
-    password: z.string().min(6, 'Senha deve ter pelo menos 6 caracteres'),
-    confirmPassword: z.string().min(6, 'Confirmação de senha deve ter pelo menos 6 caracteres'),
-}).refine(data => data.password === data.confirmPassword, {
-    message: 'As senhas não coincidem',
-    path: ['confirmPassword'],
-});
+const schema = z.object({
+    email: z.string().email("Insira um email válido").nonempty("O campo email é obrigatório"),
+})
 
-type PasswordFormValues = z.infer<typeof passwordSchema>;
+type FormData = z.infer<typeof schema>
 
-export default function Recoverpassworduserblog({ params }: { params: { recover_password: string } }) {
+export default function Emailrecoverypassworduserblog() {
 
-    const router = useRouter();
     const { configs } = useContext(AuthContext);
+    const router = useRouter()
 
     const [loading, setLoading] = useState(false);
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
     const captchaRef = useRef<ReCAPTCHA | null>(null);
 
-    const { register, handleSubmit, formState: { errors } } = useForm<PasswordFormValues>({
-        resolver: zodResolver(passwordSchema),
+    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
+        resolver: zodResolver(schema),
+        mode: "onChange"
     });
 
     const onChangeCaptcha = (token: string | null) => {
         setCaptchaToken(token);
     };
 
-    async function onSubmit(data: PasswordFormValues) {
+    async function onSubmit(data: FormData) {
 
         if (!captchaToken) {
             toast.error("Por favor, verifique o reCAPTCHA.");
@@ -51,21 +48,29 @@ export default function Recoverpassworduserblog({ params }: { params: { recover_
 
         setLoading(true);
 
+        const email = data?.email;
+
         try {
             const apiClient = setupAPIClient();
-            await apiClient.put(`/user/recover_password_user_blog?passwordRecoveryUser_id=${params?.recover_password}`, { password: data?.confirmPassword });
+            await apiClient.post(`/user/user_blog/email_recovery_password`, { email: email });
 
-            toast.success('Senha atualizada com sucesso!');
+            toast.success(`Email enviado para o endereço "${email}`);
 
             setLoading(false);
 
-            router.push('/login');
+            router.push('/');
 
-        } catch (error) {/* @ts-ignore */
-            console.log(error.response.data);
-            toast.error('Erro ao cadastrar!');
+        } catch (error) {
+            if (error instanceof Error && 'response' in error && error.response) {
+                console.log((error as any).response.data);
+                toast.error('Ops erro ao enviar email ao usuario.');
+            } else {
+                console.error(error);
+                toast.error('Erro desconhecido.');
+            }
+        } finally {
+            setLoading(false);
         }
-
     }
 
 
@@ -93,24 +98,13 @@ export default function Recoverpassworduserblog({ params }: { params: { recover_
                             className='bg-white max-w-xl w-full rounded-lg p-4'
                             onSubmit={handleSubmit(onSubmit)}
                         >
-                            <div className='mb-3'>
+                            <div className='mb-3 w-full'>
                                 <Input
                                     styles='w-full p-2'
-                                    type="password"
-                                    placeholder="Digite a nova senha..."
-                                    name="confirmPassword"
-                                    error={errors.password?.message}
-                                    register={register}
-                                />
-                            </div>
-
-                            <div className='mb-3'>
-                                <Input
-                                    styles='w-full p-2'
-                                    type="password"
-                                    placeholder="Digite novamente a senha..."
-                                    name="password"
-                                    error={errors.confirmPassword?.message}
+                                    type="email"
+                                    placeholder="Digite seu email..."
+                                    name="email"
+                                    error={errors.email?.message}
                                     register={register}
                                 />
                             </div>
@@ -127,16 +121,12 @@ export default function Recoverpassworduserblog({ params }: { params: { recover_
                                 type='submit'
                                 className='bg-red-600 w-full rounded-md text-white h-10 font-medium'
                             >
-                                Solicitar
+                                Enviar
                             </button>
                         </form>
 
-                        <Link href="/register">
-                            Ainda não possui uma conta? Cadastre-se
-                        </Link>
-
-                        <Link href="/login">
-                            Já possui uma conta? Faça o login!
+                        <Link href="/">
+                            Voltar para o blog
                         </Link>
 
                     </div>

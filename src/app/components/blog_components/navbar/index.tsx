@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { FiLogIn, FiUpload, FiUser } from "react-icons/fi";
+import { FiLogIn, FiMenu, FiUpload, FiUser } from "react-icons/fi";
 import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { AuthContextBlog } from "@/contexts/AuthContextBlog";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -34,6 +34,9 @@ export function Navbar() {
     const [photo, setPhoto] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const captchaRef = useRef<ReCAPTCHA | null>(null);
+
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
         resolver: zodResolver(schema),
@@ -160,44 +163,103 @@ export function Navbar() {
 
     return (
         <header className="bg-black shadow-md sticky top-0 z-50">
-            <nav className="container mx-auto flex justify-between items-center py-4">
+            <nav className="container mx-auto flex justify-between items-center py-2 px-2 md:px-8">
+                {/* Logo */}
                 <Link href="/">
                     <Image
                         src={`http://localhost:3333/files/${configs?.logo}`}
-                        width={120}
-                        height={120}
+                        width={150}
+                        height={150}
                         alt="logo"
+                        className="w-20 h-20 md:w-28 md:h-28 object-contain mr-14"
                     />
                 </Link>
-                <ul className="flex gap-6">
-                    <li><Link href="/about" className="hover:text-hoverButtonBackground">Sobre</Link></li>
-                    <li><Link href="/categories" className="hover:text-hoverButtonBackground">Categorias</Link></li>
-                    <li><Link href="/contact" className="hover:text-hoverButtonBackground">Contato</Link></li>
+
+                {/* Menu para dispositivos móveis */}
+                <div className="md:hidden flex items-center">
+                    <button
+                        onClick={toggleMobileMenu}
+                        className="text-var(--foreground) focus:outline-none"
+                    >
+                        <FiMenu size={28} />
+                    </button>
+                </div>
+
+                {/* Lista de links */}
+                <ul
+                    className={`absolute top-full left-0 w-full bg-black shadow-md p-4 flex flex-col gap-4 items-center md:static md:flex md:flex-row md:gap-6 md:shadow-none md:bg-transparent ${isMobileMenuOpen ? "block" : "hidden"
+                        }`}
+                >
+                    <li>
+                        <Link href="/categories" className="hover:text-hoverButtonBackground">
+                            Categorias
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/contact" className="hover:text-hoverButtonBackground">
+                            Contato
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/about" className="hover:text-hoverButtonBackground">
+                            Sobre
+                        </Link>
+                    </li>
+
+                    {/* Ícone de usuário ou login - Mobile */}
+                    <li className="md:hidden">
+                        {!loadingAuth && isAuthenticated ? (
+                            <button onClick={handleEditUserModalClick}>
+                                <div className="border-2 rounded-full p-1 border-var(--foreground) overflow-hidden w-[50px] h-[50px] flex items-center justify-center">
+                                    {user?.image_user ? (
+                                        <Image
+                                            src={`http://localhost:3333/files/${user.image_user}`}
+                                            alt="user"
+                                            width={50}
+                                            height={50}
+                                            className="object-cover w-full h-full rounded-full"
+                                        />
+                                    ) : (
+                                        <FiUser cursor="pointer" size={24} color="var(--foreground)" />
+                                    )}
+                                </div>
+                            </button>
+                        ) : (
+                            <button onClick={handleLoginModalClick}>
+                                <div className="border-2 rounded-full p-1 border-var(--foreground)">
+                                    <FiLogIn size={22} color="var(--foreground)" />
+                                </div>
+                            </button>
+                        )}
+                    </li>
                 </ul>
 
-                {!loadingAuth && isAuthenticated ? (
-                    <button onClick={handleEditUserModalClick}>
-                        <div className="border-2 rounded-full p-1 border-var(--foreground) overflow-hidden w-[50px] h-[50px] flex items-center justify-center">
-                            {user?.image_user ? (
-                                <Image
-                                    src={`http://localhost:3333/files/${user.image_user}`}
-                                    alt="user"
-                                    width={50}
-                                    height={50}
-                                    className="object-cover w-full h-full rounded-full"
-                                />
-                            ) : (
-                                <FiUser cursor="pointer" size={24} color="var(--foreground)" />
-                            )}
-                        </div>
-                    </button>
-                ) : (
-                    <button onClick={handleLoginModalClick}>
-                        <div className="border-2 rounded-full p-1 border-var(--foreground)">
-                            <FiLogIn size={22} color="var(--foreground)" />
-                        </div>
-                    </button>
-                )}
+                {/* Ícone de usuário ou login - Desktop */}
+                <div className="hidden md:flex items-center">
+                    {!loadingAuth && isAuthenticated ? (
+                        <button onClick={handleEditUserModalClick}>
+                            <div className="border-2 rounded-full p-1 border-var(--foreground) overflow-hidden w-[50px] h-[50px] flex items-center justify-center">
+                                {user?.image_user ? (
+                                    <Image
+                                        src={`http://localhost:3333/files/${user.image_user}`}
+                                        alt="user"
+                                        width={50}
+                                        height={50}
+                                        className="object-cover w-full h-full rounded-full"
+                                    />
+                                ) : (
+                                    <FiUser cursor="pointer" size={24} color="var(--foreground)" />
+                                )}
+                            </div>
+                        </button>
+                    ) : (
+                        <button onClick={handleLoginModalClick}>
+                            <div className="border-2 rounded-full p-1 border-var(--foreground)">
+                                <FiLogIn size={22} color="var(--foreground)" />
+                            </div>
+                        </button>
+                    )}
+                </div>
             </nav>
             {modalLogin && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
@@ -247,7 +309,7 @@ export function Navbar() {
                                     </button>
 
                                     <Link
-                                        href="/email_recovery_password"
+                                        href="/email_recovery_password_user_blog"
                                         className="text-black"
                                     >
                                         Recupere sua senha!

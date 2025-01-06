@@ -25,7 +25,7 @@ const passwordSchema = z.object({
 
 type PasswordFormValues = z.infer<typeof passwordSchema>;
 
-export default function Recoverpassworduserblog({ params }: { params: { recover_password: string } }) {
+export default function RecoverPassword({ params }: { params: { recover_password: string } }) {
 
     const router = useRouter();
     const { configs } = useContext(AuthContext);
@@ -53,13 +53,13 @@ export default function Recoverpassworduserblog({ params }: { params: { recover_
 
         try {
             const apiClient = setupAPIClient();
-            await apiClient.put(`/user/recover_password_user_blog?passwordRecoveryUser_id=${params?.recover_password}`, { password: data?.confirmPassword });
+            await apiClient.put(`/user/user_blog/recovery_password_user_blog?passwordRecoveryUser_id=${params?.recover_password}`, { password: data?.confirmPassword });
 
             toast.success('Senha atualizada com sucesso!');
 
             setLoading(false);
 
-            router.push('/login');
+            router.push('/');
 
         } catch (error) {/* @ts-ignore */
             console.log(error.response.data);

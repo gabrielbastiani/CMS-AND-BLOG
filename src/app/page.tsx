@@ -1,4 +1,5 @@
 import { Categories } from "./components/blog_components/categories";
+import { Container_page } from "./components/blog_components/container_page";
 import { Footer } from "./components/blog_components/footer";
 import { Navbar } from "./components/blog_components/navbar";
 import { Newsletter } from "./components/blog_components/newsletter";
@@ -9,7 +10,7 @@ import { SlideBanner } from "./components/blog_components/slideBanner";
 export default function Dashboard() {
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <Container_page>
       <Navbar />
 
       {/* <SlideBanner /> */}
@@ -23,6 +24,6 @@ export default function Dashboard() {
       <PostsGrid title="Posts Mais Visualizados" posts={['popular1', 'popular2', 'popular3', 'popular4']} />
 
       <Footer />
-    </div>
-  );
+    </Container_page>
+  )
 }

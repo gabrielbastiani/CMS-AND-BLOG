@@ -725,6 +725,16 @@ export function SidebarAndHeader({ children }: Content) {
 
                     <h1 className="text-white font-bold">CMS Blog - {configs?.name_blog}</h1>
 
+                    <div>
+                        <Link
+                            href="/"
+                            target="_blank"
+                            className="text-sm"
+                        >
+                            Ir para o blog
+                        </Link>
+                    </div>
+
                     {/* Novo container para o sino e o avatar */}
                     <div className="flex items-center gap-4">
                         <span>{user?.name}</span>

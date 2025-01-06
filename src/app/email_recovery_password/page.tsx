@@ -100,6 +100,7 @@ export default function EmailRecoveryPassword() {
                         >
                             <div className='mb-3'>
                                 <Input
+                                    styles='w-full p-2'
                                     type="email"
                                     placeholder="Digite seu email..."
                                     name="email"
@@ -120,7 +121,7 @@ export default function EmailRecoveryPassword() {
                                 type='submit'
                                 className='bg-red-600 w-full rounded-md text-white h-10 font-medium'
                             >
-                                Acessar
+                                Enviar
                             </button>
                         </form>
 
