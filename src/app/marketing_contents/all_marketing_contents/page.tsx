@@ -49,7 +49,7 @@ export default function All_marketing_contents() {
 
     const apiClient = setupAPIClient();
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     const [allPublications, setAllPublications] = useState<PublicationProps[]>([]);
     const [totalPages, setTotalPages] = useState(1);

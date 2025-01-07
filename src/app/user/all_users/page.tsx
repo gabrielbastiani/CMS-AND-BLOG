@@ -31,7 +31,7 @@ const roleOptions = ["SUPER_ADMIN", "ADMIN", "EMPLOYEE"];
 
 export default function All_users() {
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     const [modalVisiblePassword, setModalVisiblePassword] = useState(false);
     const [userId, setUserId] = useState<string>("");

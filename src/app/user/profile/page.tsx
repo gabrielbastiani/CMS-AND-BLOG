@@ -27,7 +27,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function Profile() {
     
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const { user, signOut, updateUser } = useContext(AuthContext);
 
     const [avatarUrl, setAvatarUrl] = useState(

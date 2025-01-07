@@ -30,7 +30,7 @@ export default function Recoverpassworduserblog({ params }: { params: { recover_
     const router = useRouter();
     const { configs } = useContext(AuthContext);
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
 
     const [loading, setLoading] = useState(false);

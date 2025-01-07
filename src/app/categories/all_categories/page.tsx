@@ -43,7 +43,8 @@ type FormData = z.infer<typeof schema>;
 
 export default function All_categories() {
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    
     const { user } = useContext(AuthContext);
     const apiClient = setupAPIClient();
 

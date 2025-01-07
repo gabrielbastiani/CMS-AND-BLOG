@@ -53,7 +53,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function Marketing_content({ params }: { params: { marketing_content_id: string } }) {
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     const [marketingPublicationData, setMarketingPublicationData] = useState<FormDataProps | null>(null);
     const [configurationMarketingOnPublication, setConfigurationMarketingOnPublication] = useState<ConfigurationMarketingTypeProps[]>([]);

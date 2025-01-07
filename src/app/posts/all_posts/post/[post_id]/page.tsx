@@ -68,7 +68,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function Post({ params }: { params: { post_id: string } }) {
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     const editorRef = useRef<any>(null);
     const [allAuthors, setAllAuthors] = useState<Author[]>([]);

@@ -26,8 +26,12 @@ export default function EmailRecoveryPassword() {
     const { configs } = useContext(AuthContext);
     const router = useRouter();
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
-    const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+    if (!RECAPTCHA_SITE_KEY) {
+        throw new Error("A variável NEXT_PUBLIC_RECAPTCHA_SITE_KEY não está definida.");
+    }
 
     const [loading, setLoading] = useState(false);
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);

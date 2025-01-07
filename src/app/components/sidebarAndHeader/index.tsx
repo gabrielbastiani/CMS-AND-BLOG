@@ -26,7 +26,7 @@ interface Notification {
 
 export function SidebarAndHeader({ children }: Content) {
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     
     const { isAuthenticated, loadingAuth, user, configs } = useContext(AuthContext);
     const [isSideBarOpen, setIsSideBarOpen] = useState(true);

@@ -33,7 +33,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function Configuration() {
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     const [id, setId] = useState<string>();
     const [logoUrl, setLogoUrl] = useState<string | null>(null);

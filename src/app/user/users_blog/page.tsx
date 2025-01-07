@@ -30,7 +30,7 @@ const statusOptions = ["Disponivel", "Indisponivel"];
 
 export default function Users_blog() {
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     const [modalVisiblePassword, setModalVisiblePassword] = useState(false);
     const [userId, setUserId] = useState<string>("");

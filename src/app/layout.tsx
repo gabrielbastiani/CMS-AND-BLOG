@@ -6,7 +6,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProviderBlog } from "@/contexts/AuthContextBlog";
 
-const API_URL = process.env.API_URL || "http://localhost:3333/";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const geistSans = localFont({
   src: "./fonts/Poppins-Regular.ttf",

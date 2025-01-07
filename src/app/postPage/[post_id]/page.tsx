@@ -7,7 +7,7 @@ import { setupAPIClient } from "@/services/api";
 import { Metadata } from "next";
 import { useEffect } from "react";
 
-const API_URL = process.env.API_URL || "http://localhost:3333/";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 /* export async function generateMetadata(): Promise<Metadata> {
   try {

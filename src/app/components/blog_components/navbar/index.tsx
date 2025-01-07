@@ -23,8 +23,12 @@ type FormData = z.infer<typeof schema>
 
 export function Navbar() {
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
-    const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+    if (!RECAPTCHA_SITE_KEY) {
+        throw new Error("A variável NEXT_PUBLIC_RECAPTCHA_SITE_KEY não está definida.");
+    }
 
     const { signIn, isAuthenticated, loadingAuth, user, configs, updateUser, signOut } = useContext(AuthContextBlog);
 

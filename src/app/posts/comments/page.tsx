@@ -44,7 +44,7 @@ export default function Comments() {
     const router = useRouter();
     const apiClient = setupAPIClient();
 
-    const API_URL = process.env.API_URL || "http://localhost:3333/";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     const [all_comments, setAll_comments] = useState<CommentProps[]>([]);
     const [totalPages, setTotalPages] = useState(1);
