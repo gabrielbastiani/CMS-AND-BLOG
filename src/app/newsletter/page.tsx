@@ -10,7 +10,6 @@ import moment from "moment";
 
 interface NewslattersProps {
     id: string;
-    name_user: string;
     email_user: string;
     created_at: string | number | Date;
 }
@@ -36,10 +35,9 @@ export default function Newsletter() {
 
     // ---- COLUNAS PARA EXPORTAÇÂO DE DADOS ---- //
 
-    const availableColumns = ["name_user", "email_user", "created_at"];
+    const availableColumns = ["email_user", "created_at"];
 
     const customNames: any = {
-        name_user: "Nome do contato",
         email_user: "Email do contato",
         created_at: "Data de envio"
     };
@@ -47,15 +45,13 @@ export default function Newsletter() {
     // ---- SELECT PARA ORDENAÇÂO DOS ---- //
 
     const columnsOrder: any = [
-        { key: "name_user", label: "Nome" },
         { key: "email_user", label: "Email" },
         { key: "created_at", label: "Data de Criação" },
     ];
 
-    const availableColumnsOrder: any = ["name_user", "created_at", "email_user"];
+    const availableColumnsOrder: any = ["created_at", "email_user"];
 
     const customNamesOrder: any = {
-        name_user: "Nome",
         created_at: "Data de Registro",
         email_user: "Email"
     };
@@ -82,7 +78,6 @@ export default function Newsletter() {
                     url_delete_data="/newsletter/delete_newsletter"
                     data={newslatters}
                     columns={[
-                        { key: "name_user", label: "Nome" },
                         { key: "email_user", label: "Email" },
                         {
                             key: "created_at",
