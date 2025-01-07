@@ -6,14 +6,10 @@ import { Footer } from "../components/blog_components/footer";
 import { Navbar } from "../components/blog_components/navbar";
 
 export default function Contact() {
-
-
     return (
         <Container_page>
             <Navbar />
-
-                <ContactForm />
-
+            <ContactForm />
             <Footer />
         </Container_page>
     )

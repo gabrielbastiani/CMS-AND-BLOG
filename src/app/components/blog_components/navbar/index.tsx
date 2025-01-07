@@ -198,7 +198,12 @@ export function Navbar() {
                         }`}
                 >
                     <li>
-                        <Link href="/categories" className="hover:text-hoverButtonBackground">
+                        <Link href="/posts_blog" className="hover:text-hoverButtonBackground">
+                            Posts
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/posts_categories" className="hover:text-hoverButtonBackground">
                             Categorias
                         </Link>
                     </li>
@@ -211,33 +216,6 @@ export function Navbar() {
                         <Link href="/about" className="hover:text-hoverButtonBackground">
                             Sobre
                         </Link>
-                    </li>
-
-                    {/* Ícone de usuário ou login - Mobile */}
-                    <li className="md:hidden">
-                        {!loadingAuth && isAuthenticated ? (
-                            <button onClick={handleEditUserModalClick}>
-                                <div className="border-2 rounded-full p-1 border-var(--foreground) overflow-hidden w-[50px] h-[50px] flex items-center justify-center">
-                                    {user?.image_user ? (
-                                        <Image
-                                            src={`http://localhost:3333/files/${user.image_user}`}
-                                            alt="user"
-                                            width={50}
-                                            height={50}
-                                            className="object-cover w-full h-full rounded-full"
-                                        />
-                                    ) : (
-                                        <FiUser cursor="pointer" size={24} color="var(--foreground)" />
-                                    )}
-                                </div>
-                            </button>
-                        ) : (
-                            <button onClick={handleLoginModalClick}>
-                                <div className="border-2 rounded-full p-1 border-var(--foreground)">
-                                    <FiLogIn size={22} color="var(--foreground)" />
-                                </div>
-                            </button>
-                        )}
                     </li>
                 </ul>
 

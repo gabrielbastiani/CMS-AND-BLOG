@@ -14,7 +14,7 @@ import { TitlePage } from "@/app/components/titlePage";
 import CategoriesList from "@/app/components/categories/categoriesList";
 import { FiUpload } from "react-icons/fi";
 import Image from "next/image";
-import BulkDatas from "@/app/components/BulkDatas";
+import BulkDatas from "@/app/components/bulkDatas"; 
 
 
 const schema = z.object({
@@ -175,7 +175,7 @@ export default function AddCategory() {
                         <div>
                             <textarea
                                 {...register("description")}
-                                className="border-2 rounded-md h-56 p-3 w-full resize-none"
+                                className="border-2 rounded-md h-56 p-3 w-full resize-none text-black"
                                 placeholder="Digite uma descrição para a categoria..."
                             />
                             {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}

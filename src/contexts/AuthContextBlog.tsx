@@ -38,6 +38,8 @@ interface ConfigProps {
     logo: string;
     email_blog: string;
     phone: string;
+    description_blog: string;
+    about_author_blog: string;
 }
 
 export const AuthContextBlog = createContext({} as AuthContextData);
@@ -50,7 +52,9 @@ export function AuthProviderBlog({ children }: AuthProviderProps) {
         name_blog: "",
         logo: "",
         email_blog: "",
-        phone: ""
+        phone: "",
+        description_blog: "",
+        about_author_blog: ""
     });    
     const [cookies, setCookie, removeCookie] = useCookies(['@blog.token']);
     const [cookiesId, setCookieId, removeCookieId] = useCookies(['@idUserBlog']);
