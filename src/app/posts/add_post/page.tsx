@@ -14,7 +14,7 @@ import { z } from "zod";
 import Image from "next/image";
 import Select from "react-select";
 import { Editor } from "@tinymce/tinymce-react";
-import BulkDatas from "@/app/components/BulkDatas";
+import BulkDatas from "@/app/components/bulkDatas"; 
 import CreatableSelect from "react-select/creatable";
 
 interface FormDataProps {
@@ -147,7 +147,7 @@ export default function AddPost() {
             const apiClient = setupAPIClient();
             await apiClient.post("/post/create_post", formData);
 
-            toast.success("Post cadastrado com sucesso!");
+            toast.success("Artigo cadastrado com sucesso!");
             setSelectedCategories([]);
             setSelectedTags([]);
             setSeoKeywords([]);
@@ -205,7 +205,7 @@ export default function AddPost() {
                             options={tags.map((tag, index) => ({ key: index, value: tag.id, label: tag.tag_name }))}
                             isMulti
                             placeholder="Selecione tags"
-                            className="basic-multi-select text-black z-10"
+                            className="basic-multi-select text-black z-15"
                             classNamePrefix="select"
                             onChange={(selected) =>
                                 setSelectedTags(selected.map((item: any) => item.value))
@@ -247,7 +247,7 @@ export default function AddPost() {
                                 value={seoKeywords}
                                 onChange={handleSeoKeywordsChange}
                                 placeholder="Adicione palavras-chave..."
-                                className="text-black z-10"
+                                className="text-black"
                                 classNamePrefix="select"
                             />
                         </label>
@@ -294,7 +294,7 @@ export default function AddPost() {
                         className={`fixed right-10 bottom-10 px-6 py-3 z-10 rounded bg-backgroundButton text-white ${loading ? "opacity-50" : "hover:bg-hoverButtonBackground z-10"
                             }`}
                     >
-                        {loading ? "Cadastrando..." : "Cadastrar Post"}
+                        {loading ? "Cadastrando..." : "Cadastrar Artigo"}
                     </button>
                 </form>
 

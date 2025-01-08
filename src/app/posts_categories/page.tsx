@@ -76,7 +76,7 @@ export default function Posts_categories() {
                                         {category.name_category}
                                     </Link>
                                     <p className="text-gray-300 text-sm mb-4">
-                                        {category.description.length > 100
+                                        {category.description?.length > 100
                                             ? `${category.description.slice(0, 100)}...`
                                             : category.description}
                                     </p>

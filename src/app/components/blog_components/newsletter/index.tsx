@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
-
 const contactFormSchema = z.object({
     email_user: z.string().email("E-mail inválido"),
 });
@@ -13,8 +12,6 @@ const contactFormSchema = z.object({
 type ContactFormInputs = z.infer<typeof contactFormSchema>;
 
 export function Newsletter() {
-
-
 
     const {
         register,
@@ -54,7 +51,7 @@ export function Newsletter() {
                         type="email"
                         placeholder="Seu email"
                         {...register("email_user")}
-                        className="p-3 w-1/2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        className="text-black p-3 w-1/2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
                     />
                     <button type="submit" className="p-3 bg-backgroundButton text-white rounded-lg hover:bg-hoverButtonBackground">
                         Inscrever-se

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { FiLogIn, FiMenu, FiUpload, FiUser } from "react-icons/fi";
+import { FiLogIn, FiMenu, FiSearch, FiUpload, FiUser, FiX } from "react-icons/fi";
 import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { AuthContextBlog } from "@/contexts/AuthContextBlog";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../../input";
 import { setupAPIClientBlog } from "@/services/api_blog";
+import noImage from '../../../../assets/no-image-icon-6.png';
 
 const schema = z.object({
     name: z.string().optional(),
@@ -20,6 +21,14 @@ const schema = z.object({
 });
 
 type FormData = z.infer<typeof schema>
+
+type Post = {
+    id: string
+    title: string;
+    slug_title_post: string;
+    image_post: string | null;
+    custom_url?: string;
+};
 
 export function Navbar() {
 
@@ -44,6 +53,12 @@ export function Navbar() {
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
+
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchResults, setSearchResults] = useState<Post[]>([]);
+    const [isSearching, setIsSearching] = useState(false);
+
+    const [showSearch, setShowSearch] = useState(false);
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
         resolver: zodResolver(schema),
@@ -84,6 +99,29 @@ export function Navbar() {
             );
         }
     }, [modalEditUser, user, reset]);
+
+    const handleSearch = async (e: ChangeEvent<HTMLInputElement>) => {
+        const term = e.target.value;
+        setSearchTerm(term);
+
+        if (term.length >= 2) {
+            setIsSearching(true);
+            try {
+                const apiClientBlog = setupAPIClientBlog();
+                const response = await apiClientBlog.get(`/post/blog/search_nav_bar`, {
+                    params: { search: term },
+                });
+                setSearchResults(response.data || []);
+            } catch (error) {
+                console.error("Erro ao buscar posts:", error);
+                toast.error("Erro ao buscar posts.");
+            } finally {
+                setIsSearching(false);
+            }
+        } else {
+            setSearchResults([]);
+        }
+    };
 
     async function onSubmit(data: FormData) {
         if (!captchaToken) {
@@ -174,13 +212,65 @@ export function Navbar() {
                 {/* Logo */}
                 <Link href="/">
                     <Image
-                        src={`${API_URL}files/${configs?.logo}`}
+                        src={configs?.logo ? `${API_URL}files/${configs?.logo}` : noImage}
                         width={120}
                         height={120}
                         alt="logo"
                         className="w-20 h-20 md:w-28 md:h-28 object-contain mr-14"
                     />
                 </Link>
+
+                {/* Campo de Busca */}
+                <div className="relative flex items-center justify-center">
+                    {showSearch ? (
+                        <div id="search-container" className="relative">
+                            <input
+                                type="text"
+                                value={searchTerm}
+                                onChange={handleSearch}
+                                placeholder="Buscar artigos..."
+                                className="w-60 px-4 py-2 rounded-md border focus:outline-none focus:ring-2 focus:ring-orange-500 text-black"
+                            />
+                            <button
+                                onClick={() => setShowSearch(false)}
+                                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-black"
+                            >
+                                <FiX size={20} />
+                            </button>
+                            {isSearching && (
+                                <div className="absolute top-full left-0 w-full bg-white text-black p-2">Buscando...</div>
+                            )}
+                            {searchResults.length > 0 && (
+                                <ul className="absolute top-full left-0 w-full bg-white shadow-lg z-10">
+                                    {searchResults.map((post) => (
+                                        <li key={post.id} className="flex items-center gap-2 p-2 border-b hover:bg-gray-100">
+                                            <Image
+                                                src={post.image_post ? `${API_URL}files/${post.image_post}` : noImage}
+                                                alt={post.title}
+                                                width={50}
+                                                height={50}
+                                                className="w-12 h-12 object-cover"
+                                            />
+                                            <Link
+                                                href={`/posts_blog/post/${post.custom_url || post.title}`}
+                                                className="text-sm font-medium text-black"
+                                            >
+                                                {post.title}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => setShowSearch(true)}
+                            className="text-white hover:text-orange-500"
+                        >
+                            <FiSearch size={24} />
+                        </button>
+                    )}
+                </div>
 
                 {/* Menu para dispositivos móveis */}
                 <div className="md:hidden flex items-center">
@@ -199,7 +289,7 @@ export function Navbar() {
                 >
                     <li>
                         <Link href="/posts_blog" className="hover:text-hoverButtonBackground">
-                            Posts
+                            Artigos
                         </Link>
                     </li>
                     <li>

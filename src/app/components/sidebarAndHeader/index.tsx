@@ -10,6 +10,7 @@ import { setupAPIClient } from "@/services/api";
 import { MdCategory, MdConnectWithoutContact, MdNotifications, MdPostAdd } from "react-icons/md";
 import { FaFileExport, FaRegCommentDots, FaRegNewspaper, FaTags, FaUser } from "react-icons/fa";
 import moment from 'moment';
+import noImage from '../../../assets/no-image-icon-6.png';
 
 interface Content {
     children: ReactNode;
@@ -167,7 +168,7 @@ export function SidebarAndHeader({ children }: Content) {
                             <div className="text-white font-semibold uppercase mb-2 ml-2 mt-3">
                                 <Link href="/dashboard">
                                     <Image
-                                        src={`${API_URL}files/${configs?.logo}`}
+                                        src={configs?.logo ? `${API_URL}files/${configs?.logo}` : noImage}
                                         width={120}
                                         height={120}
                                         alt="logo"
@@ -325,7 +326,7 @@ export function SidebarAndHeader({ children }: Content) {
                                                 'text-white': openMenu !== 'posts' && !currentRoute?.includes("/posts")
                                             })}
                                         >
-                                            Posts
+                                            Artigos
                                             <CaretRight className={clsx('transition-transform duration-200', {
                                                 'rotate-90': openMenu === 'posts',
                                                 'rotate-0': openMenu !== 'posts'
@@ -529,7 +530,7 @@ export function SidebarAndHeader({ children }: Content) {
                                                     'text-white': openMenu !== 'posts' && !currentRoute?.includes("/posts")
                                                 })}
                                             >
-                                                Posts
+                                                Artigos
                                                 <CaretRight className={clsx('transition-transform duration-200', {
                                                     'rotate-90': openMenu === 'posts',
                                                     'rotate-0': openMenu !== 'posts'
@@ -679,7 +680,7 @@ export function SidebarAndHeader({ children }: Content) {
                                                         'text-white': openMenu !== 'posts' && !currentRoute?.includes("/posts")
                                                     })}
                                                 >
-                                                    Posts
+                                                    Artigos
                                                     <CaretRight className={clsx('transition-transform duration-200', {
                                                         'rotate-90': openMenu === 'posts',
                                                         'rotate-0': openMenu !== 'posts'

@@ -14,6 +14,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from 'react-toastify'
 import { setupAPIClient } from '@/services/api'
 import { AuthContext } from '@/contexts/AuthContext'
+import noImage from '../../assets/no-image-icon-6.png'
 
 const schema = z.object({
     email: z.string().email("Insira um email válido").nonempty("O campo email é obrigatório"),
@@ -91,7 +92,7 @@ export default function EmailRecoveryPassword() {
                         <div className='mb-6 max-w-sm w-full'>
                             {configs?.logo ?
                                 <Image
-                                    src={`${API_URL}files/${configs?.logo}`}
+                                    src={configs?.logo ? `${API_URL}files/${configs?.logo}` : noImage}
                                     alt='logo-do-site'
                                     width={500}
                                     height={500}

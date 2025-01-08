@@ -1,7 +1,6 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import logoImg from '../../assets/LogoBuilderWhite.webp'
 import { Container } from '../components/container'
 import { Input } from '../components/input'
 import { useForm } from 'react-hook-form'
@@ -30,7 +29,11 @@ type FormData = z.infer<typeof schema>
 
 export default function Register() {
 
-    const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
+    const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+    if (!RECAPTCHA_SITE_KEY) {
+        throw new Error("A variável NEXT_PUBLIC_RECAPTCHA_SITE_KEY não está definida.");
+    }
 
     const router = useRouter();
 

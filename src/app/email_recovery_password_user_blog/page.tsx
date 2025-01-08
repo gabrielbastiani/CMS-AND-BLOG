@@ -14,6 +14,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from 'react-toastify'
 import { setupAPIClient } from '@/services/api'
 import { AuthContext } from '@/contexts/AuthContext'
+import noImage from '../../assets/no-image-icon-6.png'
 
 const schema = z.object({
     email: z.string().email("Insira um email válido").nonempty("O campo email é obrigatório"),
@@ -24,6 +25,7 @@ type FormData = z.infer<typeof schema>
 export default function Emailrecoverypassworduserblog() {
 
     const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     const { configs } = useContext(AuthContext);
     const router = useRouter()
@@ -86,7 +88,7 @@ export default function Emailrecoverypassworduserblog() {
                         <div className='mb-6 max-w-sm w-full'>
                             {configs?.logo ?
                                 <Image
-                                    src={`http://localhost:3333/files/${configs?.logo}`}
+                                    src={configs?.logo ? `${API_URL}files/${configs?.logo}` : noImage}
                                     alt='logo-do-site'
                                     width={500}
                                     height={500}

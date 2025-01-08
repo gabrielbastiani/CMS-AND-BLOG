@@ -129,7 +129,6 @@ export default function Marketing_content({ params }: { params: { marketing_cont
     const onSubmit = async (data: FormData) => {
         setLoading(true);
         try {
-
             const formData = new FormData();
             formData.append("marketingPublication_id", params.marketing_content_id);
             formData.append("title", data.title || "");

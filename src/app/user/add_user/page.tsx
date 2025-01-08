@@ -1,6 +1,6 @@
 "use client";
 
-import BulkDatas from "@/app/components/BulkDatas";
+import BulkDatas from "@/app/components/bulkDatas";
 import { Input } from "@/app/components/input";
 import { LoadingRequest } from "@/app/components/loadingRequest";
 import { Section } from "@/app/components/section";
@@ -25,7 +25,12 @@ type FormData = z.infer<typeof schema>;
 
 export default function Add_user() {
 
-    const RECAPTCHA_SITE_KEY = process.env.RECAPTCHA_SITE_KEY || "";
+    const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+    if (!RECAPTCHA_SITE_KEY) {
+        throw new Error("A variável NEXT_PUBLIC_RECAPTCHA_SITE_KEY não está definida.");
+    }
+    
     const { user } = useContext(AuthContext);
 
     const [loading, setLoading] = useState(false);

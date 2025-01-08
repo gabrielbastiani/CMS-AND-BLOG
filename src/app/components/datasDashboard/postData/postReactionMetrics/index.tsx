@@ -23,7 +23,7 @@ export const PostReactionMetrics = ({ postReactionData }: ReactPostProps) => {
 
     return (
         <div className="bg-white shadow rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-black">Reações de Posts</h2>
+            <h2 className="text-lg font-semibold text-black">Reações de Artigos</h2>
             <Bar data={chartData} />
         </div>
     );

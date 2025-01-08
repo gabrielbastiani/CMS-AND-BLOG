@@ -72,7 +72,7 @@ export function ViewsPostsData({ postViewsMetrics }: ViewsProps) {
     return (
         <div className="bg-white shadow-md rounded-lg p-4">
 
-            <h2 className="text-lg font-semibold text-black mb-4">Visualizações de Posts</h2>
+            <h2 className="text-lg font-semibold text-black mb-4">Visualizações de Artigos</h2>
 
             <div className="space-y-4">
                 <div className="rounded-md border p-3" style={{ height: '250px' }}>

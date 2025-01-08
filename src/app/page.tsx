@@ -15,13 +15,13 @@ export default function Dashboard() {
 
       {/* <SlideBanner /> */}
 
-      <PostsGrid title="Últimos Posts" posts={['post1', 'post2', 'post3', 'post4', 'post5', 'post6']} />
+      <PostsGrid title="Últimos Artigos" posts={['post1', 'post2', 'post3', 'post4', 'post5', 'post6']} />
 
       <Newsletter />
 
       <Categories />
 
-      <PostsGrid title="Posts Mais Visualizados" posts={['popular1', 'popular2', 'popular3', 'popular4']} />
+      <PostsGrid title="Artigos Mais Visualizados" posts={['popular1', 'popular2', 'popular3', 'popular4']} />
 
       <Footer />
     </Container_page>

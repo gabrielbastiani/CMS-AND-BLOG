@@ -200,7 +200,7 @@ export default function Post({ params }: { params: { post_id: string } }) {
             const apiClient = setupAPIClient();
             await apiClient.put("/post/update", formData);
 
-            toast.success("Post atualizado com sucesso!");
+            toast.success("Artigo atualizado com sucesso!");
         } catch (error) {
             toast.error("Erro ao atualizar o post.");
         } finally {
@@ -420,7 +420,7 @@ export default function Post({ params }: { params: { post_id: string } }) {
                         disabled={loading}
                         className={`fixed right-10 bottom-10 w-36 z-50 py-3 text-white ${loading ? "bg-gray-500" : "bg-red-600 hover:bg-orange-600"} rounded-md`}
                     >
-                        {loading ? "Atualizando..." : "Atualizar Post"}
+                        {loading ? "Atualizando..." : "Atualizar Artigo"}
                     </button>
                 </form>
             </Section>

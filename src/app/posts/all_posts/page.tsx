@@ -113,9 +113,9 @@ export default function All_posts() {
     ];
 
     const customNames: any = {
-        id: "ID do Post",
+        id: "ID do Artigo",
         author: "Autor do post",
-        title: "Titulo do Post",
+        title: "Titulo do Artigo",
         post_like: "Likes",
         post_dislike: "Dislikes",
         status: "Status",
@@ -128,7 +128,7 @@ export default function All_posts() {
     // ---- SELECT PARA ORDENAÇÂO DOS ---- //
 
     const columnsOrder: any = [
-        { key: "title", label: "Titulo do Post" },
+        { key: "title", label: "Titulo do Artigo" },
         { key: "created_at", label: "Data de Criação" },
         { key: "status", label: "Status" }
     ];
@@ -140,7 +140,7 @@ export default function All_posts() {
     ];
 
     const customNamesOrder: any = {
-        title: "Titulo do Post",
+        title: "Titulo do Artigo",
         created_at: "Data de criação",
         status: "Status"
     };
@@ -157,7 +157,7 @@ export default function All_posts() {
                     active_buttons_searchInput_comments={false}
                     generate_excel_delete="/post/download_excel_delete_post?user_id"
                     delete_bulk_data="/post/bulk_delete_posts?user_id"
-                    name_file_export="Posts"
+                    name_file_export="Artigos"
                     modal_delete_bulk={true}
                     active_buttons_searchInput_notification={false}
                     active_export_data={true}
@@ -174,7 +174,7 @@ export default function All_posts() {
                     columns={[
                         {
                             key: 'image_post',
-                            label: 'Banner Post',
+                            label: 'Banner Artigo',
                             render: (item) => (
                                 <>
                                     <Image
@@ -276,7 +276,7 @@ export default function All_posts() {
                         },
                         {
                             key: "publish_at",
-                            label: "Post programado?",
+                            label: "Artigo programado?",
                             render: (item) => (
                                 <>
                                     {item.publish_at ?
@@ -296,7 +296,7 @@ export default function All_posts() {
                         },
                         {
                             key: 'edit',
-                            label: 'Editar Post',
+                            label: 'Editar Artigo',
                             render: (item) => (
                                 <button
                                     className='p-1 bg-red-600 text-white text-xs rounded hover:bg-hoverButtonBackground transition duration-300'

@@ -42,13 +42,13 @@ export default function Posts_blog() {
 
             {/* Section Header */}
             <header className="bg-gray-800 py-12 text-white text-center">
-                <h1 className="text-3xl font-bold">Todos os Posts do Blog</h1>
+                <h1 className="text-3xl font-bold">Todos os Artigos do Blog</h1>
                 <p className="text-gray-300 mt-2">
                     Explore os últimos artigos e fique por dentro das novidades.
                 </p>
             </header>
 
-            {/* Posts Section */}
+            {/* Artigos Section */}
             <section className="container mx-auto my-12 px-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {posts.map((post) => (
@@ -56,14 +56,14 @@ export default function Posts_blog() {
                             key={post.id}
                             className="bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300"
                         >
-                            {/* Post Banner */}
+                            {/* Artigo Banner */}
                             <img
                                 src={post.banner}
                                 alt={post.title}
                                 className="w-full h-48 object-cover rounded-t-lg"
                             />
 
-                            {/* Post Content */}
+                            {/* Artigo Content */}
                             <div className="p-4">
                                 {/* Title */}
                                 <h2 className="text-lg font-bold text-gray-800 hover:text-blue-600">
@@ -114,7 +114,7 @@ export default function Posts_blog() {
 
                                 {/* Read More Link */}
                                 <a
-                                    href={`/post/${post.id}`}
+                                    href={`/posts_blog/post/${post.id}`}
                                     className="block text-blue-600 mt-4 text-center font-semibold"
                                 >
                                     Leia mais

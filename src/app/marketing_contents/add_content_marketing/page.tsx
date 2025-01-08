@@ -53,8 +53,6 @@ export default function Add_content_marketing() {
     const [config_publication, setConfig_publication] = useState<ConfigsPublicationProps[]>([]);
     const [selectedConfig_publication, setSelectedConfig_publication] = useState<string[]>([]);
 
-    console.log(config_publication)
-
     const {
         register,
         handleSubmit,
@@ -70,7 +68,7 @@ export default function Add_content_marketing() {
             try {
                 const apiClient = setupAPIClient();
                 const response = await apiClient.get(`/all_marketing_configurations/type`);
-                setConfig_publication(response.data.configurations || []);
+                setConfig_publication(response.data.all || []);
             } catch (error) {
                 toast.error("Erro ao carregar configuraçõs de publicidade.");
             }

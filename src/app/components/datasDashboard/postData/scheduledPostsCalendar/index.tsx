@@ -52,7 +52,7 @@ const ScheduledPostsCalendar = () => {
     return (
         <div className="bg-white shadow rounded-lg p-4">
             <h2 className="text-lg font-semibold text-black mb-4">
-                Calendário de Posts Programados
+                Calendário de Artigos Programados
             </h2>
             <p className="text-black mt-3 mb-3">Total de posts cadastrados: <b>{allPostsProgramed}</b></p>
             <Calendar
@@ -83,7 +83,7 @@ const ScheduledPostsCalendar = () => {
             />
             {postsForDay.length > 0 && (
                 <div className="mt-4">
-                    <h3 className="text-md font-medium text-black">Posts Programados:</h3>
+                    <h3 className="text-md font-medium text-black">Artigos Programados:</h3>
                     <ul className="list-disc pl-5 text-black">
                         {postsForDay.map((post) => (
                             <li key={post.id}>
