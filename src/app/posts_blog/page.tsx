@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Container_page } from "../components/blog_components/container_page";
 import { Footer } from "../components/blog_components/footer";
 import { Navbar } from "../components/blog_components/navbar";
@@ -113,12 +114,12 @@ export default function Posts_blog() {
                                 </div>
 
                                 {/* Read More Link */}
-                                <a
+                                <Link
                                     href={`/posts_blog/post/${post.id}`}
                                     className="block text-blue-600 mt-4 text-center font-semibold"
                                 >
                                     Leia mais
-                                </a>
+                                </Link>
                             </div>
                         </article>
                     ))}
