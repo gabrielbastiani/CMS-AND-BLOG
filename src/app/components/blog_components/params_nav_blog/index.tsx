@@ -1,16 +1,17 @@
-import { useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { setupAPIClient } from "@/services/api";
-import { toast } from "react-toastify";
-import SearchInput from "../../dataTable/searchInput";
 import OrderSelect from "../../dataTable/orderSelect";
 import PaginationControls from "../../dataTable/paginationControls";
-import { AuthContext } from "@/contexts/AuthContext";
 import { Container_page } from "../container_page";
 import { Navbar } from "../navbar";
 import { Footer } from "../footer";
+import { AuthContextBlog } from "@/contexts/AuthContextBlog";
+import SearchInput from "../../dataTable/searchInput";
 
 interface DataProps {
+    active_buttons_searchInput_notification: boolean;
+    active_buttons_searchInput_comments: boolean;
+    children: ReactNode;
     customNamesOrder: {};
     availableColumnsOrder: string[];
     columnsOrder: any;
@@ -31,15 +32,17 @@ interface DataProps {
 }
 
 function Params_nav_blog({
+    active_buttons_searchInput_notification,
+    active_buttons_searchInput_comments,
+    children,
     availableColumnsOrder,
     customNamesOrder,
     columnsOrder,
-    data,
     totalPages,
     onFetchData,
 }: DataProps) {
 
-    const { user } = useContext(AuthContext);
+    const { user } = useContext(AuthContextBlog);
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -47,14 +50,14 @@ function Params_nav_blog({
     const [search, setSearch] = useState(searchParams.get("search") || "");
     const [orderBy, setOrderBy] = useState("created_at");
     const [orderDirection, setOrderDirection] = useState("desc");
-    const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 5);
+    const [limit, setLimit] = useState(Number(searchParams.get("limit")) || 6);
     const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
 
     useEffect(() => {
         const initialSearch = searchParams.get("search") || "";
         const initialOrderBy = searchParams.get("orderBy") || "created_at";
         const initialOrderDirection = searchParams.get("orderDirection") || "desc";
-        const initialLimit = Number(searchParams.get("limit")) || 5;
+        const initialLimit = Number(searchParams.get("limit")) || 6;
         const initialCurrentPage = Number(searchParams.get("page")) || 1;
 
         setSearch(initialSearch);
@@ -93,40 +96,43 @@ function Params_nav_blog({
         setSearch("");
         setOrderBy("created_at");
         setOrderDirection("desc");
-        setLimit(5);
+        setLimit(6);
         setCurrentPage(1);
         router.replace("");
     }
 
     return (
-        <Container_page>
-            <Navbar />
-            <>
-                {/* Section Header */}
-                <header className="bg-gray-800 py-12 text-white text-center">
-                    <h1 className="text-3xl font-bold">Todos os Artigos do Blog</h1>
-                    <p className="text-gray-300 mt-2">
-                        Explore os últimos artigos e fique por dentro das novidades.
-                    </p>
-                </header>
+        <>
+            <div className="container mx-auto my-12 px-4">
+                <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                    <div className="flex justify-center sm:justify-between w-full sm:w-80 space-x-2">
+                        <SearchInput
+                            active_buttons_searchInput_notification={active_buttons_searchInput_notification}
+                            active_buttons_searchInput_comments={active_buttons_searchInput_comments}
+                            value={search}
+                            onChange={setSearch}
+                            onReset={handleResetFilters}
+                        />
+                    </div>
 
-                <OrderSelect
-                    orderBy={orderBy}
-                    orderDirection={orderDirection}
-                    columns={columnsOrder}
-                    onOrderByChange={setOrderBy}
-                    onOrderDirectionChange={setOrderDirection}
-                    availableColumns={availableColumnsOrder}
-                    customNames={customNamesOrder}
-                />
+                    <div className="flex items-center w-full sm:w-auto">
+                        <OrderSelect
+                            orderBy={orderBy}
+                            orderDirection={orderDirection}
+                            columns={columnsOrder}
+                            onOrderByChange={setOrderBy}
+                            onOrderDirectionChange={setOrderDirection}
+                            availableColumns={availableColumnsOrder}
+                            customNames={customNamesOrder}
+                        />
+                    </div>
+                </div>
+            </div>
 
-                {data.map((item) => (
-                    <>
+            {children}
 
-                    </>
-                ))}
-
-                {/* Paginação */}
+            {/* Paginação */}
+            <div className="container mx-auto my-12 px-4">
                 <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                     <div className="flex justify-center sm:justify-between w-full sm:w-80 space-x-2">
                         <button
@@ -150,22 +156,21 @@ function Params_nav_blog({
                         </button>
                     </div>
                     <div className="flex items-center w-full sm:w-auto">
-                        <label htmlFor="limit" className="mr-2">Itens por página:</label>
+                        <label htmlFor="limit" className="mr-2 text-black">Itens por página:</label>
                         <select
                             id="limit"
                             value={limit}
                             onChange={handleLimitChange}
                             className="border p-2 rounded text-black"
                         >
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
+                            <option value="6">6</option>
+                            <option value="10">12</option>
+                            <option value="20">18</option>
                         </select>
                     </div>
                 </div>
-            </>
-            <Footer />
-        </Container_page>
+            </div>
+        </>
     );
 }
 

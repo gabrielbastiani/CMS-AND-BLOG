@@ -2,7 +2,6 @@
 
 import { Footer } from "@/app/components/blog_components/footer";
 import { Navbar } from "@/app/components/blog_components/navbar";
-import { Sidebar } from "@/app/components/blog_components/sidebar";
 import { setupAPIClient } from "@/services/api";
 import { Metadata } from "next";
 import { useEffect } from "react";
@@ -46,7 +45,6 @@ export default function PostPage({ params }: { params: { post_id: string } }) {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       <main className="container mx-auto flex flex-col md:flex-row gap-8 mt-6">
-        <Sidebar categories={["Tecnologia", "Saúde", "Negócios", "Esportes"]} />
         <article className="flex-1 bg-white p-6 rounded-lg shadow-md">
           <h1 className="text-2xl font-bold mb-4">{ }</h1>
           <p className="text-gray-600 mb-6">{ }</p>
