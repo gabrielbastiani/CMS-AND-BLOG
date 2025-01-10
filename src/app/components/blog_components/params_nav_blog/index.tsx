@@ -2,9 +2,6 @@ import { ReactNode, useContext, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import OrderSelect from "../../dataTable/orderSelect";
 import PaginationControls from "../../dataTable/paginationControls";
-import { Container_page } from "../container_page";
-import { Navbar } from "../navbar";
-import { Footer } from "../footer";
 import { AuthContextBlog } from "@/contexts/AuthContextBlog";
 import SearchInput from "../../dataTable/searchInput";
 
