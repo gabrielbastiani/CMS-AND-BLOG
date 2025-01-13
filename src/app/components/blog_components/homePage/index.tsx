@@ -1,23 +1,70 @@
 "use client"
 
 import Image from "next/image";
-import mkt from '../../../../assets/no-image-icon-6.png';
+import noImage from '../../../../assets/no-image-icon-6.png';
 import { Newsletter } from "../newsletter";
+import { useEffect, useState } from "react";
+import { setupAPIClient } from "@/services/api";
+import Link from "next/link";
+
+interface PostsProps {
+    id: string;
+    text_post: string;
+    author: string;
+    title: string;
+    slug_title_post: string;
+    custom_url: string
+    image_post?: string;
+    post_like?: number;
+    post_dislike?: number;
+    status: string;
+    publish_at?: string | number | Date;
+    comment?: string[];
+    created_at: string | number | Date;
+    tags?: {
+        tag?: {
+            slug_tag_name?: string;
+        };
+    };
+    categories?: Array<{
+        category?: {
+            id: string;
+            name_category?: string;
+            slug_name_category?: string;
+        };
+    }>;
+}
+
+interface CategoriesProps {
+    id: string;
+    name_category: string;
+    slug_name_category: string;
+    image_category: string;
+}
 
 const HomePage = () => {
 
-    const posts = Array.from({ length: 6 }, (_, i) => ({
-        id: i + 1,
-        title: `Post #${i + 1}`,
-        image: `/src/assets/${i + 1}.png`,
-    }));
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-    const categories = [
-        { id: 1, name: "Tecnologia", image: { mkt } },
-        { id: 2, name: "Esportes", image: { mkt } },
-        { id: 3, name: "Viagens", image: { mkt } },
-        { id: 4, name: "Negócios", image: { mkt } },
-    ];
+    const [last_posts, setLast_posts] = useState<PostsProps[]>([]);
+    const [categories, setCategories] = useState<CategoriesProps[]>([]);
+    const [most_view, setMost_view] = useState<PostsProps[]>([]);
+
+    useEffect(() => {
+        const apiClient = setupAPIClient();
+        async function lastposts() {
+            try {
+                const { data } = await apiClient.get(`/post/articles/blog`);
+                const categories = await apiClient.get(`/categories/blog/posts`);
+                setCategories(categories.data);
+                setLast_posts(data.last_post);
+                setMost_view(data.most_views_post);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        lastposts();
+    }, []);
 
     const mostViewed = Array.from({ length: 4 }, (_, i) => ({
         id: i + 1,
@@ -29,21 +76,24 @@ const HomePage = () => {
         <div className="w-full bg-gray-100">
             {/* Últimos Posts */}
             <div className="container mx-auto px-4 py-8">
-                <h2 className="text-2xl font-bold mb-4">Últimos Posts</h2>
+                <h2 className="text-2xl font-bold mb-4 text-black">Últimos Posts</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {posts.map((post) => (
+                    {last_posts.slice(0, 6).map((post) => (
                         <div
                             key={post.id}
                             className="bg-white rounded shadow p-4 hover:shadow-lg transition"
                         >
-                            <Image
-                                src={post.image}
-                                alt={post.title}
-                                width={80}
-                                height={80}
-                                className="w-full h-40 object-cover rounded mb-2"
-                            />
-                            <h3 className="text-lg font-semibold">{post.title}</h3>
+                            <Link href={`/article/${post.custom_url ? post.custom_url : post.slug_title_post}`}>
+                                <Image
+                                    src={`${API_URL}files/${post.image_post}`}
+                                    alt={post.title}
+                                    width={280}
+                                    height={80}
+                                    quality={100}
+                                    className="w-full h-40 object-cover rounded mb-2"
+                                />
+                                <h3 className="text-lg font-semibold text-black">{post.title}</h3>
+                            </Link>
                         </div>
                     ))}
                 </div>
@@ -54,45 +104,56 @@ const HomePage = () => {
 
             {/* Categorias */}
             <div className="container mx-auto px-4 py-8">
-                <h2 className="text-2xl font-bold mb-4">Categorias</h2>
+                <h2 className="text-2xl font-bold mb-4 text-black">Categorias</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     {categories.map((category) => (
                         <div
                             key={category.id}
                             className="relative rounded overflow-hidden h-40 shadow hover:shadow-lg transition"
                         >
-                            <Image
-                                src={category.image}
-                                alt={category.name}
-                                width={80}
-                                height={80}
-                                className="absolute top-0 left-0 w-full h-full object-cover opacity-70"
-                            />
-                            <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-30 flex items-center justify-center">
-                                <h3 className="text-white text-lg font-bold">{category.name}</h3>
-                            </div>
+                            <Link href={`/posts_categories/${category.slug_name_category}`}>
+                                {category.image_category ? (
+                                    <Image
+                                        src={`${API_URL}files/${category.image_category}`}
+                                        alt={category.name_category}
+                                        width={80}
+                                        height={80}
+                                        className="absolute top-0 left-0 w-full h-full object-cover opacity-70"
+                                    />
+                                ) : (
+                                    <div className="bg-black"></div>
+                                )}
+
+                                <div className="absolute top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center">
+                                    <h3 className="text-white text-lg font-bold">{category.name_category}</h3>
+                                </div>
+                            </Link>
                         </div>
+
                     ))}
                 </div>
             </div>
 
             {/* Posts Mais Visualizados */}
             <div className="container mx-auto px-4 py-8">
-                <h2 className="text-2xl font-bold mb-4">Posts Mais Visualizados</h2>
+                <h2 className="text-2xl font-bold mb-4 text-black">Posts Mais Visualizados</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {mostViewed.map((post) => (
+                    {most_view.slice(0, 8).map((post) => (
                         <div
                             key={post.id}
                             className="bg-white rounded shadow p-4 hover:shadow-lg transition"
                         >
-                            <Image
-                                src={post.image}
-                                alt={post.title}
-                                width={80}
-                                height={80}
-                                className="w-full h-40 object-cover rounded mb-2"
-                            />
-                            <h3 className="text-lg font-semibold">{post.title}</h3>
+                            <Link href={`/article/${post.custom_url ? post.custom_url : post.slug_title_post}`}>
+                                <Image
+                                    src={`${API_URL}files/${post.image_post}`}
+                                    alt={post.title}
+                                    width={280}
+                                    height={80}
+                                    quality={100}
+                                    className="w-full h-40 object-cover rounded mb-2"
+                                />
+                                <h3 className="text-lg font-semibold text-black">{post.title}</h3>
+                            </Link>
                         </div>
                     ))}
                 </div>

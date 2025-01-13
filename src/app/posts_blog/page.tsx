@@ -117,7 +117,8 @@ export default function Posts_blog() {
                                         <img
                                             src={`${API_URL}files/${post.image_post}`}
                                             alt={post.title}
-                                            className="w-full h-48 object-cover rounded-t-lg" />
+                                            className="w-full h-48 object-cover rounded-t-lg"
+                                        />
 
                                         {/* Artigo Content */}
                                         <div className="p-4">

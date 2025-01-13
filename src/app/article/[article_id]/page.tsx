@@ -26,20 +26,20 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
   }
 }
  */
-export default function PostPage({ params }: { params: { post_id: string } }) {
+export default function PostPage({ params }: { params: { article_id: string } }) {
 
   useEffect(() => {
     const updateViews = async () => {
       const apiClient = setupAPIClient();
       try {
-        await apiClient.patch(`/post/${params.post_id}/views`);
+        await apiClient.patch(`/post/${params.article_id}/views`);
       } catch (error) {
         console.error("Failed to update views:", error);
       }
     };
 
     updateViews();
-  }, [params.post_id]);
+  }, [params.article_id]);
 
   return (
     <div className="min-h-screen bg-gray-50">
