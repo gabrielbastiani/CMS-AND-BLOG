@@ -182,7 +182,7 @@ export default function Posts_Categories({ params }: { params: { category_slug: 
 
                                                         {/* Read More Link */}
                                                         <Link
-                                                            href={`/posts_blog/post/${post.custom_url ? post.custom_url : post.slug_title_post}`}
+                                                            href={`/article/${post.custom_url ? post.custom_url : post.slug_title_post}`}
                                                             className="block text-red-600 mt-4 text-center font-semibold"
                                                         >
                                                             Leia mais

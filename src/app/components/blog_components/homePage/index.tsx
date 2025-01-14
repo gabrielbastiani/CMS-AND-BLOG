@@ -66,12 +66,6 @@ const HomePage = () => {
         lastposts();
     }, []);
 
-    const mostViewed = Array.from({ length: 4 }, (_, i) => ({
-        id: i + 1,
-        title: `Popular Post #${i + 1}`,
-        image: `/src/assets/${i + 1}.png`,
-    }));
-
     return (
         <div className="w-full bg-gray-100">
             {/* Últimos Posts */}

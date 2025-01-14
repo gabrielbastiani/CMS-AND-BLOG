@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Params_nav_blog from "../components/blog_components/params_nav_blog";
 import { setupAPIClient } from "@/services/api";
+import DOMPurify from "dompurify";
 import { useState } from "react";
 import { Navbar } from "../components/blog_components/navbar";
 import { Footer } from "../components/blog_components/footer";
@@ -159,11 +160,14 @@ export default function Posts_blog() {
                                             </div>
 
                                             {/* Text */}
-                                            <p className="text-gray-600 text-sm mt-4">
-                                                {post.text_post.length > 120
-                                                    ? `${post.text_post.slice(0, 120)}...`
-                                                    : post.text_post}
-                                            </p>
+                                            <p
+                                                className="text-gray-600 text-sm mt-4"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: DOMPurify.sanitize(post.text_post.length > 120
+                                                        ? `${post.text_post.slice(0, 120)}...`
+                                                        : post.text_post),
+                                                }}
+                                            ></p>
 
                                             {/* Author */}
                                             <div className="mt-4 text-gray-500 text-sm">
@@ -172,7 +176,7 @@ export default function Posts_blog() {
 
                                             {/* Read More Link */}
                                             <Link
-                                                href={`/posts_blog/post/${post.custom_url ? post.custom_url : post.slug_title_post}`}
+                                                href={`/article/${post.custom_url ? post.custom_url : post.slug_title_post}`}
                                                 className="block text-red-600 mt-4 text-center font-semibold"
                                             >
                                                 Leia mais
