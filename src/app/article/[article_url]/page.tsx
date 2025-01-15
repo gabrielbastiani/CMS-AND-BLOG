@@ -5,7 +5,7 @@ import BlogLayout from "@/app/components/blog_components/blogLayout";
 import { Footer } from "@/app/components/blog_components/footer";
 import { Navbar } from "@/app/components/blog_components/navbar";
 import { setupAPIClient } from "@/services/api";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import DOMPurify from "dompurify";
 import { FiClock } from "react-icons/fi";
@@ -45,6 +45,8 @@ interface PostsProps {
     post_id: string;
     userBlog_id: string;
     userBlog: any;
+    name_user: string;
+    image_user: string;
     comment: string;
     replies: any;
     comment_like: number;
@@ -54,11 +56,12 @@ interface PostsProps {
 }
 
 export default function Article({ params }: { params: { article_url: string } }) {
+
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const [article_data, setArticle_data] = useState<PostsProps>();
 
   useEffect(() => {
-    const updateViews = async () => {
+    const contentArticle = async () => {
       const apiClient = setupAPIClient();
       try {
         const { data } = await apiClient.get(`/post/article/content?url_post=${params.article_url}`);
@@ -67,7 +70,7 @@ export default function Article({ params }: { params: { article_url: string } })
         console.error("Failed to update views:", error);
       }
     };
-    updateViews();
+    contentArticle();
   }, [params.article_url]);
 
   const calculateReadingTime = (text: string): string => {
@@ -75,12 +78,6 @@ export default function Article({ params }: { params: { article_url: string } })
     const words = text.split(/\s+/).length;
     const readingTime = Math.ceil(words / wordsPerMinute);
     return `${readingTime} min de leitura`;
-  };
-
-  // Função para lidar com o envio do comentário
-  const handleCommentSubmit = (comment: string) => {
-    // Lógica para enviar o comentário (ex: chamar API para salvar o comentário)
-    console.log("Comentário enviado:", comment);
   };
 
   return (
@@ -113,10 +110,8 @@ export default function Article({ params }: { params: { article_url: string } })
       }
       children={
         <div className="p-4 md:p-8 max-w-4xl mx-auto">
-          {/* Título do artigo */}
           <h1 className="text-4xl font-bold mb-4 text-gray-900">{article_data?.title}</h1>
           <span className='text-gray-600'>Autor: {article_data?.author || "Desconhecido"}</span>
-          {/* Data de publicação, categorias e tempo de leitura */}
           <div className="flex flex-wrap items-center gap-4 text-gray-600 mb-12 mt-4">
             <div className="flex items-center gap-2">
               <FiClock className="text-lg" />
@@ -142,16 +137,12 @@ export default function Article({ params }: { params: { article_url: string } })
               ))}
             </div>
           </div>
-
-          {/* Conteúdo do artigo */}
           <div
             className="prose max-w-none text-gray-800 prose-h1:text-blue-600 prose-p:mb-4 prose-a:text-indigo-500 hover:prose-a:underline"
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(article_data?.text_post || ""),
             }}
           ></div>
-
-          {/* Tags do artigo */}
           {article_data?.tags && article_data?.tags.length > 0 && (
             <div className="mt-10 mb-10">
               <h2 className="text-lg font-semibold text-gray-700 mb-4">Tags:</h2>
@@ -168,8 +159,7 @@ export default function Article({ params }: { params: { article_url: string } })
             </div>
           )}
           <CommentsSection
-            comments={article_data?.comment || []}
-            onSubmitComment={handleCommentSubmit}
+            post_id={article_data?.id || ""}
           />
           <Newsletter />
         </div>

@@ -1,8 +1,7 @@
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import OrderSelect from "../../dataTable/orderSelect";
 import PaginationControls from "../../dataTable/paginationControls";
-import { AuthContextBlog } from "@/contexts/AuthContextBlog";
 import SearchInput from "../../dataTable/searchInput";
 
 interface DataProps {
@@ -38,8 +37,6 @@ function Params_nav_blog({
     totalPages,
     onFetchData,
 }: DataProps) {
-
-    const { user } = useContext(AuthContextBlog);
 
     const router = useRouter();
     const searchParams = useSearchParams();
