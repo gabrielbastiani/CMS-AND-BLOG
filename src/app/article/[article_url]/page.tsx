@@ -5,13 +5,14 @@ import BlogLayout from "@/app/components/blog_components/blogLayout";
 import { Footer } from "@/app/components/blog_components/footer";
 import { Navbar } from "@/app/components/blog_components/navbar";
 import { setupAPIClient } from "@/services/api";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import DOMPurify from "dompurify";
 import { FiClock } from "react-icons/fi";
 import Link from 'next/link';
 import { Newsletter } from '@/app/components/blog_components/newsletter';
 import { CommentsSection } from '@/app/components/blog_components/commentsSection';
+import Most_posts_views from '@/app/components/blog_components/most_posts_views';
 
 interface PostsProps {
   id: string;
@@ -162,6 +163,7 @@ export default function Article({ params }: { params: { article_url: string } })
             post_id={article_data?.id || ""}
           />
           <Newsletter />
+          <Most_posts_views />
         </div>
       }
     />

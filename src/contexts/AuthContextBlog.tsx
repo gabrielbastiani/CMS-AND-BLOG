@@ -162,7 +162,6 @@ export function AuthProviderBlog({ children }: AuthProviderProps) {
             removeCookieId('@idUserBlog', { path: '/' });
             setUser(undefined);
             toast.success('Usuário deslogado com sucesso!');
-            router.push("/");
             setTimeout(() => {
                 window.location.reload();
             }, 1000);

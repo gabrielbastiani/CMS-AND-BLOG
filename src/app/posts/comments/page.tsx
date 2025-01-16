@@ -87,7 +87,7 @@ export default function Comments() {
             toast.success("Dado atualizado com sucesso");
 
         } catch (error) {
-            console.log("Erro ao atualizar a categoria:", error);
+            console.log("Erro ao atualizar a status:", error);
             toast.error("Erro ao atualizar o dado!!!");
         }
     };

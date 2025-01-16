@@ -10,8 +10,10 @@ import { ModalEditUser } from "../popups/modalEditUser";
 import { ModalCreateUser } from "../popups/modalCreateUser";
 import { setupAPIClient } from "@/services/api";
 import { toast } from "react-toastify";
+import moment from "moment";
 
 interface CommentsProps {
+    parentId: string;
     id: string;
     post_id: string;
     userBlog_id: string;
@@ -42,16 +44,33 @@ export function CommentsSection({ post_id }: CommentProps) {
     }
 
     const [comments, setComments] = useState<CommentsProps[]>([]);
-    const [likes, setLikes] = useState<{ [key: string]: number }>({});
-    const [dislikes, setDislikes] = useState<{ [key: string]: number }>({});
     const [newComment, setNewComment] = useState<string>("");
-
-    const [replyComment, setReplyComment] = useState("");
     const [replyingTo, setReplyingTo] = useState<string | null>(null);
-
     const [modalLogin, setModalLogin] = useState(false);
     const [modalEditUser, setModalEditUser] = useState(false);
     const [modalCreateUser, setModalCreateUser] = useState(false);
+
+    function organizeComments(comments: CommentsProps[]): CommentsProps[] {
+        const commentMap = new Map<string, CommentsProps>();
+
+        comments.forEach((comment) => {
+            comment.replies = [];
+            commentMap.set(comment.id, comment);
+        });
+
+        const organized: CommentsProps[] = [];
+
+        comments.forEach((comment) => {
+            if (comment.parentId) {
+                const parent = commentMap.get(comment.parentId);
+                if (parent) parent.replies.push(comment);
+            } else {
+                organized.push(comment);
+            }
+        });
+
+        return organized;
+    }
 
     useEffect(() => {
         async function loadCommentsPost() {
@@ -60,7 +79,8 @@ export function CommentsSection({ post_id }: CommentProps) {
                 const response = await apiClient.get(
                     `/comment/get_comments/post?post_id=${post_id}`
                 );
-                setComments(response.data);
+                const organized = organizeComments(response.data);
+                setComments(organized);
             } catch (error) {
                 console.error(error);
             }
@@ -68,25 +88,27 @@ export function CommentsSection({ post_id }: CommentProps) {
         loadCommentsPost();
     }, [post_id]);
 
+    async function loadCommentsPost() {
+        try {
+            const apiClient = setupAPIClient();
+            const response = await apiClient.get(
+                `/comment/get_comments/post?post_id=${post_id}`
+            );
+            const organized = organizeComments(response.data);
+            setComments(organized);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     const handleLikeDislike = async (id: string, isLike: boolean) => {
         try {
             const apiClient = setupAPIClient();
-            const { data } = await apiClient.post(`/comment/like`, {
+            await apiClient.patch(`/comment/likes`, {
                 comment_id: id,
                 isLike,
             });
-
-            setComments((prevComments) =>
-                prevComments.map((comment) =>
-                    comment.id === id
-                        ? {
-                            ...comment,
-                            comment_like: data.comment_like,
-                            comment_dislike: data.comment_dislike,
-                        }
-                        : comment
-                )
-            );
+            loadCommentsPost();
         } catch (error) {
             toast.error("Erro ao registrar sua reação.");
             console.error(error);
@@ -94,170 +116,216 @@ export function CommentsSection({ post_id }: CommentProps) {
     };
 
     const handleCommentSubmit = async () => {
+        if (!newComment.trim()) return;
+
         try {
             const apiClient = setupAPIClient();
-            await apiClient.post(`/comment/create_comment`, {
-                post_id,
+            await apiClient.post("/comment/create_comment", {
+                post_id: post_id,
                 userBlog_id: user?.id,
                 name_user: user?.name,
                 image_user: user?.image_user,
                 comment: newComment,
+                parentId: replyingTo
             });
             setNewComment("");
-            toast.success("Comentário enviado!");
+            setReplyingTo(null);
+            toast.warning("Comentário enviado para analise do administrador!");
+            loadCommentsPost();
         } catch (error) {
-            toast.error("Erro ao enviar o comentário!");
+            toast.error("Erro ao enviar comentário.");
             console.error(error);
         }
     };
 
-    const handleReplySubmit = async () => {
-        if (!replyComment || !replyingTo) return;
+    const CommentItem = ({ comment, nivel = 0 }: { comment: CommentsProps; nivel?: number }) => {
 
-        try {
-            const apiClient = setupAPIClient();
-            const { data: newReply } = await apiClient.post(`/comment/create_comment`, {
-                post_id,
-                userBlog_id: user?.id,
-                name_user: user?.name,
-                image_user: user?.image_user,
-                comment: replyComment,
-                parentId: replyingTo,
-            });
+        const [isReplying, setIsReplying] = useState(false);
+        const [replyContent, setReplyContent] = useState("");
 
-            setComments((prevComments) =>
-                prevComments.map((comment) =>
-                    comment.id === replyingTo
-                        ? {
-                            ...comment,
-                            replies: [...(comment.replies || []), newReply],
-                        }
-                        : comment
-                )
-            );
+        const handleReplyClick = () => {
+            setIsReplying(!isReplying);
+        };
 
-            setReplyComment("");
-            setReplyingTo(null);
-            toast.success("Resposta enviada!");
-        } catch (error) {
-            toast.error("Erro ao enviar resposta.");
-            console.error(error);
-        }
+        const handleReplyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setReplyContent(e.target.value);
+        };
+
+        const handleReplySubmit = async () => {
+            if (!replyContent.trim()) {
+                toast.error("Digite uma resposta válida.");
+                return;
+            }
+
+            try {
+                const apiClient = setupAPIClient();
+                const { data: newReply } = await apiClient.post(`/comment/create_comment`, {
+                    post_id: comment.post_id,
+                    userBlog_id: user?.id,
+                    name_user: user?.name,
+                    image_user: user?.image_user,
+                    comment: replyContent,
+                    parentId: comment.id,
+                });
+
+                setComments((prevComments) =>
+                    prevComments.map((c) =>
+                        c.id === comment.id
+                            ? {
+                                ...c,
+                                replies: [...(c.replies || []), newReply],
+                            }
+                            : c
+                    )
+                );
+
+                setReplyContent("");
+                setIsReplying(false);
+                toast.warning("Resposta enviada para analise do administrador!");
+                loadCommentsPost();
+            } catch (error) {
+                console.error(error);
+                toast.error("Erro ao enviar a resposta.");
+            }
+        };
+
+        return (
+            <div className={`ml-${nivel * 4} border-l pl-4 mb-4`}>
+                <div className="flex items-start mb-2">
+                    <Image
+                        src={comment.image_user ? `${API_URL}files/${comment.image_user}` : no_user}
+                        alt={comment.name_user}
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                    />
+                    <div className="ml-2">
+                        <h4 className="font-semibold text-black">{comment.name_user}</h4>
+                        <p className="text-gray-600 text-xs mb-2">{moment(comment.created_at).format('DD/MM/YYYY HH:mm')}</p>
+                        <p className="text-gray-600 text-sm">{comment.comment}</p>
+                        <div className="mt-2 flex space-x-4">
+                            <button
+                                onClick={() => handleLikeDislike(comment.id, true)}
+                                className="flex items-center text-gray-600 hover:text-blue-500"
+                            >
+                                <FaThumbsUp className="mr-1" />
+                                {comment.comment_like}
+                            </button>
+                            <button
+                                onClick={() => handleLikeDislike(comment.id, false)}
+                                className="flex items-center text-gray-600 hover:text-red-500"
+                            >
+                                <FaThumbsDown className="mr-1" />
+                                {comment.comment_dislike}
+                            </button>
+                            <button
+                                onClick={handleReplyClick}
+                                className="flex items-center text-gray-600 hover:text-green-500"
+                            >
+                                <FaReply className="mr-1" />
+                                Responder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {isReplying && (
+                    <>
+                        {isAuthenticated && (
+                            <div className="ml-8 mt-4">
+                                <textarea
+                            value={replyContent}
+                            onChange={handleReplyChange}
+                            rows={3}
+                            className="w-full p-3 border border-gray-300 rounded-md text-black"
+                            placeholder="Escreva sua resposta..."
+                        />
+                        <button
+                            onClick={handleReplySubmit}
+                            className="mb-5 mt-2 px-4 py-2 bg-backgroundButton text-white rounded-md hover:hoverButtonBackground"
+                        >
+                            Enviar Resposta
+                        </button>
+                        </div>
+                        )}
+                    </>        
+                )}
+                {comment.replies?.map((reply) => (
+                    <CommentItem key={reply.id} comment={reply} nivel={nivel + 1} />
+                ))}
+            </div>
+        );
     };
 
 
     return (
-        <>
-            <div className="mt-10">
-                <h2 className="text-lg font-semibold text-gray-700 mb-4">Comentários:</h2>
-                {isAuthenticated ? (
-                    <div className="mb-6">
-                        <textarea
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                            rows={4}
-                            className="w-full p-4 border border-gray-300 rounded-md text-black"
-                            placeholder="Escreva seu comentário..."
-                        />
-                        <button
-                            onClick={handleCommentSubmit}
-                            className="mt-2 px-6 py-2 bg-blue-600 text-white rounded-full"
-                        >
-                            Enviar Comentário
-                        </button>
-                    </div>
-                ) : (
-                    <div className="mb-6 flex flex-col">
-                        <p className="text-gray-600 mb-4">Faça login para deixar um comentário.</p>
+        <div>
+            <div className="flex justify-between mb-4">
+                {!isAuthenticated && (
+                    <div>
                         <button
                             onClick={() => setModalLogin(true)}
-                            className="mb-6 px-6 py-2 bg-green-600 text-white rounded-full w-1/2"
+                            className="px-4 py-2 bg-backgroundButton text-white rounded-md hover:bg-hoverButtonBackground"
                         >
-                            Fazer Login
+                            Login
                         </button>
-
                         <button
                             onClick={() => setModalCreateUser(true)}
-                            className="px-6 py-2 bg-red-500 text-white rounded-full w-1/2"
+                            className="ml-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
                         >
-                            Não tem uma conta ainda? Clique aqui!
+                            Cadastrar
                         </button>
                     </div>
                 )}
-
-                {comments.length > 0 ? (
-                    <>
-                        {comments.map((comment: any) => (
-                            <div key={comment.id} className="mb-4">
-                                <div className="flex items-start gap-4">
-                                    <Image
-                                        src={comment.image_user ? `${API_URL}files/${comment.image_user}` : no_user}
-                                        alt={comment.name_user}
-                                        width={50}
-                                        height={50}
-                                        className="rounded-full"
-                                    />
-                                    <div className="flex-1">
-                                        <div className="text-sm text-gray-600">
-                                            <span className="font-semibold">{comment.name_user}</span>{" "}
-                                            <span>{new Date(comment.created_at).toLocaleDateString()}</span>
-                                        </div>
-                                        <p className="mt-1 text-gray-800">{comment.comment}</p>
-                                        <div className="flex items-center gap-4 mt-2">
-                                            <button
-                                                onClick={() => handleLikeDislike(comment.id, true)}
-                                                className="text-gray-500 hover:text-blue-500 flex items-center gap-1"
-                                            >
-                                                <FaThumbsUp /> {likes[comment.id] || comment.comment_like}
-                                            </button>
-                                            <button
-                                                onClick={() => handleLikeDislike(comment.id, false)}
-                                                className="text-gray-500 hover:text-red-500 flex items-center gap-1"
-                                            >
-                                                <FaThumbsDown /> {dislikes[comment.id] || comment.comment_dislike}
-                                            </button>
-                                            <button
-                                                onClick={() => setReplyingTo(comment.id)}
-                                                className="text-gray-500 hover:text-green-500 flex items-center gap-1"
-                                            >
-                                                <FaReply /> Responder
-                                            </button>
-                                            {replyingTo === comment.id && (
-                                                <div className="mt-2">
-                                                    <textarea
-                                                        value={replyComment}
-                                                        onChange={(e) => setReplyComment(e.target.value)}
-                                                        rows={2}
-                                                        className="w-full p-2 border border-gray-300 rounded-md"
-                                                        placeholder="Escreva sua resposta..."
-                                                    />
-                                                    <button
-                                                        onClick={handleReplySubmit}
-                                                        className="mt-1 px-4 py-1 bg-blue-500 text-white rounded-md"
-                                                    >
-                                                        Enviar Resposta
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                                {comment.replies && comment.replies.length > 0 && (
-                                    <div className="mt-4">{comment.replies}</div>
-                                )}
-                            </div>
-                        ))}
-                    </>
-                ) :
-                    <p>Nenhum comentário disponível.</p>
-                }
+                {isAuthenticated && (
+                    <button
+                        onClick={() => setModalEditUser(true)}
+                        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-400"
+                    >
+                        Editar Perfil
+                    </button>
+                )}
             </div>
+
+            {comments.length >= 0 ? (
+                <div className="mt-10">
+                    <h2 className="text-lg font-semibold text-black mb-4">Comentários:</h2>
+                    {isAuthenticated ? (
+                        <div className="mb-6">
+                            <textarea
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                                rows={4}
+                                className="w-full p-4 border border-gray-300 rounded-md text-black"
+                                placeholder="Escreva seu comentário..."
+                            />
+                            <button
+                                onClick={handleCommentSubmit}
+                                className="mt-2 px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-300"
+                            >
+                                Enviar
+                            </button>
+                        </div>
+                    ) : (
+                        <p className="text-black mb-5">Faça login para comentar.</p>
+                    )}
+                    {comments.map((comment) => (
+                        <CommentItem key={comment.id} comment={comment} />
+                    ))}
+                </div>
+            ) : (
+                <p className="text-red-400 mb-6">Nenhum comentário disponível...</p>
+            )}
 
             <div>
                 {modalLogin && <ModalLogin onClose={() => setModalLogin(false)} />}
                 {modalEditUser && <ModalEditUser onClose={() => setModalEditUser(false)} />}
-                {modalCreateUser && <ModalCreateUser onClose={() => setModalCreateUser(false)} loginModal={() => setModalLogin(true)} />}
+                {modalCreateUser && (
+                    <ModalCreateUser
+                        onClose={() => setModalCreateUser(false)}
+                        loginModal={() => setModalLogin(true)}
+                    />
+                )}
             </div>
-        </>
-    );
-};
+        </div>
+    )
+}

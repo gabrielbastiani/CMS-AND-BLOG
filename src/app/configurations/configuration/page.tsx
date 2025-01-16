@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { z } from "zod";
+import Config_media_social from "@/app/components/config_media_social";
 
 const schema = z.object({
     name_blog: z.string().nonempty("O título é obrigatório"),
@@ -226,6 +227,10 @@ export default function Configuration() {
                         {loading ? "Atualizando..." : "Atualizar Cadastro"}
                     </button>
                 </form>
+
+                <hr className="mt-7 mb-7" />
+
+                <Config_media_social />
 
             </Section>
         </SidebarAndHeader>
