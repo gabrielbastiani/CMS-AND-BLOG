@@ -126,7 +126,7 @@ export function Navbar() {
                                                 className="w-12 h-12 object-cover"
                                             />
                                             <Link
-                                                href={`/posts_blog/post/${post.custom_url || post.title}`}
+                                                href={`/article/${post.custom_url || post.title}`}
                                                 className="text-sm font-medium text-black"
                                             >
                                                 {post.title}

@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { z } from "zod";
+import Medias_social from "./medias_social";
+import noImage from '../../../assets/no-image-icon-6.png';
 
 const schema = z.object({
     name_media: z.string().nonempty("O título é obrigatório"),
@@ -65,7 +67,7 @@ export default function Config_media_social() {
             reset();
             setLogoUrl(null);
             setLogo_media(null);
-            
+
         } catch (error) {
             toast.error("Erro ao cadastrar a media social.");
         } finally {
@@ -74,57 +76,64 @@ export default function Config_media_social() {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-                <label className="relative w-[80px] h-[80px] rounded-lg cursor-pointer flex justify-center bg-gray-200 overflow-hidden">
-                    <input type="file" accept="image/png, image/jpeg" onChange={handleFile} className="hidden" />
-                    {logoUrl ? (
-                        <Image
-                            src={logo_media ? logoUrl : `${API_URL}files/${logoUrl}`}
-                            alt="Preview da imagem"
-                            width={80}
-                            height={80}
-                            className="w-full h-full"
+        <>
+            <h1 className="text-white text-3xl mb-4">Redes sociais do blog</h1>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                    <label className="relative w-[80px] h-[80px] rounded-lg cursor-pointer flex justify-center bg-gray-200 overflow-hidden">
+                        <input type="file" accept="image/png, image/jpeg" onChange={handleFile} className="hidden" />
+                        {logoUrl ? (
+                            <Image
+                                src={logo_media && noImage ? logoUrl : `${API_URL}files/${logoUrl}`}
+                                alt="Preview da imagem"
+                                width={80}
+                                height={80}
+                                className="w-full h-full"
+                            />
+                        ) : (
+                            <div className="flex items-center justify-center w-full h-full bg-gray-300">
+                                <FiUpload size={20} color="#ff6700" />
+                            </div>
+                        )}
+                    </label>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <label>
+                        Nome da media social:
+                        <input
+                            type="text"
+                            placeholder="Digite o nome..."
+                            {...register("name_media")}
+                            className="w-full border-2 rounded-md px-3 py-2 text-black"
                         />
-                    ) : (
-                        <div className="flex items-center justify-center w-full h-full bg-gray-300">
-                            <FiUpload size={20} color="#ff6700" />
-                        </div>
-                    )}
-                </label>
-            </div>
+                    </label>
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <label>
-                    Nome da media social:
-                    <input
-                        type="text"
-                        placeholder="Digite o nome..."
-                        {...register("name_media")}
-                        className="w-full border-2 rounded-md px-3 py-2 text-black"
-                    />
-                </label>
-            </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <label>
+                        Link da media social:
+                        <input
+                            type="text"
+                            placeholder="Link da rede social..."
+                            {...register("link")}
+                            className="w-full border-2 rounded-md px-3 py-2 text-black"
+                        />
+                    </label>
+                </div>
 
-            <div className="grid grid-cols-2 gap-4">
-                <label>
-                    Link da media social:
-                    <input
-                        type="text"
-                        placeholder="Link da rede social..."
-                        {...register("link")}
-                        className="w-full border-2 rounded-md px-3 py-2 text-black"
-                    />
-                </label>
-            </div>
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className={`w-52 py-3 text-white ${loading ? "bg-gray-500" : "bg-red-600 hover:bg-orange-600"} rounded-md`}
+                >
+                    {loading ? "Salvando..." : "Salvar"}
+                </button>
+            </form>
 
-            <button
-                type="submit"
-                disabled={loading}
-                className={`w-52 py-3 text-white ${loading ? "bg-gray-500" : "bg-red-600 hover:bg-orange-600"} rounded-md`}
-            >
-                {loading ? "Salvando..." : "Salvar"}
-            </button>
-        </form>
+            <hr className="mt-7 mb-7" />
+
+            <Medias_social />
+        </>
     )
 }

@@ -13,6 +13,8 @@ import Link from 'next/link';
 import { Newsletter } from '@/app/components/blog_components/newsletter';
 import { CommentsSection } from '@/app/components/blog_components/commentsSection';
 import Most_posts_views from '@/app/components/blog_components/most_posts_views';
+import SocialShare from '@/app/components/blog_components/socialShare';
+import ArticleLikeDeslike from '@/app/components/blog_components/articleLikeDeslike';
 
 interface PostsProps {
   id: string;
@@ -159,6 +161,14 @@ export default function Article({ params }: { params: { article_url: string } })
               </div>
             </div>
           )}
+          <ArticleLikeDeslike
+            post_id={article_data?.id || ""}
+            like={article_data?.post_like || 0}
+            deslike={article_data?.post_dislike || 0}
+          />
+          <SocialShare
+            articleUrl={params.article_url}
+          />
           <CommentsSection
             post_id={article_data?.id || ""}
           />
