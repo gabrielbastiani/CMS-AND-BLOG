@@ -22,6 +22,7 @@ interface CommentProps {
     post: {
         title: string;
         slug_title_post: string;
+        custon_url: string;
     },
     replyCount: number;
     comment: string;
@@ -293,7 +294,7 @@ export default function Comments() {
                                 <button
                                     key={item.id}
                                     className='p-1 bg-red-600 text-white text-xs rounded hover:bg-hoverButtonBackground transition duration-300'
-                                    onClick={() => router.push(`/post/${item.post.slug_title_post}`)}
+                                    onClick={() => router.push(`/article/${item.post.custon_url ? item.post.custon_url : item.post.slug_title_post}`)}
                                 >
                                     Ver post
                                 </button>
