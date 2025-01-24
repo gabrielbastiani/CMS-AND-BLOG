@@ -8,12 +8,10 @@ const PUBLIC_ROUTES = [
   '/recovery_password'
 ];
 const PROTECTED_ROUTES = [
-  '/configurations/configuration',
-  '/configurations',
-  '/marketing_contents/configurations_marketing',
-  '/marketing_contents/add_content_marketing',
-  '/marketing_contents/all_marketing_contents',
-  '/marketing_contents',
+  '/marketing_publication/config_interval_banner',
+  '/marketing_publication/add_marketing_publication',
+  '/marketing_publication/all_marketing_publication',
+  '/marketing_publication',
   '/user/users_blog',
   '/posts/comments',
   '/posts/all_posts/post',
@@ -35,12 +33,10 @@ const PROTECTED_ROUTES = [
 ]; // Rotas que requerem autenticação
 const ROLE_BASED_ROUTES = {
   SUPER_ADMIN: [
-    '/configurations/configuration',
-    '/configurations',
-    '/marketing_contents/configurations_marketing',
-    '/marketing_contents/add_content_marketing',
-    '/marketing_contents/all_marketing_contents',
-    '/marketing_contents',
+    '/marketing_publication/config_interval_banner',
+    '/marketing_publication/add_marketing_publication',
+    '/marketing_publication/all_marketing_publication',
+    '/marketing_publication',
     '/user/users_blog',
     '/posts/comments',
     '/posts/all_posts/post',
@@ -61,9 +57,10 @@ const ROLE_BASED_ROUTES = {
     '/central_notifications'
   ], // Exemplo de rotas restritas para SUPER_ADMIN
   ADMIN: [
-    '/marketing_contents/add_content_marketing',
-    '/marketing_contents/all_marketing_contents',
-    '/marketing_contents',
+    '/marketing_publication/config_interval_banner',
+    '/marketing_publication/add_marketing_publication',
+    '/marketing_publication/all_marketing_publication',
+    '/marketing_publication',
     '/user/users_blog',
     '/posts/comments',
     '/posts/all_posts/post',
@@ -142,11 +139,10 @@ function hasAccessToRoute(userRole: string, pathname: string): boolean {/* @ts-i
 export const config = {
   matcher: [
     '/configurations',
-    '/configurations/configuration',
-    '/marketing_contents/configurations_marketing',
-    '/marketing_contents/add_content_marketing',
-    '/marketing_contents/all_marketing_contents',
-    '/marketing_contents',
+    '/marketing_publication/config_interval_banner',
+    '/marketing_publication/add_marketing_publication',
+    '/marketing_publication/all_marketing_publication',
+    '/marketing_publication',
     '/user/users_blog',
     '/posts/comments',
     '/posts/all_posts/post',

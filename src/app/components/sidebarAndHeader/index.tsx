@@ -28,7 +28,7 @@ interface Notification {
 export function SidebarAndHeader({ children }: Content) {
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    
+
     const { isAuthenticated, loadingAuth, user, configs } = useContext(AuthContext);
     const [isSideBarOpen, setIsSideBarOpen] = useState(true);
     const [currentRoute, setCurrentRoute] = useState<string | null>(null);
@@ -358,37 +358,37 @@ export function SidebarAndHeader({ children }: Content) {
 
                                     <div>
                                         <button
-                                            onClick={() => handleMenuToggle('marketing_contents')}
+                                            onClick={() => handleMenuToggle('marketing_publication')}
                                             className={clsx('p-2 text-left mb-2 flex justify-between items-center w-full', {
-                                                'bg-activeLink rounded': openMenu === 'marketing_contents' || currentRoute?.includes("/marketing_contents"),
-                                                'text-white': openMenu !== 'marketing_contents' && !currentRoute?.includes("/marketing_contents")
+                                                'bg-activeLink rounded': openMenu === 'marketing_publication' || currentRoute?.includes("/marketing_publication"),
+                                                'text-white': openMenu !== 'marketing_publication' && !currentRoute?.includes("/marketing_publication")
                                             })}
                                         >
                                             Marketing
                                             <CaretRight className={clsx('transition-transform duration-200', {
-                                                'rotate-90': openMenu === 'marketing_contents',
-                                                'rotate-0': openMenu !== 'marketing_contents'
+                                                'rotate-90': openMenu === 'marketing_publication',
+                                                'rotate-0': openMenu !== 'marketing_publication'
                                             })} />
                                         </button>
-                                        {openMenu === 'marketing_contents' && (
+                                        {openMenu === 'marketing_publication' && (
                                             <div className="ml-4 overflow-hidden transition-all duration-300 ease-in-out flex flex-col">
-                                                <Link href="/marketing_contents/configurations_marketing" className={clsx({
-                                                    'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_contents/configurations_marketing",
-                                                    'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_contents/configurations_marketing"
+                                                <Link href="/marketing_publication/all_marketing_publication" className={clsx({
+                                                    'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_publication/all_marketing_publication",
+                                                    'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_publication/all_marketing_publication"
                                                 })}>
-                                                    Configurações de marketing
+                                                    Todos publicidades de marketing
                                                 </Link>
-                                                <Link href="/marketing_contents/all_marketing_contents" className={clsx({
-                                                    'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_contents/all_marketing_contents",
-                                                    'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_contents/all_marketing_contents"
+                                                <Link href="/marketing_publication/add_marketing_publication" className={clsx({
+                                                    'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_publication/add_marketing_publication",
+                                                    'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_publication/add_marketing_publication"
                                                 })}>
-                                                    Todos os conteudos de marketing
+                                                    Adicionar publicidade de marketing
                                                 </Link>
-                                                <Link href="/marketing_contents/add_content_marketing" className={clsx({
-                                                    'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_contents/add_content_marketing",
-                                                    'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_contents/add_content_marketing"
+                                                <Link href="/marketing_publication/config_interval_banner" className={clsx({
+                                                    'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_publication/config_interval_banner",
+                                                    'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_publication/config_interval_banner"
                                                 })}>
-                                                    Adicionar novo conteudo de marketing
+                                                    Configurar intervalo de banners
                                                 </Link>
                                             </div>
                                         )}
@@ -588,32 +588,38 @@ export function SidebarAndHeader({ children }: Content) {
 
                                         <div>
                                             <button
-                                                onClick={() => handleMenuToggle('marketing_contents')}
+                                                onClick={() => handleMenuToggle('marketing_publication')}
                                                 className={clsx('p-2 text-left mb-2 flex justify-between items-center w-full', {
-                                                    'bg-activeLink rounded': openMenu === 'marketing_contents' || currentRoute?.includes("/marketing_contents"),
-                                                    'text-white': openMenu !== 'marketing_contents' && !currentRoute?.includes("/marketing_contents")
+                                                    'bg-activeLink rounded': openMenu === 'marketing_publication' || currentRoute?.includes("/marketing_publication"),
+                                                    'text-white': openMenu !== 'marketing_publication' && !currentRoute?.includes("/marketing_publication")
                                                 })}
                                             >
                                                 Marketing
                                                 <CaretRight className={clsx('transition-transform duration-200', {
-                                                    'rotate-90': openMenu === 'marketing_contents',
-                                                    'rotate-0': openMenu !== 'marketing_contents'
+                                                    'rotate-90': openMenu === 'marketing_publication',
+                                                    'rotate-0': openMenu !== 'marketing_publication'
                                                 })} />
                                             </button>
-                                            {openMenu === 'marketing_contents' && (
+                                            {openMenu === 'marketing_publication' && (
                                                 <div className="ml-4 overflow-hidden transition-all duration-300 ease-in-out flex flex-col">
-                                                    <Link href="/marketing_contents/all_marketing_contents" className={clsx({
-                                                        'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_contents/all_marketing_contents",
-                                                        'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_contents/all_marketing_contents"
+                                                    <Link href="/marketing_publication/all_marketing_publication" className={clsx({
+                                                        'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_publication/all_marketing_publication",
+                                                        'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_publication/all_marketing_publication"
                                                     })}>
-                                                        Todos os conteudos de marketing
+                                                        Todos publicidades de marketing
                                                     </Link>
-                                                    <Link href="/marketing_contents/add_content_marketing" className={clsx({
-                                                        'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_contents/add_content_marketing",
-                                                        'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_contents/add_content_marketing"
+                                                    <Link href="/marketing_publication/add_marketing_publication" className={clsx({
+                                                        'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_publication/add_marketing_publication",
+                                                        'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_publication/add_marketing_publication"
                                                     })}>
-                                                        Adicionar novo conteudo de marketing
+                                                        Adicionar publicidade de marketing
                                                     </Link>
+                                                    <Link href="/marketing_publication/config_interval_banner" className={clsx({
+                                                    'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_publication/config_interval_banner",
+                                                    'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_publication/config_interval_banner"
+                                                })}>
+                                                    Configurar intervalo de banners
+                                                </Link>
                                                 </div>
                                             )}
                                         </div>

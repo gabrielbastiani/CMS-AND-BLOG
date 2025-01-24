@@ -6,23 +6,6 @@ import Image from "next/image";
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { setupAPIClient } from '@/services/api';
 
-interface ConfigurationMarketingConfiguration {
-  id: string;
-  value: string;
-}
-
-interface ConfigurationMarketingType {
-  id: string;
-  name: string;
-  description: string;
-  configurationMarketingConfiguration: ConfigurationMarketingConfiguration[];
-}
-
-interface ConfigurationMarketingOnPublication {
-  id: string;
-  configurationMarketingType: ConfigurationMarketingType;
-}
-
 interface PublicationProps {
   id: string;
   title: string;
@@ -35,41 +18,31 @@ interface PublicationProps {
   publish_at_end: string | number | Date;
   is_popup: boolean;
   created_at: string | number | Date;
-  configurationMarketingOnPublication: ConfigurationMarketingOnPublication[];
 }
 
-export function SlideBanner() {
+interface SliderProps {
+  position: string;
+  local: string;
+}
+
+export function SlideBanner({ position, local }: SliderProps) {
+
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const [banners, setBanners] = useState<PublicationProps[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [intervalTime, setIntervalTime] = useState<number>(5000); // Valor padrão de 5 segundos.
+  const [intervalTime, setIntervalTime] = useState<number>(3000);
 
   useEffect(() => {
     async function fetchBanners() {
-      const apiClient = setupAPIClient();
       try {
-        const response = await apiClient.get(`/marketing_publication/blog_publications`);
+        const apiClient = setupAPIClient();
+        const response = await apiClient.get(`/marketing_publication/blog_publications/slides?position=${position}&local=${local}`);
 
-        const filteredBanners = response.data.filter((banner: PublicationProps) =>
-          banner.image_url &&
-          banner.configurationMarketingOnPublication.some((config) =>
-            config.configurationMarketingType.configurationMarketingConfiguration.some(
-              (conf) => conf.value === "top_home"
-            )
-          )
-        );
+        setBanners(response.data);
 
-        setBanners(filteredBanners);
-
-        // Obtém o tempo de intervalo de um dos banners (ajuste conforme sua estrutura de dados)
-        const dynamicInterval = response.data[0]?.configurationMarketingOnPublication[0]?.configurationMarketingType.configurationMarketingConfiguration.find(
-          (conf: { value: string; }) => conf.value === "banner_interval"
-        )?.value;
-
-        if (dynamicInterval) {
-          setIntervalTime(Number(dynamicInterval) * 1000); // Converte para milissegundos.
-        }
+        setIntervalTime(5000)
+        
       } catch (error) {
         console.error(error);
       }
@@ -95,10 +68,24 @@ export function SlideBanner() {
     setCurrentSlide((prev) => (prev === banners.length - 1 ? 0 : prev + 1));
   };
 
+  const click_publication = async (id: string) => {
+    try {
+      const apiClient = setupAPIClient();
+        await apiClient.patch(`/marketing_publication/${id}/clicks`);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
   return (
     <div className="relative w-full h-[300px] md:h-[500px] overflow-hidden">
       {banners.map((banner, index) => (
-        <Link href={banner.redirect_url} key={banner.id} target='_blank'>
+        <Link
+          key={banner.id}
+          href={banner.redirect_url}
+          target='_blank'
+          onClick={() => click_publication(banner.id)}
+        >
           <Image
             src={`${API_URL}files/${banner.image_url}`}
             alt={banner.title}
@@ -109,7 +96,7 @@ export function SlideBanner() {
           />
         </Link>
       ))}
-      {/* Botões de navegação */}
+      
       <button
         className="absolute top-1/2 left-4 -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-600"
         onClick={handlePrevSlide}

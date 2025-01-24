@@ -47,7 +47,7 @@ export default function SocialShare({ articleUrl }: { articleUrl: string }) {
             </div>
 
             {/* Floating Social Share Box */}
-            <div className="fixed left-4 top-1/3 z-50">
+            <div className="fixed left-4 top-1/3 z-50 hidden md:block">
                 <div className="flex flex-col gap-4">
                     <Link
                         href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}

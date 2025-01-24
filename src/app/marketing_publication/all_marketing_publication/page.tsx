@@ -15,8 +15,8 @@ import { useRouter } from "next/navigation";
 
 interface PublicationProps {
     edit: string;
-    title: string;
     id: string;
+    title: string;
     image_url: string | null;
     status: string;
     description: string;
@@ -24,25 +24,20 @@ interface PublicationProps {
     redirect_url: string;
     publish_at_start: string | number | Date;
     publish_at_end: string | number | Date;
-    is_popup: boolean;
-    configurationMarketingOnPublication: {
-        map: any;
-        length: any;
-        id: string;
-        configurationMarketingType: any
-    }
+    created_at: string | number | Date;
+    conditions: any;
+    position: string;
+    type: string;
     marketingPublicationView: {
         id: string;
         marketingPublication_id: string;
-        local_site: string
         length: number;
     }
-    created_at: string | number | Date;
 }
 
 const statusOptions = ["Disponivel", "Indisponivel"];
 
-export default function All_marketing_contents() {
+export default function All_marketing_publication() {
 
     const { user } = useContext(AuthContext);
     const router = useRouter();
@@ -141,10 +136,6 @@ export default function All_marketing_contents() {
                         "publish_at_start",
                         "publish_at_end",
                         "is_popup",
-                        "local_site",
-                        "popup_position",
-                        "popup_behavior",
-                        "popup_conditions",
                         "created_at"
                     ]}
                     customNames={{
@@ -157,11 +148,6 @@ export default function All_marketing_contents() {
                         clicks: "Clicks na publicidade",
                         publish_at_start: "Inicio data programação",
                         publish_at_end: "Data fim da programação",
-                        is_popup: "Publicação é um popup?",
-                        local_site: "Locais no site",
-                        popup_position: "Posição do popup",
-                        popup_behavior: "Comportamento do popup",
-                        popup_conditions: "Condições do popup"
                     }}
                     customNamesOrder={{
                         title: "Nome da publicidade",
@@ -169,22 +155,19 @@ export default function All_marketing_contents() {
                         status: "Status",
                         publish_at_start: "Data de inicio da publicidade",
                         publish_at_end: "Data fim da publicidade",
-                        is_popup: "Popup?"
                     }}
                     availableColumnsOrder={[
                         "title",
                         "created_at",
                         "status",
                         "publish_at_start",
-                        "publish_at_end",
-                        "is_popup"
+                        "publish_at_end"
                     ]}
                     columnsOrder={[
                         { key: "title", label: "Nome da publicidade" },
                         { key: "status", label: "Status" },
                         { key: "publish_at_start", label: "Data de inicio da publicidade" },
                         { key: "publish_at_end", label: "Data fim da publicidade" },
-                        { key: "is_popup", label: "Popup?" },
                         { key: "created_at", label: "Data de Criação" }
                     ]}
                     table_data="marketingPublication"
@@ -281,13 +264,6 @@ export default function All_marketing_contents() {
                             ),
                         },
                         {
-                            key: "is_popup",
-                            label: "É um popup?",
-                            render: (item) => (
-                                <td>{item.is_popup ? "SIM" : "NÃO"}</td>
-                            ),
-                        },
-                        {
                             key: 'redirect_url',
                             label: 'Link de redirecionamento',
                             render: (item) => (
@@ -335,26 +311,6 @@ export default function All_marketing_contents() {
                             label: "Clicks"
                         },
                         {
-                            key: "configurationMarketingOnPublication",
-                            label: "Configurações",
-                            render: (item) => (
-                                <td className="flex flex-wrap space-x-2 max-w-xs">
-                                    {item.configurationMarketingOnPublication?.length ? (
-                                        item.configurationMarketingOnPublication.map((item: any, index: Key | null | undefined) => (
-                                            <span
-                                                key={index}
-                                                className="p-1 bg-gray-200 rounded-full text-xs whitespace-nowrap text-black"
-                                            >
-                                                {item.configurationMarketingType?.name || "Sem configurações"}
-                                            </span>
-                                        ))
-                                    ) : (
-                                        <span className="text-gray-500">Sem configurações</span>
-                                    )}
-                                </td>
-                            ),
-                        },
-                        {
                             key: "created_at",
                             label: "Data de Criação",
                             render: (item) => (
@@ -367,7 +323,7 @@ export default function All_marketing_contents() {
                             render: (item) => (
                                 <button
                                     className='p-1 bg-red-600 text-white text-xs rounded hover:bg-hoverButtonBackground transition duration-300'
-                                    onClick={() => router.push(`/marketing_contents/all_marketing_contents/marketing_content/${item.id}`)}
+                                    onClick={() => router.push(`/marketing_publication/all_marketing_publication/${item.id}`)}
                                 >
                                     Editar
                                 </button>

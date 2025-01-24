@@ -13,7 +13,7 @@ export default function Home_page() {
   return (
     <BlogLayout
       navbar={<Navbar />}
-      bannersSlide={<SlideBanner />}
+      bannersSlide={<SlideBanner position="SLIDER" local="Pagina_inicial" />}
       footer={<Footer />}
       banners={
         [

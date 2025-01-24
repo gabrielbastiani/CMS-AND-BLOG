@@ -10,6 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import mkt from '../../../assets/no-image-icon-6.png';
+import MarketingPopup from "@/app/components/blog_components/popups/marketingPopup";
 
 interface PostsProps {
     id: string;
@@ -82,7 +83,7 @@ export default function Posts_Categories({ params }: { params: { category_slug: 
     return (
         <BlogLayout
             navbar={<Navbar />}
-            bannersSlide={<SlideBanner />}
+            bannersSlide={<SlideBanner position={""} local={""} />}
             footer={<Footer />}
             banners={
                 [
@@ -194,6 +195,10 @@ export default function Posts_Categories({ params }: { params: { category_slug: 
                                     }
                                 </>
                             </div>
+                            <MarketingPopup
+                                position="POPUP"
+                                local="Pagina_categoria"
+                            />
                         </section>
                     }
                 />

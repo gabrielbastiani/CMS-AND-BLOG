@@ -15,6 +15,7 @@ import { CommentsSection } from '@/app/components/blog_components/commentsSectio
 import Most_posts_views from '@/app/components/blog_components/most_posts_views';
 import SocialShare from '@/app/components/blog_components/socialShare';
 import ArticleLikeDeslike from '@/app/components/blog_components/articleLikeDeslike';
+import BackToTopButton from '@/app/components/blog_components/backToTopButton';
 
 interface PostsProps {
   id: string;
@@ -69,6 +70,7 @@ export default function Article({ params }: { params: { article_url: string } })
       try {
         const { data } = await apiClient.get(`/post/article/content?url_post=${params.article_url}`);
         setArticle_data(data);
+        await apiClient.patch(`/post/${data?.id}/views`);
       } catch (error) {
         console.error("Failed to update views:", error);
       }
@@ -77,7 +79,7 @@ export default function Article({ params }: { params: { article_url: string } })
   }, [params.article_url]);
 
   const calculateReadingTime = (text: string): string => {
-    const wordsPerMinute = 200; // Média de palavras lidas por minuto
+    const wordsPerMinute = 200;
     const words = text.split(/\s+/).length;
     const readingTime = Math.ceil(words / wordsPerMinute);
     return `${readingTime} min de leitura`;
@@ -174,6 +176,7 @@ export default function Article({ params }: { params: { article_url: string } })
           />
           <Newsletter />
           <Most_posts_views />
+          <BackToTopButton />
         </div>
       }
     />
