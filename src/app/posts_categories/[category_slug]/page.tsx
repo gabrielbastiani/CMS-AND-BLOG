@@ -8,7 +8,7 @@ import { SlideBanner } from "@/app/components/blog_components/slideBanner";
 import { setupAPIClient } from "@/services/api";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import mkt from '../../../assets/no-image-icon-6.png';
 import MarketingPopup from "@/app/components/blog_components/popups/marketingPopup";
 
@@ -50,6 +50,23 @@ export default function Posts_Categories({ params }: { params: { category_slug: 
     const [all_posts, setAll_posts] = useState<PostsProps[]>([]);
     const [totalPages, setTotalPages] = useState(1);
     const [loadData, setLoadData] = useState<any>();
+    const [existing_slide, setExisting_slide] = useState<any[]>([]);
+    const [existing_sidebar, setExisting_sidebar] = useState<any[]>([]);
+
+    useEffect(() => {
+        const contentArticle = async () => {
+            const apiClient = setupAPIClient();
+            try {
+                const response = await apiClient.get(`/marketing_publication/existing_banner?local=Pagina_categoria`);
+                const { data } = await apiClient.get(`/marketing_publication/existing_sidebar?local=Pagina_categoria`);
+                setExisting_sidebar(data || []);
+                setExisting_slide(response?.data || []);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        contentArticle();
+    }, []);
 
     async function fetchPosts({ page, limit, search, orderBy, orderDirection }: any) {
         try {
@@ -83,8 +100,17 @@ export default function Posts_Categories({ params }: { params: { category_slug: 
     return (
         <BlogLayout
             navbar={<Navbar />}
-            bannersSlide={<SlideBanner position={""} local={""} />}
+            bannersSlide={
+                <>
+                    {existing_slide.length >= 1 ?
+                        <SlideBanner position="SLIDER" local="Pagina_categoria" />
+                        :
+                        null
+                    }
+                </>
+            }
             footer={<Footer />}
+            existing_sidebar={existing_sidebar.length}
             banners={
                 [
                     <Image src={mkt} alt="Banner 1" className="w-full rounded" width={80} height={80} />,

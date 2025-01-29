@@ -7,9 +7,10 @@ interface BlogLayoutProps {
     banners?: ReactNode;
     bannersSlide?: ReactNode;
     presentation?: ReactNode;
+    existing_sidebar: number;
 }
 
-const BlogLayout: React.FC<BlogLayoutProps> = ({ navbar, footer, children, banners, bannersSlide, presentation }) => {
+const BlogLayout: React.FC<BlogLayoutProps> = ({ navbar, existing_sidebar, footer, children, banners, bannersSlide, presentation }) => {
     return (
         <div className="flex flex-col min-h-screen bg-gray-100">
             {/* Navbar */}
@@ -31,12 +32,17 @@ const BlogLayout: React.FC<BlogLayoutProps> = ({ navbar, footer, children, banne
                 </div>
 
                 {/* Aside (Fixed Scroll) */}
-                <aside className="hidden lg:block sticky top-28 h-screen w-[300px] bg-gray-50 p-4 shadow">
-                    <div className="overflow-y-auto h-full">
-                        {/* Conteúdo do Aside */}
-                        {banners}
-                    </div>
-                </aside>
+                {existing_sidebar >= 1 ?
+                    <aside className="hidden lg:block sticky top-28 h-screen w-[300px] bg-gray-50 p-4 shadow">
+                        <div className="overflow-y-auto h-full">
+                            {/* Conteúdo do Aside */}
+                            {banners}
+                        </div>
+                    </aside>
+                    :
+                    null
+                }
+
             </main>
 
             {/* Banners - Mobile */}

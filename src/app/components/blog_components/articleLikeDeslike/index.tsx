@@ -43,7 +43,7 @@ export default function ArticleLikeDislike({
                 post_id: post_id,
                 isLike,
             });
-            await fetchUpdatedReactions(); // Atualiza os dados reais
+            await fetchUpdatedReactions();
         } catch (error) {
             toast.error("Erro ao registrar sua reação.");
             console.error(error);
@@ -59,6 +59,26 @@ export default function ArticleLikeDislike({
         }
         fetchUpdatedReactions();
     }, [post_id]);
+
+    const formatLike = (like: number): string => {
+        if (like >= 1_000_000) {
+            return (like / 1_000_000).toFixed(1).replace(".0", "") + " Mi";
+        }
+        if (like >= 1_000) {
+            return (like / 1_000).toFixed(1).replace(".0", "") + " Mil";
+        }
+        return like.toString();
+    };
+
+    const formatDislikes = (dislike: number): string => {
+        if (dislike >= 1_000_000) {
+            return (dislike / 1_000_000).toFixed(1).replace(".0", "") + " Mi";
+        }
+        if (dislike >= 1_000) {
+            return (dislike / 1_000).toFixed(1).replace(".0", "") + " Mil";
+        }
+        return dislike.toString();
+    };
 
 
     return (
@@ -76,7 +96,7 @@ export default function ArticleLikeDislike({
                     disabled={loading}
                 >
                     <FaThumbsUp className="text-xl" />
-                    <span className="font-medium">{like}</span>
+                    <span className="font-medium">{formatLike(like)}</span>
                 </button>
                 <button
                     onClick={() => handleLikeDislike(false)}
@@ -87,7 +107,7 @@ export default function ArticleLikeDislike({
                     disabled={loading}
                 >
                     <FaThumbsDown className="text-xl" />
-                    <span className="font-medium">{dislike}</span>
+                    <span className="font-medium">{formatDislikes(dislike)}</span>
                 </button>
             </div>
         </div>

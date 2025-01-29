@@ -36,15 +36,15 @@ export default function UpdateMarketingPublication({
         title: "",
         status: "Disponivel",
         position: "SLIDER",
+        local: "",
+        conditions: "scroll",
     });
 
     useEffect(() => {
         async function fetchMarketingData() {
             try {
                 const apiClient = setupAPIClient();
-                const response = await apiClient.get(
-                    `/marketing_publication/all_publications?marketing_publication_id=${params.marketing_publication_id}`
-                );
+                const response = await apiClient.get(`/marketing_publication/all_publications?marketing_publication_id=${params.marketing_publication_id}`);
 
                 const data = response.data.unique_marketing_content;
                 setAvatarUrl(data.image_url || null);
@@ -107,8 +107,12 @@ export default function UpdateMarketingPublication({
             );
 
             Object.entries(formData).forEach(([key, value]) => {
+                console.log(key)
+                console.log(value)
                 if (value) formDataToSend.append(key, value as string);
             });
+
+            console.log(formDataToSend)
 
             if (imageFile) {
                 formDataToSend.append("file", imageFile);
@@ -252,7 +256,7 @@ export default function UpdateMarketingPublication({
                             Condições:
                             <select
                                 name="conditions"
-                                value={formData.conditions || ""}
+                                value={formData.conditions}
                                 onChange={handleInputChange}
                                 className="w-full border-2 rounded-md px-3 py-2 text-black"
                             >

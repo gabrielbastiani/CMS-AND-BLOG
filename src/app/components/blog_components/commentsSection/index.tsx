@@ -189,6 +189,26 @@ export function CommentsSection({ post_id }: CommentProps) {
             }
         };
 
+        const formatLike = (comment_like: number): string => {
+            if (comment_like >= 1_000_000) {
+                return (comment_like / 1_000_000).toFixed(1).replace(".0", "") + " Mi";
+            }
+            if (comment_like >= 1_000) {
+                return (comment_like / 1_000).toFixed(1).replace(".0", "") + " Mil";
+            }
+            return comment_like.toString();
+        };
+
+        const formatDislikes = (comment_dislike: number): string => {
+            if (comment_dislike >= 1_000_000) {
+                return (comment_dislike / 1_000_000).toFixed(1).replace(".0", "") + " Mi";
+            }
+            if (comment_dislike >= 1_000) {
+                return (comment_dislike / 1_000).toFixed(1).replace(".0", "") + " Mil";
+            }
+            return comment_dislike.toString();
+        };
+
         return (
             <div className={`ml-${nivel * 4} border-l pl-4 mb-4`}>
                 <div className="flex items-start mb-2">
@@ -209,14 +229,14 @@ export function CommentsSection({ post_id }: CommentProps) {
                                 className="flex items-center text-gray-600 hover:text-blue-500"
                             >
                                 <FaThumbsUp className="mr-1" />
-                                {comment.comment_like}
+                                {formatLike(comment.comment_like)}
                             </button>
                             <button
                                 onClick={() => handleLikeDislike(comment.id, false)}
                                 className="flex items-center text-gray-600 hover:text-red-500"
                             >
                                 <FaThumbsDown className="mr-1" />
-                                {comment.comment_dislike}
+                                {formatDislikes(comment.comment_dislike)}
                             </button>
                             <button
                                 onClick={handleReplyClick}

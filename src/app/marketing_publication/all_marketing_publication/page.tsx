@@ -7,7 +7,7 @@ import { SidebarAndHeader } from "@/app/components/sidebarAndHeader";
 import { TitlePage } from "@/app/components/titlePage";
 import { setupAPIClient } from "@/services/api";
 import moment from "moment";
-import { Key, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { MdNotInterested } from "react-icons/md";
 import { toast } from "react-toastify";
 import { AuthContext } from "@/contexts/AuthContext";
@@ -20,13 +20,14 @@ interface PublicationProps {
     image_url: string | null;
     status: string;
     description: string;
+    position: string;
     clicks: number;
+    local: string;
     redirect_url: string;
     publish_at_start: string | number | Date;
     publish_at_end: string | number | Date;
     created_at: string | number | Date;
     conditions: any;
-    position: string;
     type: string;
     marketingPublicationView: {
         id: string;
@@ -277,12 +278,24 @@ export default function All_marketing_publication() {
                                             className="border-gray-300 rounded-md p-1 text-black" />
                                     ) : (
                                         <td onClick={() => user?.role === "EMPLOYEE" ? "" : handleEdit(item.id, "redirect_url", item.redirect_url)}
-                                            className="cursor-pointer text-red-500 hover:underline">
+                                            className="truncate max-w-44 cursor-pointer text-red-500 hover:underline">
                                             {item.redirect_url}
                                         </td>
                                     )}
                                 </td>
                             ),
+                        },
+                        {
+                            key: "status",
+                            label: "Status"
+                        },
+                        {
+                            key: "position",
+                            label: "Posição"
+                        },
+                        {
+                            key: "local",
+                            label: "Local no blog"
                         },
                         {
                             key: 'publish_at_start',

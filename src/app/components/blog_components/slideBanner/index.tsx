@@ -38,11 +38,12 @@ export function SlideBanner({ position, local }: SliderProps) {
       try {
         const apiClient = setupAPIClient();
         const response = await apiClient.get(`/marketing_publication/blog_publications/slides?position=${position}&local=${local}`);
+        const { data } = await apiClient.get(`/marketing_publication/interval_banner/page_banner?local_site=${local}`);
 
         setBanners(response.data);
 
-        setIntervalTime(5000)
-        
+        setIntervalTime(data?.interval_banner || 5000);
+
       } catch (error) {
         console.error(error);
       }
@@ -71,11 +72,11 @@ export function SlideBanner({ position, local }: SliderProps) {
   const click_publication = async (id: string) => {
     try {
       const apiClient = setupAPIClient();
-        await apiClient.patch(`/marketing_publication/${id}/clicks`);
+      await apiClient.patch(`/marketing_publication/${id}/clicks`);
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-}
+  }
 
   return (
     <div className="relative w-full h-[300px] md:h-[500px] overflow-hidden">
@@ -96,7 +97,7 @@ export function SlideBanner({ position, local }: SliderProps) {
           />
         </Link>
       ))}
-      
+
       <button
         className="absolute top-1/2 left-4 -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-600"
         onClick={handlePrevSlide}

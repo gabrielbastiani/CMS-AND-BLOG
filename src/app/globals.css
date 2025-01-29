@@ -36,12 +36,14 @@ body {
 
 /* Altera a cor do nome do mês */
 .react-calendar__navigation__label {
-  color: black !important; /* Muda o nome do mês para preto */
+  color: black !important;
+  /* Muda o nome do mês para preto */
 }
 
 /* Altera a cor das setas de navegação */
 .react-calendar__navigation__arrow {
-  color: black !important; /* Muda as setas para preto */
+  color: black !important;
+  /* Muda as setas para preto */
 }
 
 /* Altera a cor dos nomes dos dias (abreviações: Seg, Ter, Qua, etc.) */
@@ -55,13 +57,15 @@ body {
 
 /* Altera a cor dos números dos dias */
 .react-calendar__tile {
-  color: black !important; /* Muda os números dos dias para preto */
+  color: black !important;
+  /* Muda os números dos dias para preto */
   position: relative;
 }
 
 /* Altera a cor do conteúdo do dia, caso tenha algum conteúdo adicional (ex: número de posts) */
 .react-calendar__tile .text-blue-600 {
-  color: #1e3a8a !important; /* Um tom de azul mais forte para os números de posts */
+  color: #1e3a8a !important;
+  /* Um tom de azul mais forte para os números de posts */
 }
 
 .react-calendar__tile .bg-blue-600 {
@@ -79,7 +83,8 @@ body {
 }
 
 .react-calendar__tile .text-black {
-  color: #333 !important; /* Garante que o número do dia permaneça legível */
+  color: #333 !important;
+  /* Garante que o número do dia permaneça legível */
 }
 
 @media (max-width: 768px) {
@@ -88,4 +93,15 @@ body {
     height: 16px;
     font-size: 0.65rem;
   }
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  @apply text-orange-500;
+  @apply font-extrabold;
+}
+
+.swiper-button-next:hover::after,
+.swiper-button-prev:hover::after {
+  @apply text-orange-700;
 }
