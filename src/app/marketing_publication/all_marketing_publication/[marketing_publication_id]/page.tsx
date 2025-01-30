@@ -17,6 +17,7 @@ interface FormData {
     publish_at_end?: string;
     text_publication?: string;
     local?: string;
+    popup_time?: string;
     status?: "Disponivel" | "Indisponivel";
     position?: "SLIDER" | "SIDEBAR" | "POPUP";
     conditions?: "scroll" | "setTimeout" | "beforeunload";
@@ -55,7 +56,8 @@ export default function UpdateMarketingPublication({
                     status: data.status,
                     position: data.position,
                     local: data.local,
-                    conditions: data.position,
+                    conditions: data.conditions,
+                    popup_time: data.popup_time,
                     description: data.description || "",
                     text_publication: data.text_publication || "",
                     publish_at_start: data.publish_at_start
@@ -107,12 +109,8 @@ export default function UpdateMarketingPublication({
             );
 
             Object.entries(formData).forEach(([key, value]) => {
-                console.log(key)
-                console.log(value)
                 if (value) formDataToSend.append(key, value as string);
             });
-
-            console.log(formDataToSend)
 
             if (imageFile) {
                 formDataToSend.append("file", imageFile);
@@ -252,19 +250,42 @@ export default function UpdateMarketingPublication({
                     </div>
 
                     {formData.position === "POPUP" && (
-                        <label>
-                            Condições:
-                            <select
-                                name="conditions"
-                                value={formData.conditions}
-                                onChange={handleInputChange}
-                                className="w-full border-2 rounded-md px-3 py-2 text-black"
-                            >
-                                <option value="scroll">Scroll</option>
-                                <option value="setTimeout">Timeout</option>
-                                <option value="beforeunload">Unload</option>
-                            </select>
-                        </label>
+                        <div className="grid grid-cols-2 gap-4">
+                            <label>
+                                Condições:
+                                <select
+                                    name="conditions"
+                                    value={formData.conditions}
+                                    onChange={handleInputChange}
+                                    className="w-full border-2 rounded-md px-3 py-2 text-black"
+                                >
+                                    <option value="">Selecione uma condição</option>
+                                    <option value="scroll">Ao rolar a página</option>
+                                    <option value="setTimeout">Tempo na página</option>
+                                    <option value="beforeunload">Ao sair da página</option>
+                                </select>
+                            </label>
+
+                            <label>
+                                Tempo do popup para aparecer ou ao rolar a página:
+                                <select
+                                    name="popup_time"
+                                    value={formData.popup_time}
+                                    onChange={handleInputChange}
+                                    className="w-full border-2 rounded-md px-3 py-2 text-black"
+                                >
+                                    <option value="">Selecione o tempo do popup para aparecer ou ao rolar a página</option>
+                                    <option value="3000">3 Segundos</option>
+                                    <option value="5000">5 Segundos</option>
+                                    <option value="7000">7 Segundos</option>
+                                    <option value="10000">10 Segundos</option>
+                                    <option value="13000">13 Segundos</option>
+                                    <option value="16000">16 Segundos</option>
+                                    <option value="19000">19 Segundos</option>
+                                    <option value="22000">22 Segundos</option>
+                                </select>
+                            </label>
+                        </div>
                     )}
 
                     <div className="grid grid-cols-2 gap-4">

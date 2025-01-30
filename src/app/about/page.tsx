@@ -5,11 +5,10 @@ import { Footer } from "../components/blog_components/footer";
 import { Navbar } from "../components/blog_components/navbar";
 import { useContext, useEffect, useState } from "react";
 import BlogLayout from "../components/blog_components/blogLayout";
-import Image from "next/image";
-import mkt from '../../assets/no-image-icon-6.png';
 import MarketingPopup from "../components/blog_components/popups/marketingPopup";
 import { SlideBanner } from "../components/blog_components/slideBanner";
 import { setupAPIClient } from "@/services/api";
+import PublicationSidebar from "../components/blog_components/publicationSidebar";
 
 export default function About() {
 
@@ -46,10 +45,7 @@ export default function About() {
             }
             existing_sidebar={existing_sidebar.length}
             banners={
-                [
-                    <Image src={mkt} alt="Banner 1" className="w-full rounded" width={80} height={80} />,
-                    <Image src={mkt} alt="Banner 2" className="w-full rounded" width={80} height={80} />
-                ]
+                <PublicationSidebar existing_sidebar={existing_sidebar} />
             }
             children={
                 <>

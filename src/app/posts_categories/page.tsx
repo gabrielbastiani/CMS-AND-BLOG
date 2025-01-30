@@ -1,7 +1,5 @@
 "use client"
 
-import Image from "next/image";
-import mkt from '../../assets/no-image-icon-6.png';
 import { setupAPIClient } from "@/services/api";
 import { Footer } from "../components/blog_components/footer";
 import { Navbar } from "../components/blog_components/navbar";
@@ -10,6 +8,7 @@ import Link from "next/link";
 import BlogLayout from "../components/blog_components/blogLayout";
 import { SlideBanner } from "../components/blog_components/slideBanner";
 import MarketingPopup from "../components/blog_components/popups/marketingPopup";
+import PublicationSidebar from "../components/blog_components/publicationSidebar";
 
 interface Category {
     id: string;
@@ -67,10 +66,7 @@ export default function Posts_categories() {
             footer={<Footer />}
             existing_sidebar={existing_sidebar.length}
             banners={
-                [
-                    <Image src={mkt} alt="Banner 1" className="w-full rounded" width={80} height={80} />,
-                    <Image src={mkt} alt="Banner 2" className="w-full rounded" width={80} height={80} />
-                ]
+                <PublicationSidebar existing_sidebar={existing_sidebar} />
             }
             presentation={
                 <section className="bg-gray-800 py-12 text-white text-center">

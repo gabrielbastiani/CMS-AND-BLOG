@@ -36,7 +36,7 @@ export default function MarketingPopup({ position, local }: PopupProps) {
 
                 if (response.data.conditions === "scroll") {
                     const handleScroll = () => {
-                        if (window.scrollY > response.data?.popup_time || 400) {
+                        if (window.scrollY > response.data?.popup_time) {
                             setIsVisible(true);
                             window.removeEventListener("scroll", handleScroll);
                         }

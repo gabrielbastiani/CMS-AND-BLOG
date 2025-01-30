@@ -376,7 +376,7 @@ export function SidebarAndHeader({ children }: Content) {
                                                     'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_publication/all_marketing_publication",
                                                     'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_publication/all_marketing_publication"
                                                 })}>
-                                                    Todos publicidades de marketing
+                                                    Todas publicidades de marketing
                                                 </Link>
                                                 <Link href="/marketing_publication/add_marketing_publication" className={clsx({
                                                     'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_publication/add_marketing_publication",
@@ -606,7 +606,7 @@ export function SidebarAndHeader({ children }: Content) {
                                                         'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_publication/all_marketing_publication",
                                                         'text-white p-2 mb-2 text-sm': currentRoute !== "/marketing_publication/all_marketing_publication"
                                                     })}>
-                                                        Todos publicidades de marketing
+                                                        Todas publicidades de marketing
                                                     </Link>
                                                     <Link href="/marketing_publication/add_marketing_publication" className={clsx({
                                                         'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/marketing_publication/add_marketing_publication",

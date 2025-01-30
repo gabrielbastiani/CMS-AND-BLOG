@@ -1,6 +1,5 @@
 "use client";
 
-import mkt from '../../../assets/no-image-icon-6.png';
 import BlogLayout from "@/app/components/blog_components/blogLayout";
 import { Footer } from "@/app/components/blog_components/footer";
 import { Navbar } from "@/app/components/blog_components/navbar";
@@ -19,6 +18,7 @@ import BackToTopButton from '@/app/components/blog_components/backToTopButton';
 import MarketingPopup from '@/app/components/blog_components/popups/marketingPopup';
 import { SlideBanner } from '@/app/components/blog_components/slideBanner';
 import { FaRegEye } from 'react-icons/fa';
+import PublicationSidebar from '@/app/components/blog_components/publicationSidebar';
 
 interface PostsProps {
   id: string;
@@ -111,10 +111,7 @@ export default function Article({ params }: { params: { article_url: string } })
       footer={<Footer />}
       existing_sidebar={existing_sidebar.length}
       banners={
-        [
-          <Image src={mkt} alt="Banner 1" className="w-full rounded" width={80} height={80} />,
-          <Image src={mkt} alt="Banner 2" className="w-full rounded" width={80} height={80} />
-        ]
+        <PublicationSidebar existing_sidebar={existing_sidebar} />
       }
       bannersSlide={
         <>
