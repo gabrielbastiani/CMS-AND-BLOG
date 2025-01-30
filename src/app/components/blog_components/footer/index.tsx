@@ -36,7 +36,7 @@ export function Footer() {
     }, []);
 
     return (
-        <footer className="bg-gray-800 text-white py-6 mt-14">
+        <footer className="bg-gray-800 text-white py-6 mt-14 z-50">
             <div className="container mx-auto text-center">
                 <div className="flex justify-center space-x-6 mb-5">
                     {dataMedias.map((media) => (

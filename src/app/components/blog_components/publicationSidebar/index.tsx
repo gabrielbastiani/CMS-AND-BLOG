@@ -50,7 +50,7 @@ export default function PublicationSidebar({ existing_sidebar }: SidebarProps) {
                             className="rounded-md object-cover w-full h-40"
                         />
                     </Link>
-                    <p className="text-lg font-semibold text-gray-800 text-center mt-2">
+                    <p className="text-sm font-semibold text-gray-800 text-center mt-2">
                         {item.text_publication}
                     </p>
                     <Link
@@ -60,7 +60,7 @@ export default function PublicationSidebar({ existing_sidebar }: SidebarProps) {
                         onClick={() => click_publication(item.id)}
                     >
                         <button
-                            className="mt-3 bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-red-600 transition duration-300 uppercase"
+                            className="mt-3 text-sm bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-red-600 transition duration-300 uppercase"
                         >
                             Saiba mais
                         </button>

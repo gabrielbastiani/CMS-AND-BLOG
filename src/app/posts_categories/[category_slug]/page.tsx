@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import mkt from '../../../assets/no-image-icon-6.png';
 import MarketingPopup from "@/app/components/blog_components/popups/marketingPopup";
+import PublicationSidebar from "@/app/components/blog_components/publicationSidebar";
 
 interface PostsProps {
     id: string;
@@ -112,10 +113,7 @@ export default function Posts_Categories({ params }: { params: { category_slug: 
             footer={<Footer />}
             existing_sidebar={existing_sidebar.length}
             banners={
-                [
-                    <Image src={mkt} alt="Banner 1" className="w-full rounded" width={80} height={80} />,
-                    <Image src={mkt} alt="Banner 2" className="w-full rounded" width={80} height={80} />
-                ]
+                <PublicationSidebar existing_sidebar={existing_sidebar} />
             }
             presentation={
                 <section className="bg-gray-800 py-12 text-white text-center">
