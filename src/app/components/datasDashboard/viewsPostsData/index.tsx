@@ -3,7 +3,6 @@ import { ChartOptions } from 'chart.js';
 
 interface ViewsProps {
     postViewsMetrics: any;
-
 }
 
 export function ViewsPostsData({ postViewsMetrics }: ViewsProps) {

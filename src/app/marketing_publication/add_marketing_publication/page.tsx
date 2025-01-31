@@ -4,7 +4,7 @@ import { Section } from "@/app/components/section";
 import { SidebarAndHeader } from "@/app/components/sidebarAndHeader";
 import { TitlePage } from "@/app/components/titlePage";
 import { setupAPIClient } from "@/services/api";
-import { useState, ChangeEvent, useEffect } from "react";
+import { useState, ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
 import { toast } from "react-toastify";
@@ -24,6 +24,7 @@ interface FormData {
     local: string;
     popup_time?: string;
     interval_banner?: string;
+    text_button?: string;
 }
 
 export default function AddMarketingPublication() {
@@ -96,14 +97,15 @@ export default function AddMarketingPublication() {
             Object.values(validationErrors).forEach(message => toast.error(message));
             return;
         }
-    
+
         setLoading(true);
-    
+
         try {
             const apiClient = setupAPIClient();
             const formData = new FormData();
-    
+
             formData.append("title", data.title);
+            formData.append("text_button", data.text_button || "");
             formData.append("description", data.description || "");
             formData.append("status", data.status || "");
             formData.append("publish_at_start", data.publish_at_start ? new Date(data.publish_at_start).toISOString() : "");
@@ -114,14 +116,14 @@ export default function AddMarketingPublication() {
             formData.append("text_publication", data.text_publication || "");
             formData.append("local", data.local);
             formData.append("popup_time", data.popup_time ? String(Number(data.popup_time)) : "0");
-    
+
             if (imageFile) {
                 formData.append("file", imageFile);
             }
-    
+
             // Cadastra o marketing publication
             await apiClient.post("/marketing_publication/create", formData);
-    
+
             toast.success("Publicidade cadastrada com sucesso!");
             reset();
             setAvatarUrl(null);
@@ -134,7 +136,7 @@ export default function AddMarketingPublication() {
             setLoading(false);
         }
     };
-    
+
 
     return (
         <SidebarAndHeader>
@@ -245,6 +247,13 @@ export default function AddMarketingPublication() {
                         </div>
                     ) : (
                         <div className="grid grid-cols-2 gap-4">
+                            <input
+                                type="text"
+                                placeholder="Texto para o botão..."
+                                {...register("text_button")}
+                                className="w-full border-2 rounded-md px-3 py-2 text-black"
+                            />
+
                             <select
                                 {...register("position")}
                                 className="border-2 rounded-md px-3 py-2 text-black"

@@ -9,6 +9,7 @@ interface PublicationProps {
     image_url: string;
     redirect_url: string;
     text_publication: string;
+    text_button: string;
 }
 
 interface SidebarProps {
@@ -62,7 +63,7 @@ export default function PublicationSidebar({ existing_sidebar }: SidebarProps) {
                         <button
                             className="mt-3 text-sm bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-red-600 transition duration-300 uppercase"
                         >
-                            Saiba mais
+                            {item.text_button}
                         </button>
                     </Link>
 

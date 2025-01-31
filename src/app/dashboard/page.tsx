@@ -13,9 +13,10 @@ import { CommentData } from "../components/datasDashboard/commentData";
 import { FormContactData } from "../components/datasDashboard/formContactData";
 import { UsersData } from "../components/datasDashboard/usersData";
 import { NewslattersData } from "../components/datasDashboard/newslattersData";
-import { ViewsPostsData } from "../components/datasDashboard/viewsPostsData";
 import { CommentReactionMetrics } from "../components/datasDashboard/commentData/commentReactionMetrics";
 import { PostReactionMetrics } from "../components/datasDashboard/postData/postReactionMetrics";
+import { ViewsPostsData } from "../components/datasDashboard/viewsPostsData";
+import { ClickPublicationMarketingData } from "../components/datasDashboard/clickPublicationMarketingData";
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement);
 
@@ -36,6 +37,12 @@ export default function Dashboard() {
   const [newsletterData, setNewsletterData] = useState<any>({});
   const [userData, setUserData] = useState<any>({});
 
+  const [publicationsClick, setPublicationsClick] = useState<{
+    dailyViews: { title: string; clicks: number }[];
+    weeklyViews: { title: string; clicks: number }[];
+    monthlyViews: { title: string; clicks: number }[];
+  } | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       const apiClient = setupAPIClient();
@@ -46,6 +53,7 @@ export default function Dashboard() {
       const contactsResponse = await apiClient.get("/dashboard/contact/statistics");
       const newsletterData = await apiClient.get("/dashboard/newslatter/statistics");
       const usersResponse = await apiClient.get("/dashboard/userBlog/statistics");
+      const publicationsClicks = await apiClient.get("/dashboard/publication_marketing/statistics");
 
       setPostData(postsResponse.data);
       setPostReactionData(postsResponse.data.metricsPostsLikesDislikes);
@@ -56,6 +64,7 @@ export default function Dashboard() {
       setContactData(contactsResponse.data);
       setNewsletterData(newsletterData.data);
       setUserData(usersResponse.data);
+      setPublicationsClick(publicationsClicks.data);
     };
 
     fetchData();
@@ -98,6 +107,12 @@ export default function Dashboard() {
           </div>
           <ViewsPostsData
             postViewsMetrics={postViewsMetrics}
+          />
+        </div>
+
+        <div className="p-4 space-y-6">
+          <ClickPublicationMarketingData
+            publicationsClickMetrics={publicationsClick}
           />
         </div>
       </Section>

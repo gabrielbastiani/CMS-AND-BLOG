@@ -12,6 +12,7 @@ interface PopupData {
     text_publication?: string;
     redirect_url?: string;
     conditions?: string;
+    text_button: string;
 }
 
 interface PopupProps {
@@ -103,7 +104,7 @@ export default function MarketingPopup({ position, local }: PopupProps) {
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        Saiba mais
+                        {popupData.text_button}
                     </Link>
                 )}
             </div>

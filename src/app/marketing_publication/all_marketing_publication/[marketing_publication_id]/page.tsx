@@ -18,6 +18,7 @@ interface FormData {
     text_publication?: string;
     local?: string;
     popup_time?: string;
+    text_button?: string;
     status?: "Disponivel" | "Indisponivel";
     position?: "SLIDER" | "SIDEBAR" | "POPUP";
     conditions?: "scroll" | "setTimeout" | "beforeunload";
@@ -55,6 +56,7 @@ export default function UpdateMarketingPublication({
                     redirect_url: data.redirect_url || "",
                     status: data.status,
                     position: data.position,
+                    text_button: data.text_button,
                     local: data.local,
                     conditions: data.conditions,
                     popup_time: data.popup_time,
@@ -109,7 +111,9 @@ export default function UpdateMarketingPublication({
             );
 
             Object.entries(formData).forEach(([key, value]) => {
-                if (value) formDataToSend.append(key, value as string);
+                if (value !== undefined && value !== null) {
+                    formDataToSend.append(key, value as string);
+                }
             });
 
             if (imageFile) {
@@ -207,17 +211,31 @@ export default function UpdateMarketingPublication({
                         />
                     </label>
 
-                    <label>
-                        Link de Redirecionamento:
-                        <input
-                            type="text"
-                            name="redirect_url"
-                            value={formData.redirect_url || ""}
-                            onChange={handleInputChange}
-                            placeholder="Insira o link"
-                            className="w-full border-2 rounded-md px-3 py-2 text-black"
-                        />
-                    </label>
+                    <div className="grid grid-cols-2 gap-4">
+                        <label>
+                            Link de Redirecionamento:
+                            <input
+                                type="text"
+                                name="redirect_url"
+                                value={formData.redirect_url || ""}
+                                onChange={handleInputChange}
+                                placeholder="Insira o link"
+                                className="w-full border-2 rounded-md px-3 py-2 text-black"
+                            />
+                        </label>
+
+                        <label>
+                            Texto do botão:
+                            <input
+                                type="text"
+                                name="text_button"
+                                value={formData.text_button}
+                                onChange={handleInputChange}
+                                placeholder="Digite o texto do botão"
+                                className="w-full border-2 rounded-md px-3 py-2 text-black"
+                            />
+                        </label>
+                    </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <label>
