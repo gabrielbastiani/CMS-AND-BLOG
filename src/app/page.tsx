@@ -9,6 +9,9 @@ import { useEffect, useState } from "react";
 import { setupAPIClient } from "@/services/api";
 import PublicationSidebar from "./components/blog_components/publicationSidebar";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const BLOG_URL = process.env.NEXT_PUBLIC_URL_BLOG;
+
 export default function Home_page() {
 
   const [existing_slide, setExisting_slide] = useState<any[]>([]);

@@ -106,6 +106,7 @@ export default function Dashboard() {
             />
           </div>
           <ViewsPostsData
+            /* @ts-ignore */
             postViewsMetrics={postViewsMetrics}
           />
         </div>

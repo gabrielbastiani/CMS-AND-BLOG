@@ -1,11 +1,88 @@
+"use client";
+
 import { Bar } from 'react-chartjs-2';
 import { ChartOptions } from 'chart.js';
+import { useEffect, useState } from 'react';
+import { setupAPIClient } from '@/services/api';
+import { FilterDateClickPublication } from './filterDateClickPublication';
+
+interface PublicationClick {
+    date: string;
+    title: string;
+    clicks: number;
+}
+
+interface CliciksMetrics {
+    dailyClicks: PublicationClick[];
+    weeklyClick: PublicationClick[];
+    monthlyClick: PublicationClick[];
+}
 
 interface ClickMarketingProps {
-    publicationsClickMetrics: any;
+    publicationsClickMetrics: CliciksMetrics;
 }
 
 export function ClickPublicationMarketingData({ publicationsClickMetrics }: ClickMarketingProps) {
+
+    const [chartData, setChartData] = useState<any>(null);
+
+    const fetchFilteredClick = async (startDate: string, endDate: string) => {
+        if (!startDate || !endDate) return;
+
+        const apiClient = setupAPIClient();
+        const { data } = await apiClient.get(`/dashboard/publication_marketing/views-by-date`, {
+            params: { startDate, endDate },
+        });
+
+        // Se for um array, processa os dados
+        if (Array.isArray(data)) {
+            processChartData(data);
+        } else {
+            console.error("A resposta da API não é um array válido:", data);
+        }
+    };
+
+    const processChartData = (data: PublicationClick[]) => {
+        const groupedData: Record<string, Record<string, number>> = {};
+
+        // Verificação para garantir que 'data' seja um array
+        if (!Array.isArray(data)) {
+            console.error("Esperava um array, mas recebeu:", data);
+            return;
+        }
+
+        data.forEach(({ date, title, clicks }) => {
+            if (!groupedData[date]) groupedData[date] = {};
+            groupedData[date][title] = clicks;
+        });
+
+        const labels = Object.keys(groupedData); // Datas no eixo X
+        const publicationsTitles = Array.from(new Set(data.map((pub) => pub.title))); // Títulos dos posts
+
+        const datasets = publicationsTitles.map((title) => ({
+            label: title,
+            data: labels.map((date) => groupedData[date][title] || 0), // Valores para cada data
+            backgroundColor: getRandomColor(),
+        }));
+
+        setChartData({ labels, datasets });
+    };
+
+    useEffect(() => {/* @ts-ignore */
+        if (publicationsClickMetrics) processChartData(publicationsClickMetrics);
+    }, [publicationsClickMetrics]);
+
+    const chartOptionsFilter: ChartOptions<"bar"> = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { position: "top" },
+        },
+        scales: {
+            x: { ticks: { font: { size: 10 } } },
+            y: { ticks: { font: { size: 10 } } },
+        },
+    };
 
     const chartOptions: ChartOptions<'bar'> = {
         responsive: true,
@@ -29,7 +106,7 @@ export function ClickPublicationMarketingData({ publicationsClickMetrics }: Clic
         },
     };
 
-    const dailyViewsChartData = publicationsClickMetrics
+    const dailyClickChartData = publicationsClickMetrics
         ? {
             labels: publicationsClickMetrics.dailyClicks.map((publication: { title: any; }) => publication.title),
             datasets: [
@@ -73,10 +150,19 @@ export function ClickPublicationMarketingData({ publicationsClickMetrics }: Clic
 
             <h2 className="text-lg font-semibold text-black mb-4">Cliques em Publicidades</h2>
 
+            <FilterDateClickPublication onFilter={fetchFilteredClick} />
+
+            <div className="rounded-md border p-3" style={{ height: "350px" }}>
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                    Visualizações por Data e Publicação
+                </h4>
+                {chartData ? <Bar data={chartData} options={chartOptionsFilter} /> : <p>Selecione um intervalo de datas.</p>}
+            </div>
+
             <div className="space-y-4">
                 <div className="rounded-md border p-3" style={{ height: '250px' }}>
                     <h4 className="text-sm font-semibold text-gray-700 mb-2">Cliques Diários</h4>
-                    {dailyViewsChartData && <Bar data={dailyViewsChartData} options={chartOptions} />}
+                    {dailyClickChartData && <Bar data={dailyClickChartData} options={chartOptions} />}
                 </div>
 
                 <div className="rounded-md border p-3" style={{ height: '250px' }}>
@@ -92,3 +178,6 @@ export function ClickPublicationMarketingData({ publicationsClickMetrics }: Clic
         </div>
     )
 };
+
+const getRandomColor = () =>
+    `hsl(${Math.floor(Math.random() * 360)}, 70%, 50%)`;

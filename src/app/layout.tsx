@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { AuthProviderBlog } from "@/contexts/AuthContextBlog";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const BLOG_URL = process.env.NEXT_PUBLIC_URL_BLOG;
 
 const geistSans = localFont({
   src: "./fonts/Poppins-Regular.ttf",
@@ -21,8 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const blog = await response.json();
 
   return {
-    title: blog?.name_blog || "Blog",
-    description: blog?.description_blog || "Blog Description",
+    title: blog.title ? blog.title : "Blog",
+    description: blog.description ? blog.description : "Descrição do blog"
   };
 }
 

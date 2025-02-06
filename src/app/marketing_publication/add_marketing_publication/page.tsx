@@ -246,25 +246,27 @@ export default function AddMarketingPublication() {
                             </select>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-2 gap-4">
-                            <input
-                                type="text"
-                                placeholder="Texto para o botão..."
-                                {...register("text_button")}
-                                className="w-full border-2 rounded-md px-3 py-2 text-black"
-                            />
-
-                            <select
-                                {...register("position")}
-                                className="border-2 rounded-md px-3 py-2 text-black"
-                            >
-                                <option value="">Selecione uma posição</option>
-                                <option value="SLIDER">Slider banner</option>
-                                <option value="SIDEBAR">No sidebar</option>
-                                {isPopup ? <option value="POPUP">Popup</option> : null}
-                            </select>
-                        </div>
+                        null
                     )}
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <input
+                            type="text"
+                            placeholder="Texto para o botão..."
+                            {...register("text_button")}
+                            className="w-full border-2 rounded-md px-3 py-2 text-black"
+                        />
+
+                        <select
+                            {...register("position")}
+                            className="border-2 rounded-md px-3 py-2 text-black"
+                        >
+                            <option value="">Selecione uma posição</option>
+                            <option value="SLIDER">Slider banner</option>
+                            <option value="SIDEBAR">No sidebar</option>
+                            {isPopup ? <option value="POPUP">Popup</option> : null}
+                        </select>
+                    </div>
 
                     <div className="grid grid-cols-2 gap-4">
                         <label>
