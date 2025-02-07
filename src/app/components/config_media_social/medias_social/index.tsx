@@ -2,6 +2,7 @@ import { setupAPIClient } from "@/services/api";
 import { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { FaTrashAlt } from "react-icons/fa";
 
 interface MediasProps {
     id: string;
@@ -89,6 +90,22 @@ export default function Medias_social() {
         }
     };
 
+    const handleDelete = async (id: string) => {
+        setLoading(true);
+        try {
+            const apiClient = setupAPIClient();
+            await apiClient.delete(`/delete/media_social?socialMediasBlog_id=${id}`);
+            toast.success(`Media deletada com sucesso`);
+            const { data } = await apiClient.get("/get/media_social");
+            setDataMedias(data);
+        } catch (error) {
+            console.error(error);
+            toast.error("Erro ao deletar o dado.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="space-y-6 px-4 sm:px-6 lg:px-8">
             <h1 className="text-xl sm:text-2xl font-bold text-center sm:text-left">Gerenciar Mídias Sociais</h1>
@@ -155,6 +172,14 @@ export default function Medias_social() {
                                     {media.link}
                                 </p>
                             )}
+                        </div>
+                        <div>
+                            <FaTrashAlt
+                                color="red"
+                                size={28}
+                                style={{ cursor: "pointer" }}
+                                onClick={() => handleDelete(media.id)}
+                            />
                         </div>
                     </div>
                 ))}

@@ -45,12 +45,6 @@ export function ClickPublicationMarketingData({ publicationsClickMetrics }: Clic
     const processChartData = (data: PublicationClick[]) => {
         const groupedData: Record<string, Record<string, number>> = {};
 
-        // Verificação para garantir que 'data' seja um array
-        if (!Array.isArray(data)) {
-            console.error("Esperava um array, mas recebeu:", data);
-            return;
-        }
-
         data.forEach(({ date, title, clicks }) => {
             if (!groupedData[date]) groupedData[date] = {};
             groupedData[date][title] = clicks;
@@ -68,8 +62,22 @@ export function ClickPublicationMarketingData({ publicationsClickMetrics }: Clic
         setChartData({ labels, datasets });
     };
 
-    useEffect(() => {/* @ts-ignore */
-        if (publicationsClickMetrics) processChartData(publicationsClickMetrics);
+    useEffect(() => {
+        if (publicationsClickMetrics) {
+            const allViews = [
+                ...publicationsClickMetrics.dailyClicks,
+                ...publicationsClickMetrics.weeklyClick,
+                ...publicationsClickMetrics.monthlyClick,
+            ];
+            processChartData(allViews);
+        }
+    }, [publicationsClickMetrics]);
+
+
+    useEffect(() => {
+        if (publicationsClickMetrics?.dailyClicks) {
+            processChartData(publicationsClickMetrics.dailyClicks);
+        }
     }, [publicationsClickMetrics]);
 
     const chartOptionsFilter: ChartOptions<"bar"> = {

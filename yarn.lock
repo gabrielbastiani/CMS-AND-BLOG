@@ -1670,7 +1670,7 @@ react-dnd@^16.0.1:
     fast-deep-equal "^3.1.3"
     hoist-non-react-statics "^3.3.2"
 
-"react-dom@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react-dom@^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^17.0.0 || ^18.0.0 || ^19.0.0", react-dom@^18, "react-dom@^18.0.0 || ^17.0.1 || ^16.7.0", react-dom@^18.2.0, "react-dom@>= 16.3.0", react-dom@>=0.14.0, react-dom@>=16.6.0, react-dom@>=16.8.0, react-dom@>=16.9.0, react-dom@>=18:
+"react-dom@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react-dom@^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^17.0.0 || ^18.0.0 || ^19.0.0", react-dom@^18, "react-dom@^18.0.0 || ^17.0.1 || ^16.7.0", react-dom@^18.2.0, "react-dom@>= 16.3.0", react-dom@>=0.14.0, react-dom@>=16.6.0, react-dom@>=16.8.0, react-dom@>=16.9.0, react-dom@>=18, react-dom@>=18.0:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz"
   integrity sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==
@@ -1716,6 +1716,15 @@ react-icons@^5.3.0:
   resolved "https://registry.npmjs.org/react-icons/-/react-icons-5.3.0.tgz"
   integrity sha512-DnUk8aFbTyQPSkCfF8dbX6kQjXA9DktMeJqfjrg6cK9vwQVMxmcA3BfP4QoiztVmEHtwlTgLFsPuH2NskKT6eg==
 
+react-input-mask-next@^3.0.0-alpha.12:
+  version "3.0.0-alpha.12"
+  resolved "https://registry.npmjs.org/react-input-mask-next/-/react-input-mask-next-3.0.0-alpha.12.tgz"
+  integrity sha512-ATUbd4vigFCmGxTDCjjZ3tAaqzLrebfTR8/XbcYXp0yQSUB14vav1ggUTEGMSu5FnrKyMGxnn/iGx6CLziKwxQ==
+  dependencies:
+    invariant "^2.2.4"
+    prop-types "^15.7.2"
+    warning "^4.0.3"
+
 react-input-mask@^2.0.4:
   version "2.0.4"
   resolved "https://registry.npmjs.org/react-input-mask/-/react-input-mask-2.0.4.tgz"
@@ -1757,10 +1766,10 @@ react-resizable@^3.0.5:
     prop-types "15.x"
     react-draggable "^4.0.3"
 
-react-select@^5.8.3:
-  version "5.8.3"
-  resolved "https://registry.npmjs.org/react-select/-/react-select-5.8.3.tgz"
-  integrity sha512-lVswnIq8/iTj1db7XCG74M/3fbGB6ZaluCzvwPGT5ZOjCdL/k0CLWhEK0vCBLuU5bHTEf6Gj8jtSvi+3v+tO1w==
+react-select@^5.10.0:
+  version "5.10.0"
+  resolved "https://registry.npmjs.org/react-select/-/react-select-5.10.0.tgz"
+  integrity sha512-k96gw+i6N3ExgDwPIg0lUPmexl1ygPe6u5BdQFNBhkpbwroIgCNXdubtIzHfThYXYYTubwOBafoMnn7ruEP1xA==
   dependencies:
     "@babel/runtime" "^7.12.0"
     "@emotion/cache" "^11.4.0"
@@ -1770,7 +1779,7 @@ react-select@^5.8.3:
     memoize-one "^6.0.0"
     prop-types "^15.6.0"
     react-transition-group "^4.3.0"
-    use-isomorphic-layout-effect "^1.1.2"
+    use-isomorphic-layout-effect "^1.2.0"
 
 react-sortablejs@^6.1.4:
   version "6.1.4"
@@ -1797,7 +1806,7 @@ react-transition-group@^4.3.0, react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@*, "react@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react@^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc", "react@^16.8.0 || ^17 || ^18 || ^19", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^17.0.0 || ^18.0.0 || ^19.0.0", react@^18, "react@^18.0.0 || ^17.0.1 || ^16.7.0", react@^18.2.0, react@^18.3.1, "react@>= 16.14", "react@>= 16.3", "react@>= 16.3.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", react@>=0.14.0, react@>=16, react@>=16.4.1, react@>=16.6.0, react@>=16.8.0, react@>=16.9.0, react@>=18:
+react@*, "react@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react@^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc", "react@^16.8.0 || ^17 || ^18 || ^19", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^17.0.0 || ^18.0.0 || ^19.0.0", react@^18, "react@^18.0.0 || ^17.0.1 || ^16.7.0", react@^18.2.0, react@^18.3.1, "react@>= 16.14", "react@>= 16.3", "react@>= 16.3.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", react@>=0.14.0, react@>=16, react@>=16.4.1, react@>=16.6.0, react@>=16.8.0, react@>=16.9.0, react@>=18, react@>=18.0:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react/-/react-18.3.1.tgz"
   integrity sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==
@@ -2060,10 +2069,10 @@ tiny-invariant@1.2.0:
   resolved "https://registry.npmjs.org/tiny-invariant/-/tiny-invariant-1.2.0.tgz"
   integrity sha512-1Uhn/aqw5C6RI4KejVeTg6mIS7IqxnLJ8Mv2tV5rTc0qWobay7pDUz6Wi392Cnc8ak1H0F2cjoRzb2/AW4+Fvg==
 
-"tinymce@^7.0.0 || ^6.0.0 || ^5.5.1":
-  version "7.5.1"
-  resolved "https://registry.npmjs.org/tinymce/-/tinymce-7.5.1.tgz"
-  integrity sha512-GRXJUB0BEIOUHUEC+q9IjsgWGIAQ4Tn5t5hfpB/YR7No3oPgKHG03v1d3nbov9aqdyVW7Be+UD4I3ZerQG30VQ==
+"tinymce@^7.0.0 || ^6.0.0 || ^5.5.1", tinymce@^7.6.1:
+  version "7.6.1"
+  resolved "https://registry.npmjs.org/tinymce/-/tinymce-7.6.1.tgz"
+  integrity sha512-5cHhaAoyyTHfAVTInNfoSp0KkUHmeVUbGSu37QKQbOFIPqxYPhqBiaLm1WVLgoNBYOHRProVc3xzxnNTeWHyoQ==
 
 to-regex-range@^5.0.1:
   version "5.0.1"
@@ -2100,10 +2109,10 @@ universal-cookie@^7.0.0:
     "@types/cookie" "^0.6.0"
     cookie "^0.6.0"
 
-use-isomorphic-layout-effect@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.npmjs.org/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.1.2.tgz"
-  integrity sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==
+use-isomorphic-layout-effect@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmjs.org/use-isomorphic-layout-effect/-/use-isomorphic-layout-effect-1.2.0.tgz"
+  integrity sha512-q6ayo8DWoPZT0VdG4u3D3uxcgONP3Mevx2i2b0434cwWBoL+aelL1DzkXI6w3PhTZzUeR2kaVlZn70iCiseP6w==
 
 util-deprecate@^1.0.2:
   version "1.0.2"

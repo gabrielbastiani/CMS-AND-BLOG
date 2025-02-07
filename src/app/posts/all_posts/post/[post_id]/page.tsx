@@ -69,6 +69,7 @@ type FormData = z.infer<typeof schema>;
 export default function Post({ params }: { params: { post_id: string } }) {
 
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const TOKEN_TINY = process.env.NEXT_PUBLIC_TINYMCE_API_KEY;
 
     const editorRef = useRef<any>(null);
     const [allAuthors, setAllAuthors] = useState<Author[]>([]);
@@ -82,6 +83,13 @@ export default function Post({ params }: { params: { post_id: string } }) {
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [imagePost, setImagePost] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
+    const [key, setKey] = useState(0);
+    const [key_b, setKey_b] = useState(1);
+
+    useEffect(() => {
+        setKey(1);
+        setKey_b(2)
+    }, []);
 
     const {
         register,
@@ -260,6 +268,8 @@ export default function Post({ params }: { params: { post_id: string } }) {
                         <label>
                             Categorias:
                             <Select
+                                key={key}
+                                instanceId="meu-select-categorias"
                                 className="text-black z-40"
                                 options={categories.map((cat) => ({
                                     value: cat.id,
@@ -296,6 +306,8 @@ export default function Post({ params }: { params: { post_id: string } }) {
                         <label>
                             Tags:
                             <Select
+                                key={key_b}
+                                instanceId="meu-select-tags"
                                 className="text-black z-40"
                                 options={tags.map((tag) => ({
                                     value: tag.id,
@@ -392,17 +404,22 @@ export default function Post({ params }: { params: { post_id: string } }) {
                     <h1 className="text-xl">Texto do post</h1>
 
                     <Editor
-                        apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
+                        apiKey={TOKEN_TINY}
                         onInit={(evt, editor) => (editorRef.current = editor)}
                         initialValue={dataPost?.text_post || "<p>Digite seu conteúdo aqui...</p>"}
                         init={{
                             height: 800,
                             menubar: true,
-                            plugins: ["link", "lists", "image", "media", "advlist autolink lists link image charmap preview anchor",
-                                "searchreplace visualblocks code fullscreen",
-                                "insertdatetime media table paste code help wordcount",
-                                "emoticons template codesample",],
                             toolbar: "undo redo | formatselect | bold italic | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image emoticons | table codesample | preview help",
+                            external_plugins: {
+                                insertdatetime: "https://cdn.jsdelivr.net/npm/tinymce/plugins/insertdatetime/plugin.min.js",
+                                media: "https://cdn.jsdelivr.net/npm/tinymce/plugins/media/plugin.min.js",
+                                table: "https://cdn.jsdelivr.net/npm/tinymce/plugins/table/plugin.min.js",
+                                paste: "https://cdn.jsdelivr.net/npm/tinymce/plugins/paste/plugin.min.js",
+                                code: "https://cdn.jsdelivr.net/npm/tinymce/plugins/code/plugin.min.js",
+                                help: "https://cdn.jsdelivr.net/npm/tinymce/plugins/help/plugin.min.js",
+                                wordcount: "https://cdn.jsdelivr.net/npm/tinymce/plugins/wordcount/plugin.min.js",
+                            },
                             codesample_languages: [
                                 { text: "HTML/XML", value: "markup" },
                                 { text: "JavaScript", value: "javascript" },

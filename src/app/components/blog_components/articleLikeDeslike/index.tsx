@@ -28,10 +28,13 @@ export default function ArticleLikeDislike({
             setLike(updatedLike);
             setDislike(updatedDislike);
         } catch (error) {
-            toast.error("Erro ao atualizar as reações.");
             console.error(error);
         }
     }
+
+    useEffect(() => {
+        fetchUpdatedReactions();
+    }, [post_id]);
 
     const handleLikeDislike = async (isLike: boolean) => {
         if (loading) return; // Evita múltiplas requisições simultâneas
@@ -52,14 +55,6 @@ export default function ArticleLikeDislike({
         }
     };
 
-    useEffect(() => {
-        if (!post_id || post_id.length === 0) {
-            console.error("Post ID inválido ou não fornecido.");
-            return;
-        }
-        fetchUpdatedReactions();
-    }, [post_id]);
-
     const formatLike = (like: number): string => {
         if (like >= 1_000_000) {
             return (like / 1_000_000).toFixed(1).replace(".0", "") + " Mi";
@@ -79,7 +74,6 @@ export default function ArticleLikeDislike({
         }
         return dislike.toString();
     };
-
 
     return (
         <div className="flex flex-col items-center mt-8 space-y-4">

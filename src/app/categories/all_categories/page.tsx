@@ -299,12 +299,12 @@ export default function All_categories() {
                                             onBlur={() => handleSave(item.id, "name_category")}
                                             className="border-gray-300 rounded-md p-1 text-black" />
                                     ) : (
-                                        <td
+                                        <span
                                             onClick={() => user?.role === "EMPLOYEE" ? "" : handleEdit(item.id, "name_category", item.name_category)}
                                             className="cursor-pointer hover:underline text-white truncate max-w-44"
                                         >
                                             {item.name_category}
-                                        </td>
+                                        </span>
                                     )}
                                 </>
                             ),
@@ -313,19 +313,19 @@ export default function All_categories() {
                             key: "description",
                             label: "Descrição",
                             render: (item) => (
-                                <td
+                                <span
                                     onClick={() => user?.role === "EMPLOYEE" ? "" : handleDescriptionClick(item.id, item.description || "")}
                                     className="cursor-pointer text-white hover:underline text-xs truncate max-w-32"
                                 >
                                     {item.description ? item.description : "Adicionar descrição"}
-                                </td>
+                                </span>
                             ),
                         },
                         {
                             key: 'order',
                             label: 'Ordenação',
                             render: (item) => (
-                                <td>
+                                <span>
                                     {editingCategory?.id === item.id && editingCategory?.field === "order" ? (
                                         <input
                                             type="number"
@@ -335,14 +335,14 @@ export default function All_categories() {
                                             onBlur={() => handleSave(item.id, "order")}
                                             className="border-gray-300 rounded-md p-1 text-black" />
                                     ) : (
-                                        <td
+                                        <span
                                             onClick={() => user?.role === "EMPLOYEE" ? "" : handleEdit(item.id, "order", item.order.toString())}
                                             className="cursor-pointer text-black hover:underline bg-slate-200 p-2 w-3 rounded"
                                         >
                                             {item.order}
-                                        </td>
+                                        </span>
                                     )}
-                                </td>
+                                </span>
                             ),
                         },
                         {
@@ -351,22 +351,22 @@ export default function All_categories() {
                             render: (item: CategoryProps) => (
                                 <>
                                     {item.children.length === 0 ?
-                                        <td className="text-gray-500">
+                                        <span className="text-gray-500">
                                             Sem subcategoria
-                                        </td>
+                                        </span>
                                         :
-                                        <td className="flex flex-wrap space-x-2 max-w-xs">
+                                        <span className="flex flex-wrap space-x-2 max-w-xs">
                                             {item.children.map((child: { name_category: string; }, index: Key | null | undefined) => {
                                                 return (
-                                                    <td
+                                                    <span
                                                         key={index}
                                                         className="p-1 bg-gray-200 rounded-full text-xs whitespace-nowrap text-black"
                                                     >
                                                         {child.name_category}
-                                                    </td>
+                                                    </span>
                                                 );
                                             })}
-                                        </td>}
+                                        </span>}
                                 </>
                             ),
                         },
@@ -374,7 +374,7 @@ export default function All_categories() {
                             key: 'status',
                             label: 'Status',
                             render: (item) => (
-                                <td>
+                                <span>
                                     {editingCategory?.id === item.id && editingCategory?.field === "status" ? (
                                         <select
                                             value={editedValue || item.status}
@@ -389,19 +389,19 @@ export default function All_categories() {
                                             ))}
                                         </select>
                                     ) : (
-                                        <td onClick={() => user?.role === "EMPLOYEE" ? "" : handleEdit(item.id, "status", item.status)}
+                                        <span onClick={() => user?.role === "EMPLOYEE" ? "" : handleEdit(item.id, "status", item.status)}
                                             className="cursor-pointer text-red-500 hover:underline">
                                             {item.status}
-                                        </td>
+                                        </span>
                                     )}
-                                </td>
+                                </span>
                             ),
                         },
                         {
                             key: "created_at",
                             label: "Data de Criação",
                             render: (item) => (
-                                <td>{moment(item.created_at).format('DD/MM/YYYY HH:mm')}</td>
+                                <span>{moment(item.created_at).format('DD/MM/YYYY HH:mm')}</span>
                             ),
                         }
                     ]}

@@ -4,7 +4,7 @@ import { Bar } from 'react-chartjs-2';
 import { ChartOptions } from 'chart.js';
 import { useEffect, useState } from 'react';
 import { setupAPIClient } from '@/services/api';
-import { FilterDateViewsPost } from './filterDateViewsPost'; 
+import { FilterDateViewsPost } from './filterDateViewsPost';
 
 interface PostView {
     date: string;
@@ -45,12 +45,6 @@ export function ViewsPostsData({ postViewsMetrics }: ViewsProps) {
     const processChartData = (data: PostView[]) => {
         const groupedData: Record<string, Record<string, number>> = {};
 
-        // Verificação para garantir que 'data' seja um array
-        if (!Array.isArray(data)) {
-            console.error("Esperava um array, mas recebeu:", data);
-            return;
-        }
-
         data.forEach(({ date, title, views }) => {
             if (!groupedData[date]) groupedData[date] = {};
             groupedData[date][title] = views;
@@ -68,8 +62,22 @@ export function ViewsPostsData({ postViewsMetrics }: ViewsProps) {
         setChartData({ labels, datasets });
     };
 
-    useEffect(() => {/* @ts-ignore */
-        if (postViewsMetrics) processChartData(postViewsMetrics);
+    useEffect(() => {
+        if (postViewsMetrics) {
+            const allViews = [
+                ...postViewsMetrics.dailyViews,
+                ...postViewsMetrics.weeklyViews,
+                ...postViewsMetrics.monthlyViews,
+            ];
+            processChartData(allViews);
+        }
+    }, [postViewsMetrics]);
+
+
+    useEffect(() => {
+        if (postViewsMetrics?.dailyViews) {
+            processChartData(postViewsMetrics.dailyViews);
+        }
     }, [postViewsMetrics]);
 
     const chartOptionsFilter: ChartOptions<"bar"> = {

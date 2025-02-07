@@ -12,10 +12,10 @@ import { FiUpload } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { z } from "zod";
 import Image from "next/image";
-import Select from "react-select";
 import { Editor } from "@tinymce/tinymce-react";
-import BulkDatas from "@/app/components/bulkDatas"; 
+import BulkDatas from "@/app/components/bulkDatas";
 import CreatableSelect from "react-select/creatable";
+import Select from "react-select";
 
 interface FormDataProps {
     title: string;
@@ -58,6 +58,9 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function AddPost() {
+
+    const TOKEN_TINY = process.env.NEXT_PUBLIC_TINYMCE_API_KEY;
+
     const editorRef = useRef<any>(null);
     const { user } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
@@ -68,6 +71,13 @@ export default function AddPost() {
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [image_post, setImage_post] = useState<File | null>(null);
     const [seoKeywords, setSeoKeywords] = useState<{ label: string; value: string }[]>([]);
+    const [key, setKey] = useState(0);
+    const [key_b, setKey_b] = useState(1);
+
+    useEffect(() => {
+        setKey(1);
+        setKey_b(2)
+    }, []);
 
     const {
         register,
@@ -192,6 +202,8 @@ export default function AddPost() {
                     {/* Seletores em linha */}
                     <div className="grid grid-cols-2 gap-4">
                         <Select
+                            key={key}
+                            instanceId="meu-select-categorias"
                             options={categories.map((cat, index) => ({ key: index, value: cat.id, label: cat.name_category }))}
                             isMulti
                             placeholder="Selecione categorias"
@@ -202,6 +214,8 @@ export default function AddPost() {
                             }
                         />
                         <Select
+                            key={key_b}
+                            instanceId="meu-select-tags"
                             options={tags.map((tag, index) => ({ key: index, value: tag.id, label: tag.tag_name }))}
                             isMulti
                             placeholder="Selecione tags"
@@ -264,17 +278,22 @@ export default function AddPost() {
                     <h1 className="text-xl">Texto do post</h1>
 
                     <Editor
-                        apiKey="3uadxc7du623dpn0gcvz8d1520ngvsigncyxnuj5f580qyz4"
+                        apiKey={TOKEN_TINY}
                         onInit={(evt, editor) => (editorRef.current = editor)}
                         initialValue="<p>Digite seu conteúdo aqui...</p>"
                         init={{
                             height: 500,
                             menubar: true,
-                            plugins: ["link", "lists", "image", "media", "advlist autolink lists link image charmap preview anchor",
-                                "searchreplace visualblocks code fullscreen",
-                                "insertdatetime media table paste code help wordcount",
-                                "emoticons template codesample",],
                             toolbar: "undo redo | formatselect | bold italic | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image emoticons | table codesample | preview help",
+                            external_plugins: {
+                                insertdatetime: "https://cdn.jsdelivr.net/npm/tinymce/plugins/insertdatetime/plugin.min.js",
+                                media: "https://cdn.jsdelivr.net/npm/tinymce/plugins/media/plugin.min.js",
+                                table: "https://cdn.jsdelivr.net/npm/tinymce/plugins/table/plugin.min.js",
+                                paste: "https://cdn.jsdelivr.net/npm/tinymce/plugins/paste/plugin.min.js",
+                                code: "https://cdn.jsdelivr.net/npm/tinymce/plugins/code/plugin.min.js",
+                                help: "https://cdn.jsdelivr.net/npm/tinymce/plugins/help/plugin.min.js",
+                                wordcount: "https://cdn.jsdelivr.net/npm/tinymce/plugins/wordcount/plugin.min.js",
+                            },
                             codesample_languages: [
                                 { text: "HTML/XML", value: "markup" },
                                 { text: "JavaScript", value: "javascript" },

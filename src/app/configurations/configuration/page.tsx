@@ -1,6 +1,6 @@
 "use client"
 
-import InputMask from "react-input-mask";
+import InputMask from "react-input-mask-next";
 import { Section } from "@/app/components/section";
 import { SidebarAndHeader } from "@/app/components/sidebarAndHeader";
 import { TitlePage } from "@/app/components/titlePage";

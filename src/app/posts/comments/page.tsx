@@ -19,7 +19,9 @@ interface CommentProps {
         image_user: string;
         name: string;
     },
+    userBlogImage: string;
     post: {
+        id: string;
         title: string;
         slug_title_post: string;
         custon_url: string;
@@ -36,6 +38,8 @@ interface CommentProps {
     commentLikes?: {
         isLike: boolean;
     };
+    post_title: string;
+    post_link: string;
 }
 
 const statusOptions = ["Pendente", "Aprovado", "Recusado"];
@@ -168,7 +172,7 @@ export default function Comments() {
                     onFetchData={fetchComments}
                     columns={[
                         {
-                            key: 'userBlog',
+                            key: 'userBlogImage',
                             label: 'Foto do usúario',
                             render: (item) => (
                                 <>
@@ -195,9 +199,9 @@ export default function Comments() {
                             render: (item) => (
                                 <>
                                     {item.userBlog?.name ? (
-                                        <td key={item.id}>{item.userBlog?.name}</td>
+                                        <span key={item.id}>{item.userBlog?.name}</span>
                                     ) :
-                                        <td>usuario excluido</td>
+                                        <span>usuario excluido</span>
                                     }
                                 </>
                             )
@@ -210,12 +214,12 @@ export default function Comments() {
                                     className="truncate w-40"
                                     key={item.id}
                                 >
-                                    <td
+                                    <span
                                         className="cursor-pointer"
                                         onClick={() => handleDescriptionClick(item.id, item.comment || "")}
                                     >
                                         {item.comment}
-                                    </td>
+                                    </span>
                                 </div>
                             )
                         },
@@ -223,20 +227,20 @@ export default function Comments() {
                             key: "created_at",
                             label: "Enviado em",
                             render: (item) => (
-                                <td>{moment(item.created_at).format('DD/MM/YYYY HH:mm')}</td>
+                                <span>{moment(item.created_at).format('DD/MM/YYYY HH:mm')}</span>
                             ),
                         },
                         {
-                            key: "post",
+                            key: "post_title",
                             label: "Em resposta para",
                             render: (item) => (
                                 <div
-                                    key={item.id}
+                                    key={item.post.id}
                                     className="truncate w-40"
                                 >
-                                    <td>
+                                    <span>
                                         {item.post.title}
-                                    </td>
+                                    </span>
                                 </div>
                             )
                         },
@@ -259,7 +263,7 @@ export default function Comments() {
                             key: 'status',
                             label: 'Status',
                             render: (item) => (
-                                <td>
+                                <span>
                                     {editStatus?.id === item.id && editStatus?.field === "status" ? (
                                         <select
                                             value={editedValue || item.status}
@@ -284,15 +288,15 @@ export default function Comments() {
                                             {item.status}
                                         </span>
                                     )}
-                                </td>
+                                </span>
                             ),
                         },
                         {
-                            key: 'post',
+                            key: 'post_link',
                             label: 'Ver post',
                             render: (item) => (
                                 <button
-                                    key={item.id}
+                                    key={item.post.id}
                                     className='p-1 bg-red-600 text-white text-xs rounded hover:bg-hoverButtonBackground transition duration-300'
                                     onClick={() => router.push(`/article/${item.post.custon_url ? item.post.custon_url : item.post.slug_title_post}`)}
                                 >

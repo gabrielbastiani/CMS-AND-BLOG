@@ -345,8 +345,9 @@ function DataTable<T extends {
                                 ) : 
                                     <td></td>
                                 }
-                                {columns.map((column) => (
+                                {columns.map((column, index) => (
                                     <td
+                                        key={index}
                                         onClick={
                                             url_item_router
                                                 ? () => router.push(`${url_item_router}/${item.id}`)

@@ -131,13 +131,13 @@ export default function All_tags() {
                                             className="border-gray-300 rounded-md p-1 text-black"
                                         />
                                     ) : (
-                                        <td
+                                        <span
                                             key={item.id}
                                             onClick={() => handleEdit(item.id, "tag_name", item.tag_name)}
                                             className="cursor-pointer hover:underline text-white truncate max-w-44"
                                         >
                                             {item.tag_name}
-                                        </td>
+                                        </span>
                                     )}
                                 </>
                             ),

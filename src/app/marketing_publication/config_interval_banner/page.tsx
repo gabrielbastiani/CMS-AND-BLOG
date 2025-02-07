@@ -6,6 +6,7 @@ import { TitlePage } from "@/app/components/titlePage";
 import { setupAPIClient } from "@/services/api";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaTrashAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 interface FormData {
@@ -129,6 +130,22 @@ export default function Config_interval_banner() {
         }
     };
 
+    const handleDelete = async (id: string) => {
+        setLoading(true);
+        try {
+            const apiClient = setupAPIClient();
+            await apiClient.delete(`/marketing_publication/delete?bannerInterval_id=${id}`);
+            toast.success(`Intervalo deletado com sucesso`);
+            const { data } = await apiClient.get("/marketing_publication/interval_banner/existing_interval");
+            setData_interval(data);
+        } catch (error) {
+            console.error(error);
+            toast.error("Erro ao deletar o dado.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     return (
         <SidebarAndHeader>
@@ -232,6 +249,14 @@ export default function Config_interval_banner() {
                                         {int.label_interval_banner}
                                     </p>
                                 )}
+                            </div>
+                            <div>
+                                <FaTrashAlt
+                                    color="red"
+                                    size={28}
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => handleDelete(int.id)}
+                                />
                             </div>
                         </div>
                     ))}

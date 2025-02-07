@@ -215,7 +215,7 @@ export default function All_posts() {
                             key: 'status',
                             label: 'Status',
                             render: (item) => (
-                                <td>
+                                <span>
                                     {editingPost?.id === item.id && editingPost?.field === "status" ? (
                                         <select
                                             value={editedValue || item.status}
@@ -230,19 +230,19 @@ export default function All_posts() {
                                             ))}
                                         </select>
                                     ) : (
-                                        <td onClick={() => handleEdit(item.id, "status", item.status)}
+                                        <span onClick={() => handleEdit(item.id, "status", item.status)}
                                             className="cursor-pointer text-red-500 hover:underline">
                                             {item.status}
-                                        </td>
+                                        </span>
                                     )}
-                                </td>
+                                </span>
                             ),
                         },
                         {
                             key: "categories",
                             label: "Categorias",
                             render: (item: PostsProps) => (
-                                <td className="flex flex-wrap space-x-2 max-w-xs">
+                                <span className="flex flex-wrap space-x-2 max-w-xs">
                                     {item.categories?.length ? (
                                         item.categories.map((categ, index: Key) => (
                                             <span
@@ -255,7 +255,7 @@ export default function All_posts() {
                                     ) : (
                                         <span className="text-gray-500">Sem categoria</span>
                                     )}
-                                </td>
+                                </span>
                             ),
                         },
                         {
@@ -271,7 +271,7 @@ export default function All_posts() {
                             key: "comment",
                             label: "Comentarios",
                             render: (item) => (
-                                <td>{item.comment?.length}</td>
+                                <span>{item.comment?.length}</span>
                             ),
                         },
                         {
@@ -280,9 +280,9 @@ export default function All_posts() {
                             render: (item) => (
                                 <>
                                     {item.publish_at ?
-                                        <td>{moment(item.publish_at).format('DD/MM/YYYY HH:mm')}</td>
+                                        <span>{moment(item.publish_at).format('DD/MM/YYYY HH:mm')}</span>
                                         :
-                                        <td>Não</td>
+                                        <span>Não</span>
                                     }
                                 </>
                             ),
@@ -291,7 +291,7 @@ export default function All_posts() {
                             key: "created_at",
                             label: "Data de Criação",
                             render: (item) => (
-                                <td>{moment(item.created_at).format('DD/MM/YYYY HH:mm')}</td>
+                                <span>{moment(item.created_at).format('DD/MM/YYYY HH:mm')}</span>
                             ),
                         },
                         {

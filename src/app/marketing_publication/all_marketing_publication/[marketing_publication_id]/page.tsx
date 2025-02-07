@@ -40,6 +40,13 @@ export default function UpdateMarketingPublication({
         position: "SLIDER",
         local: "",
         conditions: "scroll",
+        description: "",
+        text_publication: "",
+        redirect_url: "",
+        text_button: "",
+        popup_time: "",
+        publish_at_start: "",
+        publish_at_end: ""
     });
 
     useEffect(() => {
@@ -141,7 +148,7 @@ export default function UpdateMarketingPublication({
                         <input
                             type="text"
                             name="title"
-                            value={formData.title}
+                            value={formData.title || ""}
                             onChange={handleInputChange}
                             placeholder="Digite o título"
                             className="w-full border-2 rounded-md px-3 py-2 text-black"
@@ -152,7 +159,7 @@ export default function UpdateMarketingPublication({
                         Página da publicidade:
                         <select
                             name="local"
-                            value={formData.local}
+                            value={formData.local || ""}
                             onChange={handleInputChange}
                             className="w-full border-2 rounded-md px-3 py-2 text-black"
                         >
@@ -229,7 +236,7 @@ export default function UpdateMarketingPublication({
                             <input
                                 type="text"
                                 name="text_button"
-                                value={formData.text_button}
+                                value={formData.text_button || ""}
                                 onChange={handleInputChange}
                                 placeholder="Digite o texto do botão"
                                 className="w-full border-2 rounded-md px-3 py-2 text-black"
@@ -242,7 +249,7 @@ export default function UpdateMarketingPublication({
                             Status:
                             <select
                                 name="status"
-                                value={formData.status}
+                                value={formData.status || ""}
                                 onChange={handleInputChange}
                                 className="w-full border-2 rounded-md px-3 py-2 text-black"
                             >
@@ -256,7 +263,7 @@ export default function UpdateMarketingPublication({
                             Posição:
                             <select
                                 name="position"
-                                value={formData.position}
+                                value={formData.position || ""}
                                 onChange={handleInputChange}
                                 className="w-full border-2 rounded-md px-3 py-2 text-black"
                             >
@@ -273,7 +280,7 @@ export default function UpdateMarketingPublication({
                                 Condições:
                                 <select
                                     name="conditions"
-                                    value={formData.conditions}
+                                    value={formData.conditions || ""}
                                     onChange={handleInputChange}
                                     className="w-full border-2 rounded-md px-3 py-2 text-black"
                                 >
@@ -288,7 +295,7 @@ export default function UpdateMarketingPublication({
                                 Tempo do popup para aparecer ou ao rolar a página:
                                 <select
                                     name="popup_time"
-                                    value={formData.popup_time}
+                                    value={formData.popup_time || ""}
                                     onChange={handleInputChange}
                                     className="w-full border-2 rounded-md px-3 py-2 text-black"
                                 >

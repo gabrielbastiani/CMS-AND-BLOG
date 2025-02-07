@@ -19,6 +19,7 @@ interface PublicationProps {
     title: string;
     image_url: string | null;
     status: string;
+    status_publication: string;
     description: string;
     position: string;
     clicks: number;
@@ -229,19 +230,19 @@ export default function All_marketing_publication() {
                             key: "description",
                             label: "Descrição",
                             render: (item) => (
-                                <td
+                                <span
                                     onClick={() => user?.role === "EMPLOYEE" ? "" : handleDescriptionClick(item.description || "")}
                                     className="cursor-pointer text-white hover:underline text-xs truncate max-w-32"
                                 >
                                     {item.description ? item.description : "Adicionar descrição"}
-                                </td>
+                                </span>
                             ),
                         },
                         {
-                            key: 'status',
+                            key: 'status_publication',
                             label: 'Status',
                             render: (item) => (
-                                <td>
+                                <span>
                                     {editingPublication?.id === item.id && editingPublication?.field === "status" ? (
                                         <select
                                             value={editedValue || item.status}
@@ -256,19 +257,19 @@ export default function All_marketing_publication() {
                                             ))}
                                         </select>
                                     ) : (
-                                        <td onClick={() => user?.role === "EMPLOYEE" ? "" : handleEdit(item.id, "status", item.status)}
+                                        <span onClick={() => user?.role === "EMPLOYEE" ? "" : handleEdit(item.id, "status", item.status)}
                                             className="cursor-pointer text-red-500 hover:underline">
                                             {item.status}
-                                        </td>
+                                        </span>
                                     )}
-                                </td>
+                                </span>
                             ),
                         },
                         {
                             key: 'redirect_url',
                             label: 'Link de redirecionamento',
                             render: (item) => (
-                                <td>
+                                <span>
                                     {editingPublication?.id === item.id && editingPublication?.field === "redirect_url" ? (
                                         <input
                                             type="text"
@@ -277,17 +278,13 @@ export default function All_marketing_publication() {
                                             onBlur={() => handleSave(item.id, "redirect_url")}
                                             className="border-gray-300 rounded-md p-1 text-black" />
                                     ) : (
-                                        <td onClick={() => user?.role === "EMPLOYEE" ? "" : handleEdit(item.id, "redirect_url", item.redirect_url)}
+                                        <span onClick={() => user?.role === "EMPLOYEE" ? "" : handleEdit(item.id, "redirect_url", item.redirect_url)}
                                             className="truncate max-w-44 cursor-pointer text-red-500 hover:underline">
                                             {item.redirect_url}
-                                        </td>
+                                        </span>
                                     )}
-                                </td>
+                                </span>
                             ),
-                        },
-                        {
-                            key: "status",
-                            label: "Status"
                         },
                         {
                             key: "position",
@@ -301,22 +298,22 @@ export default function All_marketing_publication() {
                             key: 'publish_at_start',
                             label: 'Começo da publicidade',
                             render: (item) => (
-                                <td>
+                                <span>
                                     {item?.publish_at_start && moment(item.publish_at_start).isValid()
                                         ? moment(item.publish_at_start).format('DD/MM/YYYY HH:mm')
                                         : "Sem programação"}
-                                </td>
+                                </span>
                             ),
                         },
                         {
                             key: 'publish_at_end',
                             label: 'Fim da publicidade',
                             render: (item) => (
-                                <td>
+                                <span>
                                     {item?.publish_at_end && moment(item.publish_at_end).isValid()
                                         ? moment(item.publish_at_end).format('DD/MM/YYYY HH:mm')
                                         : "Sem programação"}
-                                </td>
+                                </span>
                             ),
                         },
                         {
@@ -327,7 +324,7 @@ export default function All_marketing_publication() {
                             key: "created_at",
                             label: "Data de Criação",
                             render: (item) => (
-                                <td>{moment(item.created_at).format('DD/MM/YYYY HH:mm')}</td>
+                                <span>{moment(item.created_at).format('DD/MM/YYYY HH:mm')}</span>
                             ),
                         },
                         {
