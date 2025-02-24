@@ -72,8 +72,14 @@ export function CommentsSection({ post_id }: CommentProps) {
         return organized;
     }
 
+    const isValidUUID = (id: string) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
+
     useEffect(() => {
         async function loadCommentsPost() {
+            if (!post_id || !isValidUUID(post_id)) {
+                console.error("post_id inválido:", post_id);
+                return;
+            }
             try {
                 const apiClient = setupAPIClient();
                 const response = await apiClient.get(
@@ -89,6 +95,10 @@ export function CommentsSection({ post_id }: CommentProps) {
     }, [post_id]);
 
     async function loadCommentsPost() {
+        if (!post_id || !isValidUUID(post_id)) {
+            console.error("post_id inválido:", post_id);
+            return;
+        }
         try {
             const apiClient = setupAPIClient();
             const response = await apiClient.get(

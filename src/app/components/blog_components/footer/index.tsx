@@ -40,10 +40,9 @@ export function Footer() {
             <div className="container mx-auto text-center">
                 <div className="flex justify-center space-x-6 mb-5">
                     {dataMedias.map((media) => (
-                        <>
+                        <div key={media.id}>
                             {media.logo_media ? (
                                 <Link
-                                    key={media.id}
                                     href={media.link ? media.link : ""}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -59,7 +58,6 @@ export function Footer() {
                                 </Link>
                             ) :
                                 <Link
-                                    key={media.id}
                                     href={media.link ? media.link : ""}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -68,7 +66,7 @@ export function Footer() {
                                     {media.name_media}
                                 </Link>
                             }
-                        </>
+                        </div>
                     ))}
                 </div>
                 <p className="mb-4">

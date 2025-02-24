@@ -18,7 +18,13 @@ export default function ArticleLikeDislike({
     const [dislike, setDislike] = useState(initialDislike);
     const [loading, setLoading] = useState(false);
 
+    const isValidUUID = (id: string) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
+
     async function fetchUpdatedReactions() {
+        if (!post_id || !isValidUUID(post_id)) {
+            console.error("post_id inválido:", post_id);
+            return;
+        }
         try {
             const apiClient = setupAPIClient();
             const response = await apiClient.get(
@@ -33,8 +39,11 @@ export default function ArticleLikeDislike({
     }
 
     useEffect(() => {
-        fetchUpdatedReactions();
-    }, [post_id]);
+        console.log("post_id recebido:", post_id);
+        if (post_id) {
+            fetchUpdatedReactions();
+        }
+    }, [post_id]);    
 
     const handleLikeDislike = async (isLike: boolean) => {
         if (loading) return; // Evita múltiplas requisições simultâneas
