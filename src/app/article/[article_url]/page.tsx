@@ -34,7 +34,7 @@ export async function generateMetadata(
 
     const previousImages = (await parent).openGraph?.images || [];
     const cleanDescription = article_data.text_post
-      .replace(/<[^>]*>/g, '') // Remove tags HTML manualmente
+      .replace(/<[^>]*>/g, '')
       .substring(0, 160);
 
       const imageUrl = article_data.image_post 
