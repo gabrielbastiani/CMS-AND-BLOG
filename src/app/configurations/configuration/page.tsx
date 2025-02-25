@@ -120,11 +120,28 @@ export default function Configuration() {
         }
     };
 
+    async function delete_files() {
+        try {
+            const apiClient = setupAPIClient();
+            await apiClient.get("/configuration_blog/delete_all_files");
+            toast.success("Arquivos deletados com sucesso");
+        } catch (error) {
+            toast.error("Erro ao deletar os arquivos.");
+            console.log(error);
+        }
+    }
 
     return (
         <SidebarAndHeader>
             <Section>
                 <TitlePage title="CONFIGURAÇÕES DO BLOG" />
+
+                <button
+                    className="bg-red-500 text-white p-5 rounded-md mb-7"
+                    onClick={delete_files}
+                >
+                    Deletar arquivos absoletos no sistema
+                </button>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 

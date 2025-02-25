@@ -1,7 +1,9 @@
-import { setupAPIClient } from "@/services/api";
+"use client"
+
 import { FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
+import { setupAPIClient } from "@/services/api";
 
 interface ReactionPostProps {
     post_id: string;

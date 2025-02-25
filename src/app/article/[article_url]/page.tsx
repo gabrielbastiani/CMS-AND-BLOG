@@ -1,92 +1,98 @@
-"use client";
-
 import BlogLayout from "@/app/components/blog_components/blogLayout";
 import { Footer } from "@/app/components/blog_components/footer";
 import { Navbar } from "@/app/components/blog_components/navbar";
 import { setupAPIClient } from "@/services/api";
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import DOMPurify from "dompurify";
 import { FiClock } from "react-icons/fi";
 import Link from 'next/link';
 import { Newsletter } from '@/app/components/blog_components/newsletter';
 import { CommentsSection } from '@/app/components/blog_components/commentsSection';
 import Most_posts_views from '@/app/components/blog_components/most_posts_views';
 import SocialShare from '@/app/components/blog_components/socialShare';
-import ArticleLikeDeslike from '@/app/components/blog_components/articleLikeDeslike';
 import BackToTopButton from '@/app/components/blog_components/backToTopButton';
 import MarketingPopup from '@/app/components/blog_components/popups/marketingPopup';
 import { SlideBanner } from '@/app/components/blog_components/slideBanner';
 import { FaRegEye } from 'react-icons/fa';
 import PublicationSidebar from '@/app/components/blog_components/publicationSidebar';
+import { Metadata, ResolvingMetadata } from 'next';
+import { PostsProps } from "../../../../Types/types";
+import ArticleLikeDislikeWrapper from "@/app/components/blog_components/articleLikeDeslike/articleLikeDeslikeWrapper";
+import SafeHTML from "@/app/components/SafeHTML";
 
-interface PostsProps {
-  id: string;
-  text_post: string;
-  author: string;
-  title: string;
-  slug_title_post: string;
-  custom_url: string;
-  image_post?: string;
-  post_like?: number;
-  post_dislike?: number;
-  views?: number;
-  status: string;
-  publish_at?: string | number | Date;
-  created_at: string | number | Date;
-  tags?: Array<{
-    tag?: {
-      id: string;
-      tag_name?: string;
-      slug_tag_name?: string;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const BLOG_URL = process.env.NEXT_PUBLIC_URL_BLOG;
+
+export async function generateMetadata(
+  { params }: { params: { article_url: string } },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  try {
+    const apiClient = setupAPIClient();
+    const { data: article_data } = await apiClient.get<PostsProps>(
+      `/post/article/content?url_post=${params.article_url}`
+    );
+
+    const previousImages = (await parent).openGraph?.images || [];
+    const cleanDescription = article_data.text_post
+      .replace(/<[^>]*>/g, '') // Remove tags HTML manualmente
+      .substring(0, 160);
+
+      const imageUrl = article_data.image_post 
+  ? new URL(`/files/${article_data.image_post}`, API_URL).toString()
+  : new URL("../../../assets/no-image-icon-6.png", BLOG_URL).toString();
+
+    return {
+      title: article_data.title,
+      description: cleanDescription || "Leia este artigo completo em nosso blog",
+      metadataBase: new URL(BLOG_URL!),
+      openGraph: {
+        title: article_data.title,
+        description: cleanDescription || "Leia este artigo completo em nosso blog",
+        images: [
+          {
+            url: imageUrl,
+            width: 1200,
+            height: 630,
+            alt: article_data.title,
+          },
+          ...previousImages,
+        ],
+        type: 'article',
+        publishedTime: new Date(article_data.publish_at || article_data.created_at).toISOString(),
+        authors: [article_data.author || "Autor Desconhecido"],
+      },
+      keywords: article_data.tags?.map(tag => tag.tag?.tag_name).filter(Boolean).join(', '),
     };
-  }>;
-  categories?: Array<{
-    category?: {
-      id: string;
-      name_category?: string;
-      slug_name_category?: string;
+  } catch (error) {
+    return {
+      title: "Artigo não encontrado",
+      description: "O artigo que você está procurando não foi encontrado",
     };
-  }>;
-  comment?: Array<{
-    id: string;
-    post_id: string;
-    userBlog_id: string;
-    userBlog: any;
-    name_user: string;
-    image_user: string;
-    comment: string;
-    replies: any;
-    comment_like: number;
-    comment_dislike: number;
-    created_at: string | number | Date;
-  }>
+  }
 }
 
-export default function Article({ params }: { params: { article_url: string } }) {
+async function getData(article_url: string) {
+  const apiClient = setupAPIClient();
+  const [article, banners, sidebar] = await Promise.all([
+    apiClient.get<PostsProps>(`/post/article/content?url_post=${article_url}`),
+    apiClient.get(`/marketing_publication/existing_banner?local=Pagina_artigo`),
+    apiClient.get(`/marketing_publication/existing_sidebar?local=Pagina_artigo`),
+  ]);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const [article_data, setArticle_data] = useState<PostsProps>();
-  const [existing_slide, setExisting_slide] = useState<any[]>([]);
-  const [existing_sidebar, setExisting_sidebar] = useState<any[]>([]);
+  if (article.data?.id) {
+    await apiClient.patch(`/post/${article.data.id}/views`);
+  }
 
-  useEffect(() => {
-    const contentArticle = async () => {
-      const apiClient = setupAPIClient();
-      try {
-        const { data } = await apiClient.get(`/post/article/content?url_post=${params.article_url}`);
-        const response = await apiClient.get(`/marketing_publication/existing_banner?local=Pagina_artigo`);
-        const response_data = await apiClient.get(`/marketing_publication/existing_sidebar?local=Pagina_artigo`);
-        setExisting_sidebar(response_data?.data || []);
-        setExisting_slide(response?.data || []);
-        setArticle_data(data);
-        await apiClient.patch(`/post/${data?.id}/views`);
-      } catch (error) {
-        console.error("Failed to update views:", error);
-      }
-    };
-    contentArticle();
-  }, [params.article_url]);
+  return {
+    article_data: article.data,
+    existing_slide: banners.data || [],
+    existing_sidebar: sidebar.data || [],
+  };
+}
+
+export default async function Article({ params }: { params: { article_url: string } }) {
+
+  const { article_data, existing_slide, existing_sidebar } = await getData(params.article_url);
 
   const calculateReadingTime = (text: string): string => {
     const wordsPerMinute = 200;
@@ -168,12 +174,11 @@ export default function Article({ params }: { params: { article_url: string } })
                 ))}
               </div>
             </div>
-            <div
-              className="prose max-w-none text-gray-800 prose-h1:text-blue-600 prose-p:mb-4 prose-a:text-indigo-500 hover:prose-a:underline"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(article_data?.text_post || ""),
-              }}
-            ></div>
+            <div className="prose max-w-none text-gray-800 prose-h1:text-blue-600 prose-p:mb-4 prose-a:text-indigo-500 hover:prose-a:underline">
+              {article_data?.text_post && (
+                <SafeHTML html={article_data.text_post} />
+              )}
+            </div>
             {article_data?.tags && article_data?.tags.length > 0 && (
               <div className="mt-10 mb-10">
                 <h2 className="text-lg font-semibold text-gray-700 mb-4">Tags:</h2>
@@ -189,11 +194,7 @@ export default function Article({ params }: { params: { article_url: string } })
                 </div>
               </div>
             )}
-            <ArticleLikeDeslike
-              post_id={article_data?.id || ""}
-              like={article_data?.post_like || 0}
-              deslike={article_data?.post_dislike || 0}
-            />
+            <ArticleLikeDislikeWrapper post_id={article_data?.id || ""} />
             <SocialShare
               articleUrl={params.article_url}
             />

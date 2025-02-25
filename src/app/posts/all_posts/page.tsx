@@ -10,30 +10,7 @@ import Image from "next/image";
 import { toast } from "react-toastify"
 import { useRouter } from "next/navigation"
 import moment from "moment"
-
-interface PostsProps {
-    id: string;
-    edit: string;
-    author: string;
-    title: string;
-    image_post?: string;
-    post_like?: number;
-    post_dislike?: number;
-    status: string;
-    publish_at?: string | number | Date;
-    comment?: string[];
-    created_at: string | number | Date;
-    tags?: {
-        tag?: {
-            tag_name?: string;
-        };
-    };
-    categories?: Array<{
-        category?: {
-            name_category?: string;
-        };
-    }>;
-}
+import { PostsProps } from "../../../../Types/types"
 
 const statusOptions = ["Disponivel", "Indisponivel", "Programado"];
 

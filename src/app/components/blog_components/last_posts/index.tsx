@@ -5,34 +5,7 @@ import noImage from '../../../../assets/no-image-icon-6.png';
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { setupAPIClient } from "@/services/api";
-
-interface PostsProps {
-    id: string;
-    text_post: string;
-    author: string;
-    title: string;
-    slug_title_post: string;
-    custom_url: string
-    image_post?: string;
-    post_like?: number;
-    post_dislike?: number;
-    status: string;
-    publish_at?: string | number | Date;
-    comment?: string[];
-    created_at: string | number | Date;
-    tags?: {
-        tag?: {
-            slug_tag_name?: string;
-        };
-    };
-    categories?: Array<{
-        category?: {
-            id: string;
-            name_category?: string;
-            slug_name_category?: string;
-        };
-    }>;
-}
+import { PostsProps } from "../../../../../Types/types";
 
 export default function Last_post() {
 
