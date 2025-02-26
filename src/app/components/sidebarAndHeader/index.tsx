@@ -416,6 +416,12 @@ export function SidebarAndHeader({ children }: Content) {
                                                 })}>
                                                     Configurações
                                                 </Link>
+                                                <Link href="/configurations/seo_pages" className={clsx({
+                                                    'bg-activeLink rounded p-2 mb-2 text-sm': currentRoute === "/configurations/seo_pages",
+                                                    'text-white p-2 mb-2 text-sm': currentRoute !== "/configurations/seo_pages"
+                                                })}>
+                                                    SEO
+                                                </Link>
                                             </div>
                                         )}
                                     </div>

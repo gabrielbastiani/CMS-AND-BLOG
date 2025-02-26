@@ -6,23 +6,36 @@ import HomePage from "./components/blog_components/homePage";
 import { setupAPIClient } from "@/services/api";
 import PublicationSidebar from "./components/blog_components/publicationSidebar";
 import { Metadata } from "next";
-import image_default from "../assets/no-image-icon-6.png";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const BLOG_URL = process.env.NEXT_PUBLIC_URL_BLOG;
 
 export async function generateMetadata(): Promise<Metadata> {
   const apiClient = setupAPIClient();
   try {
     const response = await apiClient.get('/configuration_blog/get_configs');
+    const imageUrl = response.images
+      ? new URL(`/files/${response.images}`, API_URL).toString()
+      : new URL("../assets/no-image-icon-6.png", BLOG_URL).toString();
+      const faviconUrl = response.favicon
+      ? new URL(`/files/${response.favicon}`, API_URL).toString()
+      : "../app/favicon.ico";
     return {
       title: response.data.name_blog || "Blog Padrão",
       description: response.data.description_blog || "Descrição padrão do blog",
       metadataBase: new URL(BLOG_URL!),
+      robots: {
+        follow: true,
+        index: true
+      },
+      icons: {
+        icon: `${faviconUrl}`
+      },
       openGraph: {
         title: response.data.name_blog || "Blog Padrão",
         description: response.data.description_blog || "Descrição padrão do blog",
         images: [{
-          url: response.data.logo || image_default,
+          url: imageUrl,
           width: 1200,
           height: 630,
           alt: response.data.name_blog || "Logo do Blog",

@@ -37,14 +37,24 @@ export async function generateMetadata(
       .replace(/<[^>]*>/g, '')
       .substring(0, 160);
 
-      const imageUrl = article_data.image_post 
-  ? new URL(`/files/${article_data.image_post}`, API_URL).toString()
-  : new URL("../../../assets/no-image-icon-6.png", BLOG_URL).toString();
+    const imageUrl = article_data.image_post
+      ? new URL(`/files/${article_data.image_post}`, API_URL).toString()
+      : new URL("../../../assets/no-image-icon-6.png", BLOG_URL).toString();
+      const faviconUrl = response.favicon
+      ? new URL(`/files/${response.favicon}`, API_URL).toString()
+      : "../app/favicon.ico";
 
     return {
       title: article_data.title,
       description: cleanDescription || "Leia este artigo completo em nosso blog",
       metadataBase: new URL(BLOG_URL!),
+      robots: {
+        follow: true,
+        index: true
+      },
+      icons: {
+        icon: `${faviconUrl}`
+      },
       openGraph: {
         title: article_data.title,
         description: cleanDescription || "Leia este artigo completo em nosso blog",
@@ -60,6 +70,21 @@ export async function generateMetadata(
         type: 'article',
         publishedTime: new Date(article_data.publish_at || article_data.created_at).toISOString(),
         authors: [article_data.author || "Autor Desconhecido"],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: article_data.title || `Artigo'}`,
+        description: cleanDescription,
+        images: [
+          {
+            url: imageUrl,
+            width: 1200,
+            height: 630,
+            alt: article_data.title,
+          },
+          ...previousImages,
+        ],
+        creator: '@seu_twitter',
       },
       keywords: article_data.tags?.map(tag => tag.tag?.tag_name).filter(Boolean).join(', '),
     };

@@ -8,6 +8,7 @@ const PUBLIC_ROUTES = [
   '/recovery_password'
 ];
 const PROTECTED_ROUTES = [
+  '/configurations/seo_pages',
   '/marketing_publication/config_interval_banner',
   '/marketing_publication/add_marketing_publication',
   '/marketing_publication/all_marketing_publication',
@@ -33,6 +34,7 @@ const PROTECTED_ROUTES = [
 ]; // Rotas que requerem autenticação
 const ROLE_BASED_ROUTES = {
   SUPER_ADMIN: [
+    '/configurations/seo_pages',
     '/marketing_publication/config_interval_banner',
     '/marketing_publication/add_marketing_publication',
     '/marketing_publication/all_marketing_publication',
@@ -57,6 +59,7 @@ const ROLE_BASED_ROUTES = {
     '/central_notifications'
   ], // Exemplo de rotas restritas para SUPER_ADMIN
   ADMIN: [
+    '/configurations/seo_pages',
     '/marketing_publication/config_interval_banner',
     '/marketing_publication/add_marketing_publication',
     '/marketing_publication/all_marketing_publication',
@@ -138,6 +141,7 @@ function hasAccessToRoute(userRole: string, pathname: string): boolean {/* @ts-i
 
 export const config = {
   matcher: [
+    '/configurations/seo_pages',
     '/configurations',
     '/marketing_publication/config_interval_banner',
     '/marketing_publication/add_marketing_publication',

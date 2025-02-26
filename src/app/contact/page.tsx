@@ -9,35 +9,66 @@ import PublicationSidebar from "../components/blog_components/publicationSidebar
 import { Metadata, ResolvingMetadata } from "next";
 
 const BLOG_URL = process.env.NEXT_PUBLIC_URL_BLOG;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     try {
         const apiClient = setupAPIClient();
-        const { data: seoData } = await apiClient.get('/configuration_blog/get_configs');
+        const { data } = await apiClient.get('/configuration_blog/get_configs');
 
         const previousImages = (await parent).openGraph?.images || [];
+        const imageUrl = previousImages
+            ? new URL(`/files/${previousImages}`, API_URL).toString()
+            : new URL("../../assets/no-image-icon-6.png", BLOG_URL).toString();
+            const faviconUrl = response.favicon
+            ? new URL(`/files/${response.favicon}`, API_URL).toString()
+            : "../app/favicon.ico";
 
         return {
-            title: seoData?.name_blog || "Contato - Fale Conosco",
-            description: seoData?.description_blog || "Entre em contato conosco para tirar dúvidas, dar sugestões ou solicitar informações",
+            title: data?.name_blog || "Contato - Fale Conosco",
+            description: data?.description_blog || "Entre em contato conosco para tirar dúvidas, dar sugestões ou solicitar informações",
             metadataBase: new URL(BLOG_URL!),
+            robots: {
+                follow: true,
+                index: true
+            },
+            icons: {
+                icon: `${faviconUrl}`
+              },
             openGraph: {
-                title: seoData?.name_blog || "Contato - Nossa Equipe Está à Sua Disposição",
-                description: seoData?.description_blog || "Formas de entrar em contato com nossa equipe e suporte",
+                title: data.og_title || `Entre em contato com o nosso blog`,
+                description: data.og_description || `Entre em contato com o nosso blog...`,
                 images: [
                     {
-                        url: seoData?.logo || `${BLOG_URL}/../../../assets/no-image-icon-6.png`,
+                        url: imageUrl,
                         width: 1200,
                         height: 630,
-                        alt: seoData?.name_blog || "Contato",
+                        alt: data.image_alt || `Contato`,
                     },
                     ...previousImages,
                 ],
-                type: 'website',
+                locale: 'pt_BR',
+                siteName: 'Nome do Seu Site',
+                type: "website"
             },
-            keywords: seoData?.keywords || [
+            twitter: {
+                card: 'summary_large_image',
+                title: data.twitter_title || `Entre em contato com o nosso blog`,
+                description: data.twitter_description || `Entre em contato com o nosso blog...`,
+                images: [
+                    {
+                        url: imageUrl,
+                        width: 1200,
+                        height: 630,
+                        alt: data.image_alt || 'Artigos',
+                    },
+                    ...previousImages,
+                ],
+                creator: '@seu_twitter',
+            },
+            keywords: data?.keywords || [
                 'contato',
                 'suporte',
                 'email',

@@ -8,42 +8,71 @@ import PublicationSidebar from "../components/blog_components/publicationSidebar
 import { Metadata, ResolvingMetadata } from "next";
 
 const BLOG_URL = process.env.NEXT_PUBLIC_URL_BLOG;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function generateMetadata(
     parent: ResolvingMetadata
 ): Promise<Metadata> {
     try {
         const apiClient = setupAPIClient();
-        const { data: configs } = await apiClient.get('/configs/blog');
+        const { data } = await apiClient.get('/configs/blog');
 
         const previousImages = (await parent).openGraph?.images || [];
+        const imageUrl = previousImages
+            ? new URL(`/files/${previousImages}`, API_URL).toString()
+            : new URL("../../assets/no-image-icon-6.png", BLOG_URL).toString();
+            const faviconUrl = response.favicon
+            ? new URL(`/files/${response.favicon}`, API_URL).toString()
+            : "../app/favicon.ico";
 
         return {
-            title: `Sobre - ${configs?.title_blog || 'Nosso Blog'}`,
-            description: configs?.description_blog || 'Conheça mais sobre nossa plataforma e autores',
+            title: `Sobre - ${data?.title_blog || 'Nosso Blog'}`,
+            description: data?.description_blog || 'Conheça nosso blog',
             metadataBase: new URL(BLOG_URL!),
+            robots: {
+                follow: true,
+                index: true
+            },
+            icons: {
+                icon: `${faviconUrl}`
+              },
             openGraph: {
-                title: `Sobre - ${configs?.title_blog || 'Nosso Blog'}`,
-                description: configs?.about_author_blog || 'Descubra mais sobre nossa missão e valores',
+                title: `Sobre - ${data?.title_blog || 'Nosso Blog'}`,
+                description: data.og_description || `Conheça nosso blog...`,
                 images: [
                     {
-                        url: configs?.og_image ?
-                            `${BLOG_URL}/images/${configs.og_image}` :
-                            `${BLOG_URL}/../../../assets/no-image-icon-6.png`,
+                        url: imageUrl,
                         width: 1200,
                         height: 630,
-                        alt: configs?.title_blog || 'Sobre nós',
+                        alt: data.image_alt || `Sobre`,
                     },
                     ...previousImages,
                 ],
-                type: 'website',
+                locale: 'pt_BR',
+                siteName: 'Nome do Seu Site',
+                type: "website"
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: data.twitter_title || `Sobre - ${data?.title_blog || 'Nosso Blog'}`,
+                description: data.twitter_description || `Conheça nosso blog...`,
+                images: [
+                    {
+                        url: imageUrl,
+                        width: 1200,
+                        height: 630,
+                        alt: data.image_alt || 'Artigos',
+                    },
+                    ...previousImages,
+                ],
+                creator: '@seu_twitter',
             },
             keywords: [
                 'sobre',
                 'quem somos',
                 'autor',
                 'história',
-                ...(configs?.keywords?.split(',') || [])
+                ...(data?.keywords?.split(',') || [])
             ],
         };
     } catch (error) {

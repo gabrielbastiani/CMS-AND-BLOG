@@ -33,23 +33,54 @@ export async function generateMetadata(
         const { data } = await apiClient.get('/categories/seo');
         const previousImages = (await parent).openGraph?.images || [];
 
+        const imageUrl = previousImages
+            ? new URL(`/files/${previousImages}`, API_URL).toString()
+            : new URL("../../assets/no-image-icon-6.png", BLOG_URL).toString();
+            const faviconUrl = response.favicon
+            ? new URL(`/files/${response.favicon}`, API_URL).toString()
+            : "../app/favicon.ico";
+
         return {
             title: data.title || "Todas as Categorias",
             description: data.description || "Explore nossa coleção completa de categorias de artigos",
             metadataBase: new URL(BLOG_URL!),
+            robots: {
+                follow: true,
+                index: true
+            },
+            icons: {
+                icon: `${faviconUrl}`
+              },
             openGraph: {
-                title: "Todas as Categorias",
-                description: "Descubra nossos principais tópicos e categorias de conteúdo",
+                title: data.og_title || "Todas as Categorias",
+                description: data.og_description || "Descubra nossas categorias...",
                 images: [
                     {
-                        url: new URL('/default-categories-og.jpg', BLOG_URL).toString(),
+                        url: imageUrl,
                         width: 1200,
                         height: 630,
-                        alt: 'Categorias',
+                        alt: data.image_alt || 'Categorias',
                     },
                     ...previousImages,
                 ],
-                type: 'website',
+                locale: 'pt_BR',
+                siteName: 'Nome do Seu Site',
+                type: "website"
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: data.twitter_title || "Todas as Categorias",
+                description: data.twitter_description || "Descubra nossas categorias...",
+                images: [
+                    {
+                        url: imageUrl,
+                        width: 1200,
+                        height: 630,
+                        alt: data.image_alt || 'Artigos',
+                    },
+                    ...previousImages,
+                ],
+                creator: '@seu_twitter',
             },
             keywords: data.keywords?.join(', ') || "categorias, tópicos, artigos, blog",
         };

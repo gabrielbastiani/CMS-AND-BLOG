@@ -21,23 +21,54 @@ export async function generateMetadata(
         const { data } = await apiClient.get('/post/articles/seo');
         const previousImages = (await parent).openGraph?.images || [];
 
+        const imageUrl = previousImages
+            ? new URL(`/files/${previousImages}`, API_URL).toString()
+            : new URL("../../assets/no-image-icon-6.png", BLOG_URL).toString();
+            const faviconUrl = response.favicon
+            ? new URL(`/files/${response.favicon}`, API_URL).toString()
+            : "../app/favicon.ico";
+
         return {
             title: "Todos os Artigos",
             description: "Explore nossa coleção completa de artigos e conteúdos exclusivos",
             metadataBase: new URL(BLOG_URL!),
+            robots: {
+                follow: true,
+                index: true
+            },
+            icons: {
+                icon: `${faviconUrl}`
+              },
             openGraph: {
-                title: "Todos os Artigos",
-                description: "Descubra nossos artigos mais recentes e populares",
+                title: data.og_title || "Todos os Artigos",
+                description: data.og_description || "Descubra nossos artigos...",
                 images: [
                     {
-                        url: new URL('../../assets/no-image-icon-6.png', BLOG_URL).toString(),
+                        url: imageUrl,
                         width: 1200,
                         height: 630,
-                        alt: 'Artigos',
+                        alt: data.image_alt || 'Artigos',
                     },
                     ...previousImages,
                 ],
-                type: 'website',
+                locale: 'pt_BR',
+                siteName: 'Nome do Seu Site',
+                type: "website"
+            },
+            twitter: {
+                card: 'summary_large_image',
+                title: data.twitter_title || "Todos os Artigos",
+                description: data.twitter_description || "Descubra nossos artigos...",
+                images: [
+                    {
+                        url: imageUrl,
+                        width: 1200,
+                        height: 630,
+                        alt: data.image_alt || 'Artigos',
+                    },
+                    ...previousImages,
+                ],
+                creator: '@seu_twitter',
             },
             keywords: "artigos, blog, conteúdo, notícias",
         };
