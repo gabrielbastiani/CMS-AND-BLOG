@@ -15,70 +15,68 @@ export async function generateMetadata(
 ): Promise<Metadata> {
     try {
         const apiClient = setupAPIClient();
-        const { data } = await apiClient.get('/configs/blog');
+        const response = await apiClient.get('/configuration_blog/get_configs');
+        const { data } = await apiClient.get(`/seo/get_page?page=Sobre`);
 
         const previousImages = (await parent).openGraph?.images || [];
-        const imageUrl = previousImages
-            ? new URL(`/files/${previousImages}`, API_URL).toString()
-            : new URL("../../assets/no-image-icon-6.png", BLOG_URL).toString();
-            const faviconUrl = response.favicon
-            ? new URL(`/files/${response.favicon}`, API_URL).toString()
+
+        const ogImages = data.ogImages?.map((image: string) => ({
+            url: new URL(`files/${image}`, API_URL).toString(),
+            width: Number(data.ogImageWidth) || 1200,
+            height: data.ogImageHeight || 630,
+            alt: data.ogImageAlt || 'Sobre',
+        })) || [];
+
+        const twitterImages = data.twitterImages?.map((image: string) => ({
+            url: new URL(`files/${image}`, API_URL).toString(),
+            width: Number(data.ogImageWidth) || 1200,
+            height: data.ogImageHeight || 630,
+            alt: data.ogImageAlt || 'Sobre',
+        })) || [];
+
+        const faviconUrl = response.data.favicon
+            ? new URL(`files/${response.data.favicon}`, API_URL).toString()
             : "../app/favicon.ico";
 
         return {
-            title: `Sobre - ${data?.title_blog || 'Nosso Blog'}`,
-            description: data?.description_blog || 'Conheça nosso blog',
+            title: data?.title || 'Sobre - Nosso Blog',
+            description: data?.description || 'Conheça nosso blog',
             metadataBase: new URL(BLOG_URL!),
             robots: {
                 follow: true,
                 index: true
             },
             icons: {
-                icon: `${faviconUrl}`
-              },
+                icon: faviconUrl
+            },
             openGraph: {
-                title: `Sobre - ${data?.title_blog || 'Nosso Blog'}`,
-                description: data.og_description || `Conheça nosso blog...`,
+                title: data?.ogTitle || 'Sobre - Nosso Blog',
+                description: data?.ogDescription || 'Conheça nosso blog...',
                 images: [
-                    {
-                        url: imageUrl,
-                        width: 1200,
-                        height: 630,
-                        alt: data.image_alt || `Sobre`,
-                    },
+                    ...ogImages,
                     ...previousImages,
                 ],
                 locale: 'pt_BR',
-                siteName: 'Nome do Seu Site',
+                siteName: response.data.name_blog || 'Nosso Blog',
                 type: "website"
             },
             twitter: {
                 card: 'summary_large_image',
-                title: data.twitter_title || `Sobre - ${data?.title_blog || 'Nosso Blog'}`,
-                description: data.twitter_description || `Conheça nosso blog...`,
+                title: data?.twitterTitle || 'Sobre - Nosso Blog',
+                description: data?.twitterDescription || 'Conheça nosso blog...',
                 images: [
-                    {
-                        url: imageUrl,
-                        width: 1200,
-                        height: 630,
-                        alt: data.image_alt || 'Artigos',
-                    },
+                    ...twitterImages,
                     ...previousImages,
                 ],
-                creator: '@seu_twitter',
+                creator: data?.twitterCreator || '@perfil_twitter',
             },
-            keywords: [
-                'sobre',
-                'quem somos',
-                'autor',
-                'história',
-                ...(data?.keywords?.split(',') || [])
-            ],
+            keywords: data?.keywords || [],
         };
     } catch (error) {
+        console.error('Erro ao gerar metadados:', error);
         return {
             title: "Sobre Nós",
-            description: "Conheça mais sobre nossa plataforma e equipe",
+            description: "Conheça mais sobre nosso blog",
         };
     }
 }

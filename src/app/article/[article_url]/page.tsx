@@ -28,24 +28,28 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   try {
     const apiClient = setupAPIClient();
+    const response = await apiClient.get('/configuration_blog/get_configs');
+    const { data } = await apiClient.get(`/seo/get_page?page=Pagina principal`);
     const { data: article_data } = await apiClient.get<PostsProps>(
       `/post/article/content?url_post=${params.article_url}`
     );
 
     const previousImages = (await parent).openGraph?.images || [];
+
     const cleanDescription = article_data.text_post
       .replace(/<[^>]*>/g, '')
       .substring(0, 160);
 
     const imageUrl = article_data.image_post
-      ? new URL(`/files/${article_data.image_post}`, API_URL).toString()
+      ? new URL(`files/${article_data.image_post}`, API_URL).toString()
       : new URL("../../../assets/no-image-icon-6.png", BLOG_URL).toString();
-      const faviconUrl = response.favicon
-      ? new URL(`/files/${response.favicon}`, API_URL).toString()
+
+    const faviconUrl = response.data.favicon
+      ? new URL(`files/${response.data.favicon}`, API_URL).toString()
       : "../app/favicon.ico";
 
     return {
-      title: article_data.title,
+      title: article_data.title ? article_data.title : "Artigo",
       description: cleanDescription || "Leia este artigo completo em nosso blog",
       metadataBase: new URL(BLOG_URL!),
       robots: {
@@ -53,7 +57,7 @@ export async function generateMetadata(
         index: true
       },
       icons: {
-        icon: `${faviconUrl}`
+        icon: faviconUrl
       },
       openGraph: {
         title: article_data.title,
@@ -84,9 +88,9 @@ export async function generateMetadata(
           },
           ...previousImages,
         ],
-        creator: '@seu_twitter',
+        creator: data?.twitterCreator || '@perfil_twitter',
       },
-      keywords: article_data.tags?.map(tag => tag.tag?.tag_name).filter(Boolean).join(', '),
+      keywords: article_data.seo_keywords || [],
     };
   } catch (error) {
     return {

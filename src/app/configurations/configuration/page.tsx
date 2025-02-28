@@ -17,6 +17,7 @@ import Config_media_social from "@/app/components/config_media_social";
 const schema = z.object({
     name_blog: z.string().nonempty("O título é obrigatório"),
     logo: z.string().optional(),
+    favicon: z.string().optional(),
     email_blog: z.string().email("Insira um email válido").nonempty("O campo email é obrigatório"),
     phone: z
         .string()
@@ -39,6 +40,8 @@ export default function Configuration() {
     const [id, setId] = useState<string>();
     const [logoUrl, setLogoUrl] = useState<string | null>(null);
     const [logo, setLogo] = useState<File | null>(null);
+    const [faviconUrl, setFaviconUrl] = useState<string | null>(null);
+    const [favicon, setFavicon] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
 
     const {
@@ -65,6 +68,20 @@ export default function Configuration() {
         }
     }
 
+    function handleFileFavicon(e: ChangeEvent<HTMLInputElement>) {
+        if (!e.target.files) return;
+
+        const image = e.target.files[0];
+        if (!image) return;
+
+        if (image.type === "image/x-icon" || image.type === "image/vnd.microsoft.icon") {
+            setFavicon(image);
+            setFaviconUrl(URL.createObjectURL(image));
+        } else {
+            toast.error("Formato de imagem inválido. Selecione uma imagem ICO.");
+        }
+    }
+
     useEffect(() => {
         async function fetchData() {
             try {
@@ -73,6 +90,7 @@ export default function Configuration() {
                 setId(data?.id || "");
 
                 setLogoUrl(data.logo || null);
+                setFaviconUrl(data.favicon || null);
 
                 reset({
                     name_blog: data.name_blog,
@@ -106,7 +124,11 @@ export default function Configuration() {
             formData.append("about_author_blog", data.about_author_blog || "");
 
             if (logo) {
-                formData.append("file", logo);
+                formData.append("logo", logo);
+            }
+
+            if (favicon) {
+                formData.append("favicon", favicon);
             }
 
             const apiClient = setupAPIClient();
@@ -145,6 +167,7 @@ export default function Configuration() {
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
 
+                    <p>Logomarca:</p>
                     <div className="grid grid-cols-2 gap-4">
                         <label className="relative w-[380px] h-[280px] rounded-lg cursor-pointer flex justify-center bg-gray-200 overflow-hidden">
                             <input type="file" accept="image/png, image/jpeg" onChange={handleFile} className="hidden" />
@@ -154,6 +177,26 @@ export default function Configuration() {
                                     alt="Preview da imagem"
                                     width={450}
                                     height={300}
+                                    className="w-full h-full"
+                                />
+                            ) : (
+                                <div className="flex items-center justify-center w-full h-full bg-gray-300">
+                                    <FiUpload size={30} color="#ff6700" />
+                                </div>
+                            )}
+                        </label>
+                    </div>
+                    
+                    <p>Favicon:</p>
+                    <div className="grid grid-cols-2 gap-4">
+                        <label className="relative w-[300px] h-[200px] rounded-lg cursor-pointer flex justify-center bg-gray-200 overflow-hidden">
+                            <input type="file" accept=".ico, image/x-icon, image/vnd.microsoft.icon" onChange={handleFileFavicon} className="hidden" />
+                            {faviconUrl ? (
+                                <Image
+                                    src={favicon ? faviconUrl : `${API_URL}files/${faviconUrl}`}
+                                    alt="Preview da imagem"
+                                    width={300}
+                                    height={200}
                                     className="w-full h-full"
                                 />
                             ) : (

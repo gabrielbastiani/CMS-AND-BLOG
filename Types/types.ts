@@ -29,6 +29,7 @@ export interface PostsProps {
   publish_at?: string | number | Date;
   created_at: string | number | Date;
   edit?: string;
+  seo_keywords?: string[];
   tags?: Array<{
     tag?: {
       id: string;

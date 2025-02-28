@@ -13,71 +13,74 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const BLOG_URL = process.env.NEXT_PUBLIC_URL_BLOG;
 
 export async function generateMetadata(
-    parent: ResolvingMetadata
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
-    const apiClient = setupAPIClient();
+  try {
+      const apiClient = setupAPIClient();
+      const response = await apiClient.get('/configuration_blog/get_configs');
+      const { data } = await apiClient.get(`/seo/get_page?page=Todos os artigos`);
 
-    try {
-        const { data } = await apiClient.get('/post/articles/seo');
-        const previousImages = (await parent).openGraph?.images || [];
+      const previousImages = (await parent).openGraph?.images || [];
 
-        const imageUrl = previousImages
-            ? new URL(`/files/${previousImages}`, API_URL).toString()
-            : new URL("../../assets/no-image-icon-6.png", BLOG_URL).toString();
-            const faviconUrl = response.favicon
-            ? new URL(`/files/${response.favicon}`, API_URL).toString()
-            : "../app/favicon.ico";
+      const ogImages = data.ogImages?.map((image: string) => ({
+          url: new URL(`files/${image}`, API_URL).toString(),
+          width: Number(data.ogImageWidth) || 1200,
+          height: data.ogImageHeight || 630,
+          alt: data.ogImageAlt || 'Todos os artigos do blog',
+      })) || [];
 
-        return {
-            title: "Todos os Artigos",
-            description: "Explore nossa coleção completa de artigos e conteúdos exclusivos",
-            metadataBase: new URL(BLOG_URL!),
-            robots: {
-                follow: true,
-                index: true
-            },
-            icons: {
-                icon: `${faviconUrl}`
-              },
-            openGraph: {
-                title: data.og_title || "Todos os Artigos",
-                description: data.og_description || "Descubra nossos artigos...",
-                images: [
-                    {
-                        url: imageUrl,
-                        width: 1200,
-                        height: 630,
-                        alt: data.image_alt || 'Artigos',
-                    },
-                    ...previousImages,
-                ],
-                locale: 'pt_BR',
-                siteName: 'Nome do Seu Site',
-                type: "website"
-            },
-            twitter: {
-                card: 'summary_large_image',
-                title: data.twitter_title || "Todos os Artigos",
-                description: data.twitter_description || "Descubra nossos artigos...",
-                images: [
-                    {
-                        url: imageUrl,
-                        width: 1200,
-                        height: 630,
-                        alt: data.image_alt || 'Artigos',
-                    },
-                    ...previousImages,
-                ],
-                creator: '@seu_twitter',
-            },
-            keywords: "artigos, blog, conteúdo, notícias",
-        };
-    } catch (error) {
-        return {
-            title: "Artigos",
-            description: "Nossa coleção completa de artigos",
-        };
-    }
+      const twitterImages = data.twitterImages?.map((image: string) => ({
+          url: new URL(`files/${image}`, API_URL).toString(),
+          width: Number(data.ogImageWidth) || 1200,
+          height: data.ogImageHeight || 630,
+          alt: data.ogImageAlt || 'Todos os artigos do blog',
+      })) || [];
+
+      const faviconUrl = response.data.favicon
+          ? new URL(`files/${response.data.favicon}`, API_URL).toString()
+          : "../app/favicon.ico";
+
+      return {
+          title: data?.title || 'Todos os artigos do blog',
+          description: data?.description || 'Conheça os artigos do nosso blog',
+          metadataBase: new URL(BLOG_URL!),
+          robots: {
+              follow: true,
+              index: true
+          },
+          icons: {
+              icon: faviconUrl
+          },
+          openGraph: {
+              title: data?.ogTitle || 'Todos os artigos do blog',
+              description: data?.ogDescription || 'Conheça os artigos do nosso blog...',
+              images: [
+                  ...ogImages,
+                  ...previousImages,
+              ],
+              locale: 'pt_BR',
+              siteName: response.data.name_blog || 'Todos os artigos do blog',
+              type: "website"
+          },
+          twitter: {
+              card: 'summary_large_image',
+              title: data?.twitterTitle || 'Todos os artigos do blog',
+              description: data?.twitterDescription || 'Conheça os artigos do nosso blog...',
+              images: [
+                  ...twitterImages,
+                  ...previousImages,
+              ],
+              creator: data?.twitterCreator || '@perfil_twitter',
+          },
+          keywords: data?.keywords || [],
+      };
+  } catch (error) {
+      console.error('Erro ao gerar metadados:', error);
+      return {
+          title: "Blog",
+          description: "Conheça o blog",
+      };
+  }
 }
 
 async function getData() {

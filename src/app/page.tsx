@@ -5,50 +5,79 @@ import { SlideBanner } from "./components/blog_components/slideBanner";
 import HomePage from "./components/blog_components/homePage";
 import { setupAPIClient } from "@/services/api";
 import PublicationSidebar from "./components/blog_components/publicationSidebar";
-import { Metadata } from "next";
+import { Metadata, ResolvingMetadata } from "next";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const BLOG_URL = process.env.NEXT_PUBLIC_URL_BLOG;
 
-export async function generateMetadata(): Promise<Metadata> {
-  const apiClient = setupAPIClient();
+export async function generateMetadata(
+  parent: ResolvingMetadata
+): Promise<Metadata> {
   try {
-    const response = await apiClient.get('/configuration_blog/get_configs');
-    const imageUrl = response.images
-      ? new URL(`/files/${response.images}`, API_URL).toString()
-      : new URL("../assets/no-image-icon-6.png", BLOG_URL).toString();
-      const faviconUrl = response.favicon
-      ? new URL(`/files/${response.favicon}`, API_URL).toString()
-      : "../app/favicon.ico";
-    return {
-      title: response.data.name_blog || "Blog Padrão",
-      description: response.data.description_blog || "Descrição padrão do blog",
-      metadataBase: new URL(BLOG_URL!),
-      robots: {
-        follow: true,
-        index: true
-      },
-      icons: {
-        icon: `${faviconUrl}`
-      },
-      openGraph: {
-        title: response.data.name_blog || "Blog Padrão",
-        description: response.data.description_blog || "Descrição padrão do blog",
-        images: [{
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: response.data.name_blog || "Logo do Blog",
-        }],
-        type: 'website',
-        siteName: response.data.name_blog || "Blog",
-      },
-    };
-  } catch {
-    return {
-      title: "Blog de Notícias",
-      description: "As últimas notícias e atualizações",
-    };
+      const apiClient = setupAPIClient();
+      const response = await apiClient.get('/configuration_blog/get_configs');
+      const { data } = await apiClient.get(`/seo/get_page?page=Pagina principal`);
+
+      const previousImages = (await parent).openGraph?.images || [];
+
+      const ogImages = data.ogImages?.map((image: string) => ({
+          url: new URL(`files/${image}`, API_URL).toString(),
+          width: Number(data.ogImageWidth) || 1200,
+          height: data.ogImageHeight || 630,
+          alt: data.ogImageAlt || 'Blog',
+      })) || [];
+
+      const twitterImages = data.twitterImages?.map((image: string) => ({
+          url: new URL(`files/${image}`, API_URL).toString(),
+          width: Number(data.ogImageWidth) || 1200,
+          height: data.ogImageHeight || 630,
+          alt: data.ogImageAlt || 'Blog',
+      })) || [];
+
+      const faviconUrl = response.data.favicon
+          ? new URL(`files/${response.data.favicon}`, API_URL).toString()
+          : "../app/favicon.ico";
+
+      return {
+          title: data?.title || 'Nosso Blog',
+          description: data?.description || 'Conheça nosso blog',
+          metadataBase: new URL(BLOG_URL!),
+          robots: {
+              follow: true,
+              index: true
+          },
+          icons: {
+              icon: faviconUrl
+          },
+          openGraph: {
+              title: data?.ogTitle || 'Nosso Blog',
+              description: data?.ogDescription || 'Conheça nosso blog...',
+              images: [
+                  ...ogImages,
+                  ...previousImages,
+              ],
+              locale: 'pt_BR',
+              siteName: response.data.name_blog || 'Nosso Blog',
+              type: "website"
+          },
+          twitter: {
+              card: 'summary_large_image',
+              title: data?.twitterTitle || 'Nosso Blog',
+              description: data?.twitterDescription || 'Conheça nosso blog...',
+              images: [
+                  ...twitterImages,
+                  ...previousImages,
+              ],
+              creator: data?.twitterCreator || '@perfil_twitter',
+          },
+          keywords: data?.keywords || [],
+      };
+  } catch (error) {
+      console.error('Erro ao gerar metadados:', error);
+      return {
+          title: "Blog",
+          description: "Conheça o blog",
+      };
   }
 }
 

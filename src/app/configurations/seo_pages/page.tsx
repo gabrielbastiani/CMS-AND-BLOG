@@ -1,19 +1,29 @@
 "use client"
 
 import { Section } from "@/app/components/section";
+import SEOSettingsList from "@/app/components/sEOSettingsList";
 import { SidebarAndHeader } from "@/app/components/sidebarAndHeader";
 import { TitlePage } from "@/app/components/titlePage";
 import { setupAPIClient } from "@/services/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiUpload } from "react-icons/fi";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
 const schema = z.object({
-  page: z.string().nonempty("O campo página é obrigatório"),
+  page: z.enum([
+    "Pagina principal",
+    "Sobre",
+    "Contato",
+    "Todos os artigos",
+    "Todas as categorias",
+    "Artigos em uma determinada categoria"
+  ], {
+    errorMap: () => ({ message: "Selecione uma página válida" })
+  }),
   title: z.string().optional(),
   description: z.string().optional(),
   keywords: z.string().optional(),
@@ -48,7 +58,7 @@ export default function SeoPages() {
 
   const handleOgImages = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const validFiles = files.filter(file => 
+    const validFiles = files.filter(file =>
       file.type === "image/jpeg" || file.type === "image/png"
     );
 
@@ -62,7 +72,7 @@ export default function SeoPages() {
 
   const handleTwitterImages = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const validFiles = files.filter(file => 
+    const validFiles = files.filter(file =>
       file.type === "image/jpeg" || file.type === "image/png"
     );
 
@@ -76,10 +86,10 @@ export default function SeoPages() {
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
-    
+
     try {
       const formData = new FormData();
-      
+
       // Campos textuais
       formData.append("page", data.page);
       formData.append("title", data.title || "");
@@ -101,7 +111,7 @@ export default function SeoPages() {
       twitterImages.forEach(file => formData.append("twitterImages", file));
 
       const apiClient = setupAPIClient();
-      await apiClient.post("/configuration_blog/seo/create", formData, {
+      await apiClient.post("/seo/create", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -126,17 +136,35 @@ export default function SeoPages() {
       <Section>
         <TitlePage title="CONFIGURAÇÕES SEO" />
 
+        <SEOSettingsList />
+
+        <hr className="mt-8 mb-8" />
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-4xl">
           <div className="grid gap-4">
             <label className="block">
               Página:
-              <input
-                type="text"
+              <select
                 {...register("page")}
-                className="w-full p-2 border rounded-md"
-                placeholder="Ex: /blog, /contato"
-              />
-              {errors.page && <span className="text-red-500 text-sm">{errors.page.message}</span>}
+                className="w-full p-2 border rounded-md bg-white text-black"
+              >
+                <option value="">Selecione uma página</option>
+                {[
+                  "Pagina principal",
+                  "Sobre",
+                  "Contato",
+                  "Todos os artigos",
+                  "Todas as categorias",
+                  "Artigos em uma determinada categoria",
+                ].sort().map((path) => (
+                  <option key={path} value={path}>
+                    {path}
+                  </option>
+                ))}
+              </select>
+              {errors.page && (
+                <span className="text-red-500 text-sm">{errors.page.message}</span>
+              )}
             </label>
 
             <label className="block">
@@ -144,7 +172,7 @@ export default function SeoPages() {
               <input
                 type="text"
                 {...register("title")}
-                className="w-full p-2 border rounded-md"
+                className="w-full p-2 border rounded-md text-black"
               />
             </label>
 
@@ -152,7 +180,7 @@ export default function SeoPages() {
               Descrição:
               <textarea
                 {...register("description")}
-                className="w-full p-2 border rounded-md h-24"
+                className="w-full p-2 border rounded-md h-24 text-black"
               />
             </label>
 
@@ -161,7 +189,7 @@ export default function SeoPages() {
               <input
                 type="text"
                 {...register("keywords")}
-                className="w-full p-2 border rounded-md"
+                className="w-full p-2 border rounded-md text-black"
                 placeholder="Ex: SEO, Marketing, Tecnologia"
               />
             </label>
@@ -169,57 +197,57 @@ export default function SeoPages() {
 
           {/* Seção Open Graph */}
           <div className="border-t pt-6">
-            <h3 className="text-xl font-bold mb-4">Open Graph</h3>
-            
+            <h3 className="text-xl font-bold mb-4">Open Graph - Redes Sociais</h3>
+
             <div className="grid gap-4">
               <label className="block">
-                Título OG:
+                Título para as redes sociais:
                 <input
                   type="text"
                   {...register("ogTitle")}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border rounded-md text-black"
                 />
               </label>
 
               <label className="block">
-                Descrição OG:
+                Descrição para as redes sociais:
                 <textarea
                   {...register("ogDescription")}
-                  className="w-full p-2 border rounded-md h-24"
+                  className="w-full p-2 border rounded-md h-24 text-black"
                 />
               </label>
 
               <div className="grid grid-cols-2 gap-4">
                 <label className="block">
-                  Largura da Imagem OG:
+                  Largura da Imagem para as redes sociais:
                   <input
                     type="number"
                     {...register("ogImageWidth")}
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded-md text-black"
                   />
                 </label>
 
                 <label className="block">
-                  Altura da Imagem OG:
+                  Altura da Imagem para as redes sociais:
                   <input
                     type="number"
                     {...register("ogImageHeight")}
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded-md text-black"
                   />
                 </label>
               </div>
 
               <label className="block">
-                Texto Alternativo OG:
+                Texto Alternativo para as redes sociais:
                 <input
                   type="text"
                   {...register("ogImageAlt")}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border rounded-md text-black"
                 />
               </label>
 
               <div className="block">
-                <label className="mb-2 block">Imagens OG (Máx. 5):</label>
+                <label className="mb-2 block">Imagens para as redes sociais (Máx. 5):</label>
                 <div className="flex flex-wrap gap-4">
                   <label className="relative w-32 h-32 rounded-lg cursor-pointer flex justify-center items-center bg-gray-100 border-2 border-dashed">
                     <FiUpload className="text-gray-500 text-2xl" />
@@ -236,7 +264,7 @@ export default function SeoPages() {
                     <div key={index} className="relative w-32 h-32">
                       <Image
                         src={preview}
-                        alt={`Preview OG ${index}`}
+                        alt={`Preview para as redes sociais ${index}`}
                         fill
                         className="object-cover rounded-lg"
                       />
@@ -250,14 +278,14 @@ export default function SeoPages() {
           {/* Seção Twitter */}
           <div className="border-t pt-6">
             <h3 className="text-xl font-bold mb-4">Twitter</h3>
-            
+
             <div className="grid gap-4">
               <label className="block">
                 Título Twitter:
                 <input
                   type="text"
                   {...register("twitterTitle")}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border rounded-md text-black"
                 />
               </label>
 
@@ -265,7 +293,7 @@ export default function SeoPages() {
                 Descrição Twitter:
                 <textarea
                   {...register("twitterDescription")}
-                  className="w-full p-2 border rounded-md h-24"
+                  className="w-full p-2 border rounded-md h-24 text-black"
                 />
               </label>
 
@@ -274,7 +302,7 @@ export default function SeoPages() {
                 <input
                   type="text"
                   {...register("twitterCreator")}
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border rounded-md text-black"
                   placeholder="@usuário"
                 />
               </label>
@@ -311,9 +339,8 @@ export default function SeoPages() {
           <button
             type="submit"
             disabled={loading}
-            className={`px-6 py-3 rounded-md text-white ${
-              loading ? "bg-gray-500" : "bg-blue-600 hover:bg-blue-700"
-            }`}
+            className={`px-6 py-3 rounded-md text-white ${loading ? "bg-gray-500" : "bg-green-600 hover:bg-green-700"
+              }`}
           >
             {loading ? "Salvando..." : "Salvar Configurações"}
           </button>
