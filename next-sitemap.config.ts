@@ -1,54 +1,46 @@
-import { IConfig } from 'next-sitemap';
+import type { IConfig } from 'next-sitemap';
 
 const config: IConfig = {
-    siteUrl: 'https://seublog.com', // Substitua pelo URL do seu blog
-    generateRobotsTxt: true, // Gera o arquivo robots.txt automaticamente
-    exclude: [
-        '/configurations/configuration',
-        '/configurations',
-        '/marketing_contents/configurations_marketing',
-        '/marketing_contents/add_content_marketing',
-        '/marketing_contents/all_marketing_contents',
-        '/marketing_contents',
-        '/user/users_blog',
-        '/posts/comments',
-        '/posts/all_posts/post',
-        '/posts/all_posts',
-        '/posts/add_post',
-        '/posts',
-        '/tags',
-        '/tags/all_tags',
-        '/categories',
-        '/categories/add_category',
-        '/categories/all_categories',
-        '/newsletter',
-        '/dashboard',
-        '/user/profile',
-        '/user/all_users',
-        '/user/add_user',
-        '/contacts_form/all_contacts',
-        '/central_notifications'
-    ], // Rotas a serem excluídas do sitemap
-    changefreq: 'daily', // Frequência de alteração das páginas
-    priority: 0.7, // Prioridade padrão para as páginas
-    sitemapSize: 5000, // Número máximo de URLs por sitemap
-    transform: async (config, path) => {
-        return {
-            loc: path, // URL da página
-            changefreq: 'daily',
-            priority: path.includes('/noticias/') ? 1.0 : 0.7, // Prioridade mais alta para notícias
-            lastmod: new Date().toISOString(), // Data de última modificação
-        };
-    },
-    robotsTxtOptions: {
-        policies: [
-            { userAgent: '*', allow: '/' }, // Permite acesso geral
-            { userAgent: 'Googlebot', allow: '/' }, // Permite acesso específico para Googlebot
-        ],
-        additionalSitemaps: [
-            'https://seublog.com/sitemap-articles.xml', // Adicione sitemaps personalizados, se necessário
-        ],
-    },
-};
+  siteUrl: process.env.NEXT_PUBLIC_URL_BLOG || 'http://localhost:3000', // URL do seu site
+  generateRobotsTxt: true, // Gera robots.txt automaticamente
+  exclude: [
+    '/server-sitemap.xml', // Exclui sitemap gerado pelo servidor
+    '/dashboard',
+    '/user/profile',
+    '/central_notifications',
+    '/all_users',
+    '/user/users_blog',
+    '/user/add_user',
+    '/user/profile',
+    '/contacts_form/all_contacts',
+    '/newsletter',
+    '/categories/all_categories',
+    '/categories/add_category',
+    '/tags/all_tags',
+    '/tags/add_tag',
+    '/posts/all_posts',
+    '/posts/all_posts/post/[post_id]',
+    '/posts/add_post',
+    '/posts/comments',
+    '/marketing_publication/all_marketing_publication',
+    '/marketing_publication/all_marketing_publication/[marketing_publication_id]',
+    '/marketing_publication/add_marketing_publication',
+    '/marketing_publication/config_interval_banner',
+    '/configurations/configuration',
+    '/configurations/seo_pages',
+    '/configurations/seo_pages/[seo_id]'
+  ],
+  robotsTxtOptions: {
+    policies: [
+      {
+        userAgent: '*',
+        allow: '/',
+      },
+    ],
+    additionalSitemaps: [
+      `${process.env.NEXT_PUBLIC_URL_BLOG}/server-sitemap.xml`, // Adiciona sitemaps extras
+    ],
+  },
+}
 
-export default config;
+export default config
